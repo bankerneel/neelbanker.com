@@ -1,0 +1,64 @@
+import { NextRequest, NextResponse } from 'next/server'
+import { z } from 'zod'
+import { resend, FROM_EMAIL } from '@/lib/resend'
+
+const schema = z.object({
+  name: z.string().min(1),
+  email: z.string().email(),
+  company: z.string().optional(),
+  service: z.string().min(1),
+  description: z.string().min(10),
+  source: z.string().optional(),
+})
+
+const CONTACT_TO = process.env.CONTACT_EMAIL ?? 'neel@neelbanker.com'
+
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;')
+}
+
+export async function POST(req: NextRequest) {
+  const body = await req.json()
+  const parsed = schema.safeParse(body)
+  if (!parsed.success) {
+    return NextResponse.json({ error: 'Invalid form data' }, { status: 400 })
+  }
+
+  const { name, email, company, service, description, source } = parsed.data
+
+  await resend.emails.send({
+    from: FROM_EMAIL,
+    to: CONTACT_TO,
+    replyTo: email,
+    subject: `New enquiry: ${escapeHtml(service)} — ${escapeHtml(name)}`,
+    html: `
+      <h2>New contact form submission</h2>
+      <p><strong>Name:</strong> ${escapeHtml(name)}</p>
+      <p><strong>Email:</strong> ${escapeHtml(email)}</p>
+      <p><strong>Company:</strong> ${company ? escapeHtml(company) : '—'}</p>
+      <p><strong>Service:</strong> ${escapeHtml(service)}</p>
+      <p><strong>Description:</strong></p>
+      <p>${escapeHtml(description)}</p>
+      <p><strong>Source:</strong> ${source ? escapeHtml(source) : '—'}</p>
+    `,
+  })
+
+  // Auto-reply to sender
+  const firstName = escapeHtml(name.split(' ')[0])
+  await resend.emails.send({
+    from: FROM_EMAIL,
+    to: email,
+    subject: `Got your message, ${firstName}`,
+    html: `<p>Hi ${firstName},</p>
+           <p>Thanks for reaching out — I've received your message about <strong>${escapeHtml(service)}</strong>.</p>
+           <p>I'll get back to you within 2 business days.</p>
+           <p>— Neel</p>`,
+  })
+
+  return NextResponse.json({ ok: true })
+}
