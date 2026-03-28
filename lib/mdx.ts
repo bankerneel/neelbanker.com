@@ -2,6 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import matter from 'gray-matter'
 import type { ArticleMeta, Article, ResourceMeta, ProjectMeta } from '@/types/content'
+export { parseDate } from '@/lib/utils-date'
 
 const CONTENT_DIR = path.join(process.cwd(), 'content')
 
@@ -10,14 +11,6 @@ const CONTENT_DIR = path.join(process.cwd(), 'content')
 export function computeReadingTime(content: string): number {
   const words = content.trim().split(/\s+/).length
   return Math.max(1, Math.round(words / 200))
-}
-
-export function parseDate(iso: string): string {
-  return new Date(iso).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  })
 }
 
 function readMdxDir(type: 'writing' | 'resources' | 'projects') {
