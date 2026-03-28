@@ -1,0 +1,36 @@
+---
+title: "Fireblocks vs BitGo: Custody Platform Evaluation"
+excerpt: "Real cost analysis and architecture comparison for a multi-asset presale platform. BitGo at $23K/yr vs Fireblocks at $52K/yr — what the numbers don't tell you."
+chain: "Ethereum, Bitcoin, Polygon"
+stack: ["Fireblocks SDK", "BitGo SDK", "Node.js", "PostgreSQL"]
+date: "2026-01-10"
+---
+
+## Problem
+
+Design custody architecture for a multi-asset presale platform. Core requirements: omnibus vault model, UTXO consolidation for Bitcoin, ERC-20 support, webhook-driven balance updates.
+
+## Approach
+
+Evaluated both providers against the same workload model: 500 deposits/day, 50 withdrawals/day, 3 assets (ETH, BTC, USDT).
+
+## Cost Analysis
+
+Annual estimates based on our transaction volume:
+
+| | Fireblocks | BitGo |
+|-|-----------|-------|
+| Platform fee | $30K | $12K |
+| Transaction fees | $14K | $8K |
+| Support tier | $8K | $3K |
+| **Total** | **~$52K** | **~$23K** |
+
+## Architecture: Omnibus Vault Design
+
+Both providers support omnibus vaults where all user funds pool into one or a few wallets, with internal ledger tracking per user. This is the standard model for exchanges and presale platforms.
+
+Key difference: BitGo's UTXO consolidation runs automatically via policy engine. With Fireblocks you must schedule consolidation via API — easy to miss at scale.
+
+## Decision
+
+BitGo recommended. 55% cost reduction with equivalent security model for our threat profile. Fireblocks' advantage (better enterprise integrations, faster support) was not worth the delta at our scale.

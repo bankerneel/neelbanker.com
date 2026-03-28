@@ -1,0 +1,22 @@
+---
+title: "Blockchain Custody Architecture Guide"
+description: "Fireblocks vs BitGo comparison, MPC wallet design, omnibus vaults, and a decision framework for choosing a custody provider."
+fileUrl: "/resources/blockchain-custody-guide.pdf"
+---
+
+# Blockchain Custody Architecture Guide
+
+## Fireblocks vs BitGo: The Real Comparison
+
+After evaluating both for a multi-asset presale platform, here's what actually matters beyond the marketing:
+
+| Factor | Fireblocks | BitGo |
+|--------|-----------|-------|
+| Annual cost (our workload) | ~$52K | ~$23K |
+| UTXO consolidation | Manual via API | Automated policy |
+| EVM support | Excellent | Excellent |
+| MPC model | GG18/GG20 | TSS (custom) |
+| Webhook reliability | High | High |
+| Support response | < 4 hours | < 8 hours |
+
+This guide covers: decision framework, omnibus vault architecture, UTXO consolidation strategies, and webhook integration patterns.

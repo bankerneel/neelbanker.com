@@ -1,0 +1,31 @@
+---
+title: "MemeVault V1 & V2"
+excerpt: "Upgradeable smart contract system deployed on Ethereum mainnet and Base chain. Proxy pattern with Admin, Proxy, and Implementation components."
+chain: "Ethereum mainnet, Base"
+stack: ["Solidity", "Hardhat", "OpenZeppelin", "ethers.js"]
+date: "2025-11-17"
+---
+
+## Problem
+
+Deploy a meme token vault system with upgradeability, allowing logic changes post-launch without migrating user funds.
+
+## Approach
+
+Used OpenZeppelin's transparent proxy pattern: Admin contract controls upgrades, Proxy stores state, Implementation contains logic.
+
+## Architecture Decisions
+
+**Why transparent proxy over UUPS?** Admin-controlled upgrade allows multi-sig governance without embedding upgrade logic in every implementation. Slightly more gas on each call, acceptable trade-off for the governance model.
+
+**Gas optimisation:** Removed redundant storage reads in the claim function — saved ~12% gas per claim by caching `msg.sender` balance in memory before the loop.
+
+## Outcome
+
+- V1 deployed: 5,038,195 total gas
+- V2 deployed: 5,057,173 total gas (new features added cleanly)
+- Base chain deployment: ~$0.016 USD total (vs ~$180 on mainnet at same time)
+
+## Lessons
+
+Proxy storage slot collisions are silent bugs. Always run the OpenZeppelin storage layout checker before deploying a new implementation. We caught one in V2 staging — would have corrupted all balances.

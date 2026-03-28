@@ -1,0 +1,32 @@
+---
+title: "Smart Contract Security Checklist"
+description: "Pre-mainnet security checklist covering reentrancy, access control, upgradeability, oracle risk, and missing events."
+fileUrl: "/resources/smart-contract-security-checklist.pdf"
+---
+
+# Smart Contract Security Checklist
+
+Use before every mainnet deployment. No exceptions.
+
+## Access Control
+- All state-changing functions have appropriate modifiers (`onlyOwner`, role checks)
+- Roles are assigned in initialiser, not constructor (for upgradeable contracts)
+- No function allows arbitrary address to drain funds
+
+## Reentrancy
+- Checks-Effects-Interactions pattern followed throughout
+- `nonReentrant` modifier on all external calls that transfer value
+- No cross-function reentrancy paths
+
+## Upgradeability
+- Storage layout validated with OpenZeppelin storage checker
+- No constructor logic (use initializer)
+- Initializer has `initializer` modifier and cannot be called twice
+
+## Oracle Risk
+- Price feeds have staleness checks (check `updatedAt` from Chainlink)
+- No single oracle dependency for high-value decisions
+
+## Events
+- All state changes emit events
+- Events include indexed fields for efficient filtering

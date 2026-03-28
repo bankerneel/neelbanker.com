@@ -1,0 +1,37 @@
+---
+title: "AI Agents That Execute On-Chain: A Practical Guide"
+date: "2026-03-13"
+pillar: "ai"
+excerpt: "LLMs can now sign transactions, call smart contracts, and manage DeFi positions. Here's the architecture that makes it safe."
+---
+
+## Why This Is Different Now
+
+Previous AI + blockchain integrations were read-only: summarise a wallet, explain a transaction. Now, with tool-calling and MCP-connected agents, an AI can actually execute.
+
+## The Core Architecture
+
+The signing layer is the critical piece. You have three options:
+
+1. **MPC Wallet** — agent holds a key share, human approval required for full sig
+2. **Smart Contract Wallet (AA)** — policy rules encoded on-chain, agent operates within limits
+3. **Custodian API** — Fireblocks/BitGo with policy engine, agent submits, human approves
+
+## Safety Constraints You Must Implement
+
+- Whitelist of allowed contracts (no arbitrary calls)
+- Max transaction value per call
+- Rate limiting (N transactions per hour)
+- Human-in-the-loop for anything above threshold
+
+## A Real Pattern: DeFi Position Manager
+
+An agent that monitors a Uniswap LP position and rebalances when out of range:
+
+1. Agent reads pool state via ethers.js tool
+2. Computes rebalance params
+3. Constructs `UserOperation` (ERC-4337)
+4. Submits to approval queue — human approves or auto-approves if within policy
+5. Bundler submits to EntryPoint
+
+The key insight: the agent never holds the private key. The policy engine does the authorisation.
