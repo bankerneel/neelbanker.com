@@ -1,4 +1,4 @@
-import type { Pillar, PillarSlug } from '@/types/content'
+import type { Pillar } from '@/types/content'
 
 export const PILLARS: Pillar[] = [
   {

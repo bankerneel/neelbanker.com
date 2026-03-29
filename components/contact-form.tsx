@@ -32,7 +32,7 @@ export function ContactForm() {
     return (
       <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-6 text-center">
         <p className="text-lg font-semibold text-emerald-400">Message received ✓</p>
-        <p className="mt-2 text-sm text-muted-foreground">I'll get back to you within 2 business days.</p>
+        <p className="mt-2 text-sm text-muted-foreground">I&apos;ll get back to you within 2 business days.</p>
       </div>
     )
   }
@@ -65,7 +65,7 @@ export function ContactForm() {
         </select>
       </div>
       <div>
-        <label className="mb-1.5 block text-sm font-medium">Brief description of what you're building</label>
+        <label className="mb-1.5 block text-sm font-medium">Brief description of what you&apos;re building</label>
         <textarea required rows={4} value={form.description} onChange={(e) => update('description', e.target.value)}
           className="w-full rounded-md border border-border bg-muted px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary resize-none" />
       </div>
