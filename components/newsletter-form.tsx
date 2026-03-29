@@ -35,7 +35,7 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
         disabled={state === 'loading'}
         className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground disabled:opacity-50 whitespace-nowrap"
       >
-        {state === 'loading' ? '…' : 'Get The Architect&apos;s Brief →'}
+        {state === 'loading' ? '…' : "Get The Architect's Brief →"}
       </button>
       {state === 'error' && (
         <p className="text-sm text-red-400">Something went wrong. Try again.</p>

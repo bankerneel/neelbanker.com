@@ -45,6 +45,14 @@ export default function HomePage() {
           </p>
           <NewsletterForm />
           <p className="mt-3 text-xs text-muted-foreground font-mono">Free · Weekly · No spam</p>
+          <div className="mt-8">
+            <Link
+              href="/about"
+              className="inline-flex items-center border border-border px-5 py-3 text-sm font-semibold uppercase tracking-[0.14em] text-foreground transition-all duration-200 hover:border-primary hover:bg-primary hover:text-primary-foreground"
+            >
+              About Neel →
+            </Link>
+          </div>
         </div>
       </section>
 
