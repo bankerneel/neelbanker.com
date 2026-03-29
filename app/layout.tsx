@@ -22,6 +22,10 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://neelbanker.com'),
   title: { default: 'Neel Banker — Blockchain Architect', template: '%s | Neel Banker' },
   description: 'Senior Blockchain Architect writing on Web3, AI, and engineering leadership.',
+  icons: {
+    icon: [{ url: '/favicon.svg', type: 'image/svg+xml' }],
+    shortcut: '/favicon.svg',
+  },
   openGraph: {
     type: 'website',
     locale: 'en_US',
