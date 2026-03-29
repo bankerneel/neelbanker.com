@@ -28,6 +28,7 @@ Current stack: Next.js 16 App Router · Tailwind v4 · shadcn/ui · MDX · Resen
 
 - `lib/mdx.ts` uses Node.js `fs`/`path` — **never import in `'use client'` components**
 - Pure client-safe utils live in `lib/utils-date.ts`
+- Shared client-safe contact validation lives in `lib/contact-schema.ts`
 - Components that filter/display articles must import `parseDate` from `lib/utils-date.ts`, not `lib/mdx.ts`
 - Cal.com embed code belongs in a dedicated client component (`components/cal-booking-embed.tsx`), not directly in a server route
 
@@ -57,6 +58,7 @@ Current stack: Next.js 16 App Router · Tailwind v4 · shadcn/ui · MDX · Resen
 
 - Apply `escapeHtml()` to **all user-supplied fields** before HTML email interpolation
 - Validate all API route inputs with **Zod**
+- Keep contact form validation logic shared between client and server; do not let UI and API rules drift apart
 - Never expose raw error messages to API responses — use generic user-facing messages
 
 ## Testing
@@ -84,6 +86,7 @@ Current stack: Next.js 16 App Router · Tailwind v4 · shadcn/ui · MDX · Resen
 - Do not add `tailwind.config.ts`
 - Do not add `runtime = 'edge'` to OG image files
 - Do not import `lib/mdx.ts` in client components
+- Do not duplicate contact validation rules separately in the form and API when `lib/contact-schema.ts` can be shared
 - Do not call Resend Audience API without checking `NEWSLETTER_AUDIENCE_ID`
 - Do not interpolate user input into HTML without `escapeHtml()`
 - Do not add `getProjectBySlug` — projects page is list-only (YAGNI)

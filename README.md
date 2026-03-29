@@ -57,6 +57,7 @@ docs/
 public/
   favicon.svg
 lib/
+  contact-schema.ts
   mdx.ts
   pillars.ts
   resend.ts
@@ -149,6 +150,7 @@ Detailed authoring instructions live in [docs/content-authoring.md](/home/dexter
 - Default to Server Components; only use `'use client'` for interactive UI.
 - Do not import `lib/mdx.ts` into client components because it uses Node `fs` and `path`.
 - Client-safe date helpers live in `lib/utils-date.ts`.
+- Contact form validation is shared between client and server via `lib/contact-schema.ts`.
 - OG image generation stays on the Node.js runtime.
 - Root OG image lives at `app/opengraph-image.tsx`; article OG images live at `app/writing/[slug]/opengraph-image.tsx`.
 - Tailwind v4 is CSS-first in `app/globals.css`; there is no `tailwind.config.ts`.
@@ -157,6 +159,7 @@ Detailed authoring instructions live in [docs/content-authoring.md](/home/dexter
 - Standalone pages and article pages include in-page navigation CTAs so users do not rely only on browser back buttons.
 - Newsletter emails use `NEWSLETTER_FROM_EMAIL`; contact emails and auto-replies use `ENQUIRY_FROM_EMAIL`.
 - Contacts are stored in Resend Audience, but a custom weekly send/unsubscribe flow has not been built in this repo yet.
+- The contact form performs client-side validation and highlights invalid fields before submitting to `/api/contact`.
 
 ## Testing
 
