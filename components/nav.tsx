@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { cn } from '@/lib/utils'
 
 const links = [
+  { href: '/about', label: 'About' },
   { href: '/writing', label: 'Writing' },
   { href: '/resources', label: 'Resources' },
   { href: '/projects', label: 'Projects' },

@@ -10,6 +10,7 @@ export function Footer() {
             <p className="mt-1 text-sm text-muted-foreground">Senior Blockchain Architect · Ahmedabad, India</p>
           </div>
           <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted-foreground">
+            <Link href="/about" className="hover:text-foreground transition-colors">About</Link>
             <Link href="/writing" className="hover:text-foreground transition-colors">Writing</Link>
             <Link href="/resources" className="hover:text-foreground transition-colors">Resources</Link>
             <Link href="/projects" className="hover:text-foreground transition-colors">Projects</Link>
