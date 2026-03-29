@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { NewsletterForm } from '@/components/newsletter-form'
 
 export const metadata: Metadata = {
@@ -9,6 +10,15 @@ export const metadata: Metadata = {
 export default function NewsletterPage() {
   return (
     <div className="mx-auto max-w-2xl px-6 py-16">
+      <div className="mb-8 flex flex-wrap items-center gap-3 text-sm">
+        <Link href="/" className="font-mono uppercase tracking-[0.14em] text-muted-foreground transition-colors hover:text-primary">
+          ← Home
+        </Link>
+        <span className="text-muted-foreground">/</span>
+        <Link href="/writing" className="font-mono uppercase tracking-[0.14em] text-muted-foreground transition-colors hover:text-primary">
+          Writing
+        </Link>
+      </div>
       <p className="mb-3 font-mono text-sm font-semibold text-primary">Free · Weekly</p>
       <h1 className="mb-4 text-4xl font-extrabold">The Architect&apos;s Brief</h1>
       <p className="mb-6 text-lg text-muted-foreground">

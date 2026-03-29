@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { CalBookingEmbed } from '@/components/cal-booking-embed'
 import { ContactForm } from '@/components/contact-form'
 
@@ -33,6 +34,15 @@ const services = [
 export default function WorkWithMePage() {
   return (
     <div className="mx-auto max-w-4xl px-6 py-16">
+      <div className="mb-8 flex flex-wrap items-center gap-3 text-sm">
+        <Link href="/" className="font-mono uppercase tracking-[0.14em] text-muted-foreground transition-colors hover:text-primary">
+          ← Home
+        </Link>
+        <span className="text-muted-foreground">/</span>
+        <Link href="/about" className="font-mono uppercase tracking-[0.14em] text-muted-foreground transition-colors hover:text-primary">
+          About
+        </Link>
+      </div>
       <h1 className="mb-2 text-3xl font-bold">Work With Me</h1>
       <p className="mb-12 max-w-xl text-muted-foreground">
         I work with a small number of clients at a time. If you&apos;re building something in blockchain, AI, or distributed systems,
@@ -70,6 +80,14 @@ export default function WorkWithMePage() {
           Prefer to describe your project first? Send a message and I&apos;ll respond within 2 business days.
         </p>
         <ContactForm />
+        <div className="mt-8 flex flex-wrap items-center gap-4 text-sm">
+          <Link href="/projects" className="font-semibold text-foreground transition-colors hover:text-primary">
+            See project case studies →
+          </Link>
+          <Link href="/writing" className="font-semibold text-muted-foreground transition-colors hover:text-primary">
+            Read recent writing →
+          </Link>
+        </div>
       </div>
     </div>
   )
