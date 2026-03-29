@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import { resend, FROM_EMAIL, NEWSLETTER_AUDIENCE_ID } from '@/lib/resend'
+import { NEWSLETTER_AUDIENCE_ID, NEWSLETTER_FROM_EMAIL, resend } from '@/lib/resend'
 
 const schema = z.object({ email: z.string().email() })
 
@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
   })
 
   await resend.emails.send({
-    from: FROM_EMAIL,
+    from: NEWSLETTER_FROM_EMAIL,
     to: email,
     subject: "You're subscribed to The Architect's Brief",
     html: `<p>Welcome — you're subscribed to <strong>The Architect's Brief</strong>.</p>

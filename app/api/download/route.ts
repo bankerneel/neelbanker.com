@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import { resend, FROM_EMAIL, NEWSLETTER_AUDIENCE_ID } from '@/lib/resend'
+import { NEWSLETTER_AUDIENCE_ID, NEWSLETTER_FROM_EMAIL, resend } from '@/lib/resend'
 import { getAllResourceMeta } from '@/lib/mdx'
 
 const schema = z.object({
@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
 
     // Send download link by email
     await resend.emails.send({
-      from: FROM_EMAIL,
+      from: NEWSLETTER_FROM_EMAIL,
       to: email,
       subject: `Your download: ${resource.title}`,
       html: `<p>Thanks for downloading <strong>${resource.title}</strong>.</p>
