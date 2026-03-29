@@ -14,6 +14,7 @@ Current stack: Next.js 16 App Router · Tailwind v4 · shadcn/ui · MDX · Resen
 - Server Actions (`'use server'`) for mutations, Route Handlers only for public APIs
 - OG images use **Node.js runtime** (not Edge) — `getAllArticleMeta` requires `fs`
 - Root layout currently uses `suppressHydrationWarning` on `<html>` and `<body>` to reduce noise from browser extensions that mutate the DOM before hydration
+- Root OG image is `app/opengraph-image.tsx`
 - Writing detail pages exist at `app/writing/[slug]/page.tsx` and article OG images at `app/writing/[slug]/opengraph-image.tsx`
 
 ## Critical: Tailwind v4
@@ -39,6 +40,7 @@ Current stack: Next.js 16 App Router · Tailwind v4 · shadcn/ui · MDX · Resen
 - Current top-level routes are `/`, `/about`, `/newsletter`, `/projects`, `/resources`, `/work-with-me`, and `/writing`
 - Content authoring instructions live in `docs/content-authoring.md` and are indexed from `docs/README.md`
 - Article slugs are filename-based and resolve under `/writing/[slug]`
+- Standalone pages and article pages include local navigation CTAs; preserve that flow when adding new pages
 
 ## Email (Resend)
 
@@ -60,7 +62,8 @@ Current stack: Next.js 16 App Router · Tailwind v4 · shadcn/ui · MDX · Resen
 - E2E tests: Playwright (`npm run test:e2e`) — webServer config auto-starts dev server
 - E2E specs live in `e2e/`
 - Linting: `npm run lint`
-- Git hooks: Husky pre-commit runs `npm run lint` before a commit is created
+- Type checking: `npm run typecheck`
+- Git hooks: Husky pre-commit runs `npm run lint` and `npm run typecheck` before a commit is created
 - Useful local scripts also include `npm run prepare`, `npm run test:watch`, and `npm run test:ui`
 
 ## Design
@@ -70,6 +73,8 @@ Current stack: Next.js 16 App Router · Tailwind v4 · shadcn/ui · MDX · Resen
 - Background is near-black editorial dark (`hsl(0 0% 3.5%)`) with warm foreground text (`hsl(36 15% 91%)`)
 - Syne for display/UI voice, JetBrains Mono for code/metrics/IDs
 - Spacing and typography create hierarchy — avoid adding new colour variables without reason
+- Favicon source is `public/favicon.svg`; do not reintroduce `app/favicon.ico` unless intentionally switching back to file-based icons
+- OG images should match the live editorial brand: dark background, warm text, and lime/cyan/orange accents
 
 ## What NOT to do
 
@@ -81,5 +86,7 @@ Current stack: Next.js 16 App Router · Tailwind v4 · shadcn/ui · MDX · Resen
 - Do not add `getProjectBySlug` — projects page is list-only (YAGNI)
 - Do not put Cal.com embed bootstrapping directly inside `app/work-with-me/page.tsx`; keep it inside the client component
 - Do not remove or bypass the Husky pre-commit lint hook without a strong reason
+- Do not remove or bypass the Husky pre-commit typecheck without a strong reason
 - Do not document content under `content/articles`; the live article directory is `content/writing`
 - Do not describe the brand colors as indigo/emerald/amber unless the theme tokens are actually changed in `app/globals.css`
+- Do not add `app/favicon.ico` back unless you explicitly want Next.js to auto-inject an `.ico` favicon again

@@ -49,9 +49,13 @@ components/
   pillar-badge.tsx
   pillar-filter.tsx
 content/
-  articles/
+  writing/
   resources/
   projects/
+docs/
+  content-authoring.md
+public/
+  favicon.svg
 lib/
   mdx.ts
   pillars.ts
@@ -95,6 +99,7 @@ npm run dev         # Start local dev server
 npm run build       # Production build
 npm run start       # Run built app
 npm run lint        # ESLint
+npm run typecheck   # TypeScript checking
 npm run test        # Vitest unit tests
 npm run test:e2e    # Playwright end-to-end tests
 npm run prepare     # Install Husky Git hooks
@@ -112,6 +117,7 @@ That hook runs:
 
 ```bash
 npm run lint
+npm run typecheck
 ```
 
 If lint fails, the commit is blocked before it is created.
@@ -140,13 +146,17 @@ Detailed authoring instructions live in [docs/content-authoring.md](/home/dexter
 - Do not import `lib/mdx.ts` into client components because it uses Node `fs` and `path`.
 - Client-safe date helpers live in `lib/utils-date.ts`.
 - OG image generation stays on the Node.js runtime.
+- Root OG image lives at `app/opengraph-image.tsx`; article OG images live at `app/writing/[slug]/opengraph-image.tsx`.
 - Tailwind v4 is CSS-first in `app/globals.css`; there is no `tailwind.config.ts`.
 - The booking widget on `/work-with-me` uses `@calcom/embed-react` via `components/cal-booking-embed.tsx`.
+- The site uses `public/favicon.svg` as the favicon source; `app/favicon.ico` is intentionally absent.
+- Standalone pages and article pages include in-page navigation CTAs so users do not rely only on browser back buttons.
 
 ## Testing
 
 ```bash
 npm run lint
+npm run typecheck
 npm run test
 npm run test:e2e
 ```
