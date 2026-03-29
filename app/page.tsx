@@ -5,6 +5,12 @@ import { NewsletterForm } from '@/components/newsletter-form'
 import { ServiceCard } from '@/components/service-card'
 import { PILLARS } from '@/lib/pillars'
 
+const PILLAR_HOVER_BG: Record<string, string> = {
+  blockchain: 'hover:bg-primary',
+  ai: 'hover:bg-cyan-400',
+  leadership: 'hover:bg-orange-500',
+}
+
 export default function HomePage() {
   const articles = getAllArticleMeta().slice(0, 3)
   const resources = getAllResourceMeta()
@@ -17,80 +23,123 @@ export default function HomePage() {
   ]
 
   const services = [
-    { title: '1:1 Strategy Call', description: '45-min focused session on your architecture, stack decisions, or team challenges.' },
-    { title: 'Smart Contract Audit', description: 'Security + logic review with written report and 60-min debrief.' },
-    { title: 'Architecture Review', description: 'Deep review of your blockchain or backend stack with written recommendations.' },
-    { title: 'Fractional CTO', description: 'Monthly retainer with weekly calls, async Slack access, and architecture decisions.' },
+    {
+      title: '1:1 Strategy Call',
+      description: '45-min focused session on your architecture, stack decisions, or team challenges.',
+      meta: '45 MIN / REMOTE',
+    },
+    {
+      title: 'Smart Contract Audit',
+      description: 'Security + logic review with written report and 60-min debrief.',
+      meta: '2–4 WEEKS / PROJECT',
+    },
+    {
+      title: 'Architecture Review',
+      description: 'Deep review of your blockchain or backend stack with written recommendations.',
+      meta: '1 WEEK / ASYNC',
+    },
+    {
+      title: 'Fractional CTO',
+      description: 'Monthly retainer with weekly calls, async Slack access, and architecture decisions.',
+      meta: 'RETAINER / MONTHLY',
+    },
+  ]
+
+  const stats = [
+    { value: '6+', label: 'Years Building' },
+    { value: '20+', label: 'Contracts Deployed' },
+    { value: '3', label: 'Focus Pillars' },
   ]
 
   return (
     <>
       {/* ── Hero ─────────────────────────────────────────── */}
-      <section className="mx-auto max-w-5xl xl:max-w-6xl px-4 sm:px-6 pt-14 sm:pt-20 md:pt-24 pb-12 sm:pb-16 border-b border-border">
-        <p className="font-mono text-xs tracking-[0.22em] uppercase text-muted-foreground mb-8 sm:mb-10">
-          Senior Blockchain Architect · Ahmedabad, India
-        </p>
-        <h1
-          className="font-extrabold uppercase leading-[0.88] tracking-tighter mb-8 sm:mb-10"
-          style={{ fontSize: 'clamp(2.8rem, 9vw, 8rem)' }}
-        >
-          Building<br />
-          <span className="text-primary">What&apos;s</span><br />
-          Next.
-        </h1>
-        <div className="max-w-lg">
-          <p className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 leading-relaxed">
-            6+ years designing smart contracts, custody infrastructure, and AI-native Web3 systems.
-            Writing weekly on the future of decentralised tech.
-          </p>
-          <NewsletterForm />
-          <p className="mt-3 text-xs text-muted-foreground font-mono">Free · Weekly · No spam</p>
-          <div className="mt-8">
-            <Link
-              href="/about"
-              className="inline-flex items-center border border-border px-5 py-3 text-sm font-semibold uppercase tracking-[0.14em] text-foreground transition-all duration-200 hover:border-primary hover:bg-primary hover:text-primary-foreground"
+      <section className="mx-auto max-w-5xl xl:max-w-6xl 2xl:max-w-7xl 3xl:max-w-[1440px] px-6 sm:px-12 py-20 md:py-28 relative overflow-hidden border-b border-border">
+        <div className="flex flex-col lg:flex-row justify-between items-start gap-12">
+          <div className="flex-1 z-10">
+            <p className="font-mono text-xs tracking-[0.2em] uppercase text-muted-foreground mb-8">
+              Senior Blockchain Architect · Ahmedabad, India
+            </p>
+            <h1
+              className="font-extrabold uppercase leading-[0.85] tracking-tighter mb-12"
+              style={{ fontSize: 'clamp(3rem, 9vw, 10rem)' }}
             >
-              About Neel →
-            </Link>
+              Building<br />
+              <span className="italic text-stroke">What&apos;s</span><br />
+              Next.
+            </h1>
+            <div className="max-w-[420px]">
+              <p className="text-base leading-[1.7] text-muted-foreground mb-8">
+                6+ years designing smart contracts, custody infrastructure, and AI-native Web3 systems.
+                Writing weekly on the future of decentralised tech.
+              </p>
+              <NewsletterForm />
+              <p className="font-mono text-[10px] text-muted-foreground mt-3 tracking-widest uppercase">
+                Free · Weekly · No Spam
+              </p>
+              <div className="mt-8">
+                <Link
+                  href="/about"
+                  className="inline-flex items-center border border-border px-5 py-3 text-sm font-semibold uppercase tracking-[0.14em] text-foreground transition-all duration-200 hover:border-primary hover:bg-primary hover:text-primary-foreground"
+                >
+                  About Neel →
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Decorative vertical watermark — large screens only */}
+          <div aria-hidden="true" className="hidden lg:flex items-start pt-2 pointer-events-none select-none shrink-0">
+            <span
+              className="font-extrabold uppercase text-foreground/[0.035]"
+              style={{
+                writingMode: 'vertical-rl',
+                fontSize: '7rem',
+                letterSpacing: '0.28em',
+                lineHeight: 1,
+              }}
+            >
+              Proof·of·Work
+            </span>
           </div>
         </div>
       </section>
 
       {/* ── Tech marquee ─────────────────────────────────── */}
-      <div className="bg-primary overflow-hidden py-3 select-none">
+      <div className="bg-primary overflow-hidden py-4 select-none">
         <div className="flex animate-marquee whitespace-nowrap">
           {[...techStack, ...techStack].map((item, i) => (
-            <span key={i} className="font-mono text-xs font-bold tracking-widest uppercase text-primary-foreground mx-5">
+            <span key={i} className="font-mono text-sm font-bold tracking-widest uppercase text-primary-foreground mx-8">
               {item}
-              <span className="text-primary-foreground/40 ml-5">·</span>
             </span>
           ))}
         </div>
       </div>
 
-      <div className="mx-auto max-w-5xl xl:max-w-6xl px-4 sm:px-6">
+      <div className="mx-auto max-w-5xl xl:max-w-6xl 2xl:max-w-7xl 3xl:max-w-[1440px] px-6 sm:px-12">
 
         {/* ── Stats ────────────────────────────────────────── */}
-        <section className="flex flex-wrap gap-8 sm:gap-12 md:gap-16 py-10 sm:py-12 border-b border-border">
-          <div>
-            <p className="text-4xl sm:text-5xl font-extrabold text-primary leading-none">6+</p>
-            <p className="mt-2 text-xs uppercase tracking-[0.18em] text-muted-foreground font-mono">Years building</p>
-          </div>
-          <div>
-            <p className="text-4xl sm:text-5xl font-extrabold leading-none">20+</p>
-            <p className="mt-2 text-xs uppercase tracking-[0.18em] text-muted-foreground font-mono">Contracts deployed</p>
-          </div>
-          <div>
-            <p className="text-4xl sm:text-5xl font-extrabold leading-none">3</p>
-            <p className="mt-2 text-xs uppercase tracking-[0.18em] text-muted-foreground font-mono">Focus pillars</p>
-          </div>
+        <section className="py-20 sm:py-24 grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-0 border-b border-border">
+          {stats.map((stat, i) => (
+            <div
+              key={i}
+              className={`flex flex-col gap-3 ${i > 0 ? 'md:border-l md:border-border md:pl-12' : ''}`}
+            >
+              <span className="font-extrabold text-7xl sm:text-8xl text-primary leading-none tabular-nums">
+                {stat.value}
+              </span>
+              <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+                {stat.label}
+              </span>
+            </div>
+          ))}
         </section>
 
         {/* ── Latest writing ───────────────────────────────── */}
-        <section className="py-8 sm:py-10 border-b border-border">
-          <div className="flex items-baseline justify-between mb-1">
-            <h2 className="font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">Latest Writing</h2>
-            <Link href="/writing" className="font-mono text-xs text-muted-foreground hover:text-primary transition-colors">
+        <section className="py-16 sm:py-20 border-b border-border">
+          <div className="flex items-end justify-between mb-12 sm:mb-16">
+            <h2 className="font-extrabold text-3xl sm:text-4xl uppercase tracking-tighter">Latest Writing</h2>
+            <Link href="/writing" className="font-mono text-xs uppercase text-primary hover:underline underline-offset-8 transition-colors">
               All articles →
             </Link>
           </div>
@@ -100,22 +149,31 @@ export default function HomePage() {
         </section>
 
         {/* ── Pillars ──────────────────────────────────────── */}
-        <section className="py-8 sm:py-10 border-b border-border">
-          <h2 className="font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground mb-1">Focus Areas</h2>
-          <div>
-            {PILLARS.map((p) => (
+        <section className="py-16 sm:py-20 border-b border-border">
+          <h2 className="font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground mb-8">Focus Areas</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 border border-border">
+            {PILLARS.map((p, i) => (
               <Link
                 key={p.slug}
                 href={`/writing?pillar=${p.slug}`}
-                className="group flex items-center justify-between py-4 sm:py-5 border-b border-border last:border-0 hover:pl-3 transition-all duration-200"
+                className={[
+                  'group p-8 md:p-10 transition-colors duration-300',
+                  PILLAR_HOVER_BG[p.slug] ?? 'hover:bg-primary',
+                  i < PILLARS.length - 1
+                    ? 'border-b md:border-b-0 md:border-r border-border'
+                    : '',
+                ].join(' ')}
               >
-                <div className="flex items-center gap-3 sm:gap-4">
-                  <span className="text-lg sm:text-xl">{p.emoji}</span>
-                  <span className={`text-base sm:text-lg font-bold uppercase tracking-wide ${p.textClass}`}>
-                    {p.label}
-                  </span>
+                <div className="flex justify-between items-start mb-10">
+                  <span className="text-3xl">{p.emoji}</span>
+                  <span className="text-muted-foreground group-hover:text-background transition-colors duration-300">→</span>
                 </div>
-                <span className="text-muted-foreground group-hover:text-foreground group-hover:translate-x-1 transition-all duration-200">→</span>
+                <p className={`font-mono text-[10px] uppercase tracking-widest mb-3 ${p.textClass} group-hover:text-background transition-colors duration-300`}>
+                  Focus 0{i + 1}
+                </p>
+                <h4 className="font-bold text-2xl sm:text-3xl uppercase tracking-tight group-hover:text-background transition-colors duration-300">
+                  {p.label}
+                </h4>
               </Link>
             ))}
           </div>
@@ -123,35 +181,44 @@ export default function HomePage() {
 
         {/* ── Featured resource ────────────────────────────── */}
         {featuredResource && (
-          <section className="py-8 sm:py-10 border-b border-border">
-            <h2 className="font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground mb-6">Free Resource</h2>
-            <div className="group flex flex-col sm:flex-row sm:items-center justify-between gap-5 sm:gap-6 p-5 sm:p-6 border border-border hover:border-primary/40 transition-colors duration-200">
-              <div>
-                <p className="font-mono text-xs tracking-widest uppercase text-primary mb-2">Download Free</p>
-                <h3 className="font-bold text-base group-hover:text-primary transition-colors duration-200">{featuredResource.title}</h3>
-                <p className="mt-1 text-sm text-muted-foreground">{featuredResource.description}</p>
+          <section className="py-16 sm:py-20 border-b border-border">
+            <h2 className="font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground mb-8">Free Resource</h2>
+            <div className="relative border-2 border-primary p-8 sm:p-14 overflow-hidden flex flex-col sm:flex-row items-start sm:items-center gap-10">
+              {/* Decorative rotated square */}
+              <div
+                aria-hidden="true"
+                className="absolute -right-16 -top-16 w-56 h-56 border border-primary/20 rotate-45 pointer-events-none"
+              />
+              <div className="flex-1 relative z-10">
+                <p className="font-mono text-xs uppercase tracking-[0.3em] text-primary mb-4">Download Free</p>
+                <h3 className="font-bold text-3xl sm:text-4xl uppercase tracking-tight mb-4 leading-tight">
+                  {featuredResource.title}
+                </h3>
+                <p className="text-muted-foreground leading-[1.7] max-w-md mb-8 text-sm sm:text-base">
+                  {featuredResource.description}
+                </p>
+                <Link
+                  href="/resources"
+                  className="inline-block bg-primary text-primary-foreground px-8 py-4 font-mono font-bold uppercase text-xs tracking-widest hover:bg-foreground hover:text-background transition-colors duration-200"
+                >
+                  Get It Free →
+                </Link>
               </div>
-              <Link
-                href="/resources"
-                className="shrink-0 border border-primary/40 px-5 py-2.5 text-sm font-semibold text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-200 whitespace-nowrap text-center sm:text-left"
-              >
-                Get It Free →
-              </Link>
             </div>
           </section>
         )}
 
         {/* ── Services ─────────────────────────────────────── */}
-        <section className="py-8 sm:py-10">
-          <div className="flex items-baseline justify-between mb-1">
-            <h2 className="font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">Work With Me</h2>
-            <Link href="/work-with-me" className="font-mono text-xs text-muted-foreground hover:text-primary transition-colors">
+        <section className="py-16 sm:py-20">
+          <div className="flex items-end justify-between mb-12 sm:mb-16">
+            <h2 className="font-extrabold text-3xl sm:text-4xl uppercase tracking-tighter">Work With Me</h2>
+            <Link href="/work-with-me" className="font-mono text-xs uppercase text-primary hover:underline underline-offset-8 transition-colors">
               All services →
             </Link>
           </div>
           <div>
             {services.map((s, i) => (
-              <ServiceCard key={s.title} title={s.title} description={s.description} index={i} />
+              <ServiceCard key={s.title} title={s.title} description={s.description} index={i} meta={s.meta} />
             ))}
           </div>
         </section>

@@ -161,6 +161,34 @@ Detailed authoring instructions live in [docs/content-authoring.md](/home/dexter
 - Contacts are stored in Resend Audience, but a custom weekly send/unsubscribe flow has not been built in this repo yet.
 - The contact form performs client-side validation and highlights invalid fields before submitting to `/api/contact`.
 
+## UI/UX Design System
+
+### Editorial header pattern (all inner pages)
+
+Every inner page opens with an `<section className="border-b border-border">` containing:
+1. Breadcrumb row — `font-mono text-xs uppercase tracking-[0.14em]`
+2. Section label — `font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground mb-4`
+3. Display h1 — `font-extrabold text-4xl sm:text-5xl md:text-6xl uppercase tracking-tighter leading-[0.9]`
+
+### Interactive element rules
+
+- `cursor-pointer` on all buttons and link-styled elements
+- `disabled:cursor-not-allowed` on disabled states
+- Focus: `focus-visible:ring-2 focus-visible:ring-primary` — **never** `focus:ring-0`
+- Hover animation: `transition-colors duration-200` only — no `transition-all`, no layout-shifting properties
+
+### Motion preferences
+
+`app/globals.css` includes `@media (prefers-reduced-motion: reduce)` that freezes all animations. The homepage marquee pauses. Any new `@keyframes` must be guarded by this rule.
+
+### ArticleCard layout
+
+`ArticleCard` is a full-width horizontal row. Never put it in a multi-column grid. Use a plain stacked `<div>` wrapper.
+
+### Grid dividers
+
+Use `grid gap-px bg-border` + `bg-background` cells for hairline dividers — this is the pattern used in service cards and project cards.
+
 ## Testing
 
 ```bash

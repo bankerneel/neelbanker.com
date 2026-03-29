@@ -23,12 +23,13 @@ export function ResourceCard({ resource }: { resource: ResourceMeta }) {
   }
 
   return (
-    <div className="rounded-lg border border-border p-6">
-      <h3 className="mb-2 text-base font-semibold">{resource.title}</h3>
-      <p className="mb-4 text-sm text-muted-foreground">{resource.description}</p>
+    <div className="border border-border p-6">
+      <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground mb-3">Free Download</p>
+      <h3 className="font-extrabold text-base uppercase tracking-tight mb-2">{resource.title}</h3>
+      <p className="text-sm text-muted-foreground leading-relaxed mb-5">{resource.description}</p>
 
       {state === 'done' ? (
-        <p className="text-sm text-emerald-400">✓ Download started. Check your inbox for a copy too.</p>
+        <p className="font-mono text-xs text-primary uppercase tracking-widest">Download started. Check your inbox for a copy.</p>
       ) : (
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
           <input
@@ -37,25 +38,28 @@ export function ResourceCard({ resource }: { resource: ResourceMeta }) {
             placeholder="your@email.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="rounded-md border border-border bg-muted px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+            suppressHydrationWarning
+            className="border border-border bg-muted px-3 py-2.5 text-sm font-mono placeholder:text-muted-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"
           />
-          <label className="flex items-start gap-2 text-sm text-muted-foreground">
+          <label className="flex items-start gap-2.5 text-xs text-muted-foreground cursor-pointer">
             <input
               type="checkbox"
               checked={optIn}
               onChange={(e) => setOptIn(e.target.checked)}
-              className="mt-0.5"
+              className="mt-0.5 cursor-pointer accent-[hsl(72_100%_49%)]"
             />
-            Send me The Architect&#39;s Brief — weekly insights on blockchain &amp; AI
+            Send me The Architect&apos;s Brief — weekly insights on blockchain &amp; AI
           </label>
           <button
             type="submit"
             disabled={state === 'loading'}
-            className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground disabled:opacity-50"
+            className="cursor-pointer bg-primary px-4 py-2.5 font-mono text-xs font-bold uppercase tracking-widest text-primary-foreground transition-colors hover:bg-foreground hover:text-background disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             {state === 'loading' ? 'Sending…' : 'Download Free →'}
           </button>
-          {state === 'error' && <p className="text-sm text-red-400">Something went wrong. Please try again.</p>}
+          {state === 'error' && (
+            <p className="font-mono text-xs text-red-400 uppercase tracking-widest">Something went wrong. Please try again.</p>
+          )}
         </form>
       )}
     </div>

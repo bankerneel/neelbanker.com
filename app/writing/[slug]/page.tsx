@@ -26,42 +26,58 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
   if (!article) notFound()
 
   return (
-    <article className="mx-auto max-w-2xl px-6 py-16">
-      <div className="mb-8 flex flex-wrap items-center gap-3 text-sm">
-        <Link href="/writing" className="font-mono uppercase tracking-[0.14em] text-muted-foreground transition-colors hover:text-primary">
+    <article className="mx-auto max-w-2xl px-6 sm:px-12 py-16 sm:py-20">
+
+      {/* ── Breadcrumb ───────────────────────────────────── */}
+      <div className="mb-10 flex flex-wrap items-center gap-3">
+        <Link href="/writing" className="font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground transition-colors hover:text-primary">
           ← All Articles
         </Link>
-        <span className="text-muted-foreground">/</span>
-        <Link href="/" className="font-mono uppercase tracking-[0.14em] text-muted-foreground transition-colors hover:text-primary">
+        <span className="text-muted-foreground text-xs">/</span>
+        <Link href="/" className="font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground transition-colors hover:text-primary">
           Home
         </Link>
       </div>
-      <div className="mb-4 flex items-center gap-3">
+
+      {/* ── Article meta ─────────────────────────────────── */}
+      <div className="mb-5 flex flex-wrap items-center gap-3">
         <PillarBadge pillar={article.pillar} />
-        <span className="font-mono text-sm text-muted-foreground">{parseDate(article.date)}</span>
-        <span className="text-sm text-muted-foreground">·</span>
-        <span className="text-sm text-muted-foreground">{article.readingTime} min read</span>
+        <span className="font-mono text-xs text-muted-foreground">{parseDate(article.date)}</span>
+        <span className="text-muted-foreground text-xs">·</span>
+        <span className="font-mono text-xs text-muted-foreground">{article.readingTime} min read</span>
       </div>
-      <h1 className="mb-6 text-3xl font-bold leading-tight">{article.title}</h1>
-      {/* MDXRemote from next-mdx-remote/rsc accepts raw MDX string in App Router */}
+
+      {/* ── Title ────────────────────────────────────────── */}
+      <h1 className="mb-8 text-2xl sm:text-3xl font-bold leading-snug tracking-tight">{article.title}</h1>
+
+      {/* ── Body ─────────────────────────────────────────── */}
       <div className="prose prose-invert prose-zinc max-w-none">
         <MDXRemote source={article.content} />
       </div>
-      <div className="mt-16 rounded-lg border border-border bg-muted/30 p-6 text-center">
-        <p className="mb-1 text-sm font-semibold">Enjoyed this?</p>
-        <p className="mb-4 text-sm text-muted-foreground">Get The Architect&apos;s Brief — weekly insights on blockchain, AI, and engineering.</p>
-        <Link href="/newsletter" className="inline-flex items-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground">
-          Subscribe free →
+
+      {/* ── Newsletter CTA ───────────────────────────────── */}
+      <div className="mt-16 border-t border-border pt-10">
+        <p className="font-mono text-xs uppercase tracking-[0.22em] text-primary mb-3">Free · Weekly</p>
+        <p className="font-extrabold text-xl sm:text-2xl uppercase tracking-tighter mb-2">Enjoyed This?</p>
+        <p className="text-sm text-muted-foreground leading-relaxed mb-6 max-w-md">
+          Get The Architect&apos;s Brief — weekly insights on blockchain architecture, AI × Web3, and engineering leadership.
+        </p>
+        <Link
+          href="/newsletter"
+          className="inline-flex items-center bg-primary px-5 py-2.5 font-mono text-xs font-bold uppercase tracking-widest text-primary-foreground transition-colors hover:bg-foreground hover:text-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        >
+          Subscribe Free →
         </Link>
-        <div className="mt-4 flex items-center justify-center gap-6 text-sm">
-          <Link href="/writing" className="font-semibold text-muted-foreground transition-colors hover:text-primary">
-            Back to all articles
+        <div className="mt-8 flex flex-wrap items-center gap-6">
+          <Link href="/writing" className="font-mono text-xs uppercase tracking-widest text-muted-foreground transition-colors hover:text-primary">
+            ← Back to all articles
           </Link>
-          <Link href="/work-with-me" className="font-semibold text-muted-foreground transition-colors hover:text-primary">
-            Work with Neel
+          <Link href="/work-with-me" className="font-mono text-xs uppercase tracking-widest text-muted-foreground transition-colors hover:text-primary">
+            Work with Neel →
           </Link>
         </div>
       </div>
+
     </article>
   )
 }

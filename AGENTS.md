@@ -81,6 +81,69 @@ Current stack: Next.js 16 App Router · Tailwind v4 · shadcn/ui · MDX · Resen
 - Favicon source is `public/favicon.svg`; do not reintroduce `app/favicon.ico` unless intentionally switching back to file-based icons
 - OG images should match the live editorial brand: dark background, warm text, and lime/cyan/orange accents
 
+## Design: Responsive container scale
+
+Every wide container (nav, footer, hero, page headers, content sections) must use the full 4-stop responsive max-width:
+
+```
+max-w-5xl xl:max-w-6xl 2xl:max-w-7xl 3xl:max-w-[1440px]
+```
+
+| Breakpoint | Value | Target |
+|---|---|---|
+| default | `max-w-5xl` = 1024px | Mobile / small tablet |
+| `xl` (1280px+) | `max-w-6xl` = 1152px | Laptop / desktop 1080p |
+| `2xl` (1536px+) | `max-w-7xl` = 1280px | Large desktop / 1440p |
+| `3xl` (1920px+) | `1440px` | 2K native / 4K at 200% DPI |
+
+The `3xl` breakpoint (`--breakpoint-3xl: 1920px`) is registered in `app/globals.css`.
+
+**Prose containers** (`max-w-2xl`) stay narrow for readability and do NOT follow this scale.
+**Hero font clamp**: `clamp(3rem, 9vw, 10rem)` — vw-based so it scales with viewport, capped at 160px.
+
+## Design: Inner page header pattern
+
+Every inner page (about, writing, newsletter, resources, projects, work-with-me, article detail) must use the editorial heading system:
+
+```tsx
+{/* Section label */}
+<p className="font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground mb-4">
+  Section Label
+</p>
+{/* Display heading */}
+<h1 className="font-extrabold text-4xl sm:text-5xl md:text-6xl uppercase tracking-tighter leading-[0.9] mb-6">
+  Page Title
+</h1>
+```
+
+- Page header section uses `max-w-5xl xl:max-w-6xl px-6 sm:px-12 py-16 sm:py-20 border-b border-border`
+- Content section uses an appropriate narrower container (`max-w-2xl` for prose, `max-w-5xl` for lists)
+- Breadcrumbs use `font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground`
+- Sub-headings within content use `font-extrabold text-2xl sm:text-3xl uppercase tracking-tighter`
+- Section labels inside content use `font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground mb-8`
+
+## Design: Editorial grid dividers
+
+Prefer `grid gap-px bg-border` + `bg-background` on cells for hairline dividers between grid cards (avoids border math):
+
+```tsx
+<div className="grid gap-px bg-border sm:grid-cols-2">
+  <div className="bg-background p-8">…</div>
+</div>
+```
+
+## Design: Interactive elements
+
+- All clickable elements (buttons, links styled as buttons) must have `cursor-pointer`
+- Disabled buttons must have `disabled:cursor-not-allowed`
+- All interactive elements must have `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary` — do NOT use `focus:ring-0`
+- Hover transitions: use `transition-colors duration-200`, not `transition-all` (avoid layout reflow)
+- Never animate `padding`, `margin`, or `width`/`height` on hover — use `transform` only
+
+## Design: Motion preferences
+
+`app/globals.css` includes `@media (prefers-reduced-motion: reduce)` that disables all animations/transitions for users who opt out. The marquee on the homepage pauses automatically. Do not add new `@keyframes` without respecting this rule.
+
 ## What NOT to do
 
 - Do not add `tailwind.config.ts`
@@ -96,3 +159,8 @@ Current stack: Next.js 16 App Router · Tailwind v4 · shadcn/ui · MDX · Resen
 - Do not document content under `content/articles`; the live article directory is `content/writing`
 - Do not describe the brand colors as indigo/emerald/amber unless the theme tokens are actually changed in `app/globals.css`
 - Do not add `app/favicon.ico` back unless you explicitly want Next.js to auto-inject an `.ico` favicon again
+- Do not use `focus:ring-0` or `focus:outline-none` alone on inputs — always pair with `focus-visible:ring-2 focus-visible:ring-primary`
+- Do not animate `padding`/`margin` on hover — causes layout reflow; use `transition-colors` or `transform` only
+- Do not use `transition-all` on hover — always specify the property (e.g. `transition-colors duration-200`)
+- Do not use `grid sm:grid-cols-2` for `ArticleCard` lists — ArticleCard is a full-width row component; use a plain `div` (stacked list)
+- Do not add emoji as functional list-item bullets; use CSS/text markers (`→`, `—`) or styled `before:` content

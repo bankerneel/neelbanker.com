@@ -153,3 +153,12 @@ Before committing content:
 2. Confirm the pillar is one of `blockchain`, `ai`, or `leadership` when required.
 3. Confirm any `fileUrl` points to a file that exists in `public/resources/`.
 4. Run `npm run lint`.
+
+## UI notes for future components
+
+If you add new article/resource/project cards or list components, follow these conventions:
+
+- `ArticleCard` is a **full-width row** component. Never place it inside a multi-column grid (`sm:grid-cols-2`). Wrap a list of `ArticleCard`s in a plain `<div>` with no grid classes.
+- `ResourceCard` and `ProjectCard` are grid-safe (designed for `sm:grid-cols-2`).
+- All interactive elements (buttons, form inputs) must have visible focus indicators: `focus-visible:ring-2 focus-visible:ring-primary`. Never use `focus:ring-0`.
+- New animations must be wrapped in `@media (prefers-reduced-motion: no-preference)` or guarded by the reduce block in `app/globals.css`.
