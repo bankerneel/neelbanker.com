@@ -17,7 +17,7 @@ export function CalBookingEmbed() {
         namespace="15min"
         calLink="neelbanker/15min"
         style={{ width: '100%', height: '100%', overflow: 'scroll' }}
-        config={{ layout: 'month_view', useSlotsViewOnSmallScreen: true, theme: 'dark' }}
+        config={{ layout: 'month_view', useSlotsViewOnSmallScreen: 'true', theme: 'dark' }}
       />
     </div>
   )
