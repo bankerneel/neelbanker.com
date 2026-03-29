@@ -44,3 +44,4 @@ next-env.d.ts
 # PDFs (placeholder binaries excluded; real assets committed)
 *.pdf
 !public/resources/*.pdf
+.env*.local
