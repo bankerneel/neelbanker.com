@@ -9,6 +9,7 @@ Current setup highlights:
 - Syne + JetBrains Mono via `next/font/google`
 - MDX content in `content/writing`, `content/resources`, and `content/projects`
 - Resend for email flows
+- Newsletter emails use `insights@neelbanker.com`; contact emails use `inquiry@neelbanker.com`
 - Cal.com React embed for booking on `/work-with-me`
 - Root and article OG image routes live in `app/opengraph-image.tsx` and `app/writing/[slug]/opengraph-image.tsx`
 - SVG-only favicon lives at `public/favicon.svg`

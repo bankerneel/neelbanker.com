@@ -82,14 +82,18 @@ Open `http://localhost:3000`.
 | --- | --- | --- |
 | `RESEND_API_KEY` | Yes | Resend API key |
 | `RESEND_AUDIENCE_ID` | Yes for newsletter/download opt-in | Audience/list ID used for newsletter subscriptions |
-| `CONTACT_EMAIL` | No | Destination for contact form submissions, defaults to `neel@neelbanker.com` |
+| `NEWSLETTER_FROM_EMAIL` | Recommended | Sender used for newsletter, subscription, and gated download emails |
+| `ENQUIRY_FROM_EMAIL` | Recommended | Sender used for website enquiries and contact-form auto-replies |
+| `CONTACT_EMAIL` | Recommended | Destination inbox for contact form submissions |
 
 Example:
 
 ```bash
 RESEND_API_KEY=re_xxxxxxxxxxxxxxxxxxxx
 RESEND_AUDIENCE_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
-CONTACT_EMAIL=neel@neelbanker.com
+NEWSLETTER_FROM_EMAIL="Neel Banker <insights@neelbanker.com>"
+ENQUIRY_FROM_EMAIL="Neel Banker <inquiry@neelbanker.com>"
+CONTACT_EMAIL=inquiry@neelbanker.com
 ```
 
 ## Scripts
@@ -151,6 +155,8 @@ Detailed authoring instructions live in [docs/content-authoring.md](/home/dexter
 - The booking widget on `/work-with-me` uses `@calcom/embed-react` via `components/cal-booking-embed.tsx`.
 - The site uses `public/favicon.svg` as the favicon source; `app/favicon.ico` is intentionally absent.
 - Standalone pages and article pages include in-page navigation CTAs so users do not rely only on browser back buttons.
+- Newsletter emails use `NEWSLETTER_FROM_EMAIL`; contact emails and auto-replies use `ENQUIRY_FROM_EMAIL`.
+- Contacts are stored in Resend Audience, but a custom weekly send/unsubscribe flow has not been built in this repo yet.
 
 ## Testing
 
@@ -173,6 +179,8 @@ Typical flow:
 vercel link
 vercel env add RESEND_API_KEY production
 vercel env add RESEND_AUDIENCE_ID production
+vercel env add NEWSLETTER_FROM_EMAIL production
+vercel env add ENQUIRY_FROM_EMAIL production
 vercel env add CONTACT_EMAIL production
 vercel --prod
 ```

@@ -47,8 +47,11 @@ Current stack: Next.js 16 App Router · Tailwind v4 · shadcn/ui · MDX · Resen
 - Client singleton in `lib/resend.ts` — uses `?? 'placeholder'` guard, no module-level throw
 - Newsletter opt-in is **explicit** — only subscribe when `optIn === true`
 - Always guard on `NEWSLETTER_AUDIENCE_ID` being non-empty before calling Resend Audience API
-- `FROM_EMAIL = 'Neel Banker <neel@neelbanker.com>'`
-- Env vars in use are `RESEND_API_KEY`, `RESEND_AUDIENCE_ID`, and optional `CONTACT_EMAIL`
+- Newsletter and gated-download emails use `NEWSLETTER_FROM_EMAIL` (current default: `Neel Banker <insights@neelbanker.com>`)
+- Contact form notifications and auto-replies use `ENQUIRY_FROM_EMAIL` (current default: `Neel Banker <inquiry@neelbanker.com>`)
+- Contact form submissions are delivered to `CONTACT_EMAIL`
+- Env vars in use are `RESEND_API_KEY`, `RESEND_AUDIENCE_ID`, `NEWSLETTER_FROM_EMAIL`, `ENQUIRY_FROM_EMAIL`, and `CONTACT_EMAIL`
+- Contacts are stored in Resend Audience; weekly campaign sending and unsubscribe-link handling are expected to be managed via Resend or a future custom sender
 
 ## Security
 
