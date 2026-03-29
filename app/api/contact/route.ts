@@ -1,20 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { z } from 'zod'
+import { contactFormSchema } from '@/lib/contact-schema'
 import { CONTACT_TO_EMAIL, ENQUIRY_FROM_EMAIL, resend } from '@/lib/resend'
-
-const optionalText = z.union([z.string().trim(), z.literal('')]).transform((value) => {
-  const trimmed = value.trim()
-  return trimmed.length > 0 ? trimmed : undefined
-})
-
-const schema = z.object({
-  name: z.string().trim().min(1),
-  email: z.string().trim().email(),
-  company: optionalText,
-  service: z.string().trim().min(1),
-  description: z.string().trim().min(10),
-  source: optionalText,
-})
 
 function escapeHtml(str: string): string {
   return str
@@ -28,7 +14,7 @@ function escapeHtml(str: string): string {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
-    const parsed = schema.safeParse(body)
+    const parsed = contactFormSchema.safeParse(body)
 
     if (!parsed.success) {
       return NextResponse.json({ error: 'Please fill all required fields correctly.' }, { status: 400 })
