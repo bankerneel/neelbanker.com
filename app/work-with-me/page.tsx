@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import Script from 'next/script'
+import { CalBookingEmbed } from '@/components/cal-booking-embed'
 import { ContactForm } from '@/components/contact-form'
 
 export const metadata: Metadata = {
@@ -35,7 +35,8 @@ export default function WorkWithMePage() {
     <div className="mx-auto max-w-4xl px-6 py-16">
       <h1 className="mb-2 text-3xl font-bold">Work With Me</h1>
       <p className="mb-12 max-w-xl text-muted-foreground">
-        I work with a small number of clients at a time. If you're building something in blockchain, AI, or distributed systems — let's talk.
+        I work with a small number of clients at a time. If you&apos;re building something in blockchain, AI, or distributed systems,
+        let&apos;s talk.
       </p>
 
       {/* Services */}
@@ -59,19 +60,14 @@ export default function WorkWithMePage() {
       <div className="mb-16">
         <h2 className="mb-4 text-xl font-bold">Book a Strategy Call</h2>
         <p className="mb-4 text-sm text-muted-foreground">Ready to book a 1:1? Pick a time directly:</p>
-        <div
-          data-cal-link="neelbanker/strategy-call"
-          data-cal-config='{"layout":"month_view"}'
-          className="h-[500px] rounded-lg border border-border bg-muted/20"
-        />
-        <Script src="https://app.cal.com/embed/embed.js" strategy="lazyOnload" />
+        <CalBookingEmbed />
       </div>
 
       {/* Contact form */}
       <div>
         <h2 className="mb-2 text-xl font-bold">Get In Touch</h2>
         <p className="mb-6 text-sm text-muted-foreground">
-          Prefer to describe your project first? Send a message and I'll respond within 2 business days.
+          Prefer to describe your project first? Send a message and I&apos;ll respond within 2 business days.
         </p>
         <ContactForm />
       </div>
