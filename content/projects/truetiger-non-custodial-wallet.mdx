@@ -1,0 +1,32 @@
+---
+title: "Project Tiger — Fireblocks Embedded Wallet"
+excerpt: "Production non-custodial wallet built on Fireblocks NCW with backend orchestration, transaction policy handling, and a cleaner UX for key-management-heavy flows."
+chain: "Ethereum, Base, Polygon"
+stack: ["Fireblocks NCW", "Node.js", "TypeScript", "MongoDB", "Web3 Provider"]
+date: "2025-02-01"
+---
+
+## Problem
+
+Non-custodial wallet products promise user ownership, but the production difficulty sits in recovery, session management, signing reliability, and policy enforcement. The brief was to ship a Fireblocks NCW-backed wallet that felt usable for non-technical users without weakening the underlying security model.
+
+## Approach
+
+Use Fireblocks Embedded Wallet as the signing foundation, then build an application layer that handles device enrolment, transaction state tracking, and error recovery across network conditions and wallet states.
+
+## Architecture
+
+- Fireblocks NCW for embedded key management and signing flows
+- Node.js orchestration layer for wallet lifecycle, transaction status, and webhook processing
+- Separate internal ledger for user-visible transaction history and retry-safe reconciliation
+- Guardrails around transaction initiation so UI state stays consistent during slow chain confirmations
+
+## Outcome
+
+- Wallet onboarding time reduced once recovery and enrolment flows were collapsed into fewer steps
+- Signing reliability improved after moving transaction-state handling away from optimistic UI assumptions
+- NCW abstraction remained intact while product UX became easier to reason about
+
+## Lessons
+
+The cryptography is not the hardest part. The hardest part is making failures legible to users when the wallet, backend, and chain are all progressing at different speeds.

@@ -1,0 +1,32 @@
+---
+title: "Project Orbit — Presale, CRM & DApps"
+excerpt: "Multi-surface Web3 platform spanning DApps, presale infrastructure, CRM backend, and wallet-linked user flows. Built for a live product ecosystem rather than a single isolated feature."
+chain: "Ethereum, Base, BNB Chain"
+stack: ["Angular", "Node.js", "NestJS", "MongoDB", "Solidity", "Rubic"]
+date: "2024-11-01"
+---
+
+## Problem
+
+The product was not a single application. It was an ecosystem: wallet-linked DApps, presale experiences, a CRM backend, payment-connected flows, and marketing-sensitive user journeys that needed to feel coherent under production pressure.
+
+## Approach
+
+Treat the platform as a system-of-systems. Keep each flow independently deployable while consolidating shared identity, transaction telemetry, and business logic where operational consistency mattered.
+
+## Architecture
+
+- Angular DApps for user-facing token and wallet journeys
+- Node.js and NestJS backend services for CRM, campaign operations, and token-sale orchestration
+- Shared wallet session logic across frontend surfaces
+- Smart contract integrations isolated behind service boundaries so UI releases were not tightly coupled to on-chain release timing
+
+## Outcome
+
+- Faster iteration across multiple business surfaces without duplicating core logic
+- Better operational visibility into wallet-linked user journeys
+- Reduced coordination overhead between product, backend, and smart contract changes
+
+## Lessons
+
+Ecosystem products break when every team optimises for its own surface. Shared telemetry and clear service boundaries mattered more than adding features quickly.

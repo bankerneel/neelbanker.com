@@ -8,6 +8,7 @@ const SERVICES = [
   'Smart Contract Audit',
   'Architecture Review',
   'Fractional CTO / Advisor',
+  'Leadership / Recruiter Enquiry',
   'Not sure yet',
 ]
 
@@ -68,16 +69,16 @@ export function ContactForm() {
 
   function fieldClassName(field: keyof ContactFormInput) {
     return cn(
-      'w-full rounded-md border bg-muted px-3 py-2 text-sm focus:outline-none focus:ring-1',
+      'w-full border border-border bg-muted/30 px-3 py-3 text-sm text-foreground transition-colors duration-200 [color-scheme:dark] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
       errors[field]
-        ? 'border-red-500/60 focus:ring-red-500'
-        : 'border-border focus:ring-primary'
+        ? 'border-red-500/60 focus-visible:ring-red-500'
+        : 'hover:border-primary/30'
     )
   }
 
   if (state === 'done') {
     return (
-      <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-6 text-center">
+      <div className="border border-emerald-500/20 bg-emerald-500/5 p-6">
         <p className="text-lg font-semibold text-emerald-400">Message received ✓</p>
         <p className="mt-2 text-sm text-muted-foreground">I&apos;ll get back to you within 2 business days.</p>
       </div>
@@ -85,10 +86,10 @@ export function ContactForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-5 border border-border bg-background p-5 sm:p-6">
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label className="mb-1.5 block text-sm font-medium">Name</label>
+          <label className="mb-1.5 block font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">Name</label>
           <input
             required
             value={form.name}
@@ -99,7 +100,7 @@ export function ContactForm() {
           {errors.name && <p className="mt-1 text-sm text-red-400">{errors.name}</p>}
         </div>
         <div>
-          <label className="mb-1.5 block text-sm font-medium">Email</label>
+          <label className="mb-1.5 block font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">Email</label>
           <input
             type="email"
             required
@@ -112,7 +113,7 @@ export function ContactForm() {
         </div>
       </div>
       <div>
-        <label className="mb-1.5 block text-sm font-medium">Company / Project</label>
+        <label className="mb-1.5 block font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">Company / Project</label>
         <input
           value={form.company}
           onChange={(e) => update('company', e.target.value)}
@@ -122,13 +123,13 @@ export function ContactForm() {
         {errors.company && <p className="mt-1 text-sm text-red-400">{errors.company}</p>}
       </div>
       <div>
-        <label className="mb-1.5 block text-sm font-medium">Which service interests you?</label>
+        <label className="mb-1.5 block font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">Which service interests you?</label>
         <select
           required
           value={form.service}
           onChange={(e) => update('service', e.target.value)}
           aria-invalid={Boolean(errors.service)}
-          className={fieldClassName('service')}
+          className={cn(fieldClassName('service'), 'appearance-none bg-background')}
         >
           <option value="">Select a service</option>
           {SERVICES.map((s) => <option key={s} value={s}>{s}</option>)}
@@ -136,7 +137,7 @@ export function ContactForm() {
         {errors.service && <p className="mt-1 text-sm text-red-400">{errors.service}</p>}
       </div>
       <div>
-        <label className="mb-1.5 block text-sm font-medium">Brief description of what you&apos;re building</label>
+        <label className="mb-1.5 block font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">Brief description of what you&apos;re building</label>
         <textarea
           required
           rows={4}
@@ -148,7 +149,7 @@ export function ContactForm() {
         {errors.description && <p className="mt-1 text-sm text-red-400">{errors.description}</p>}
       </div>
       <div>
-        <label className="mb-1.5 block text-sm font-medium">How did you hear about me?</label>
+        <label className="mb-1.5 block font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">How did you hear about me?</label>
         <input
           value={form.source}
           onChange={(e) => update('source', e.target.value)}
@@ -157,8 +158,11 @@ export function ContactForm() {
         />
         {errors.source && <p className="mt-1 text-sm text-red-400">{errors.source}</p>}
       </div>
-      <button type="submit" disabled={state === 'loading'}
-        className="rounded-md bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground disabled:opacity-50">
+      <button
+        type="submit"
+        disabled={state === 'loading'}
+        className="cursor-pointer bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-colors duration-200 hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50"
+      >
         {state === 'loading' ? 'Sending…' : 'Send Message →'}
       </button>
       {submitError && <p className="text-sm text-red-400">{submitError}</p>}

@@ -1,4 +1,5 @@
 'use client'
+
 import { useState } from 'react'
 
 export function NewsletterForm({ compact = false }: { compact?: boolean }) {
@@ -17,14 +18,23 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
   }
 
   if (state === 'done') {
-    return <p className="text-sm text-emerald-400 font-mono">✓ You&apos;re in. Check your inbox.</p>
+    return (
+      <div className="border border-primary/20 bg-primary/5 px-5 py-5">
+        <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-primary">You&apos;re in</p>
+        <p className="mt-2 text-sm leading-[1.8] text-muted-foreground">
+          Check your inbox for the confirmation email.
+        </p>
+      </div>
+    )
   }
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-3">
       <form
         onSubmit={handleSubmit}
-        className={`flex border border-border focus-within:border-primary transition-colors duration-200 ${compact ? 'flex-row' : 'flex-col sm:flex-row'}`}
+        className={`border border-border bg-background transition-colors duration-200 focus-within:border-primary ${
+          compact ? 'flex flex-col sm:flex-row' : 'flex flex-col'
+        }`}
       >
         <input
           type="email"
@@ -32,20 +42,22 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="your@email.com"
-          className="flex-1 bg-transparent border-none outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset text-foreground px-4 py-3.5 text-sm placeholder:text-muted-foreground font-mono"
+          className="min-h-12 flex-1 bg-transparent px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground [color-scheme:dark] transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           suppressHydrationWarning
         />
         <button
           type="submit"
           disabled={state === 'loading'}
-          className="cursor-pointer bg-primary text-primary-foreground font-mono font-bold text-xs uppercase tracking-widest px-6 py-3.5 hover:bg-foreground hover:text-background transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          className="cursor-pointer bg-primary px-5 py-3 font-mono text-[10px] uppercase tracking-[0.18em] text-primary-foreground transition-colors duration-200 hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50"
           suppressHydrationWarning
         >
-          {state === 'loading' ? '…' : 'Subscribe →'}
+          {state === 'loading' ? 'Sending…' : 'Subscribe →'}
         </button>
       </form>
       {state === 'error' && (
-        <p className="text-xs text-red-400 font-mono">Something went wrong. Try again.</p>
+        <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-red-400">
+          Something went wrong. Try again.
+        </p>
       )}
     </div>
   )

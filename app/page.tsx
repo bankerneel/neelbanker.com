@@ -1,7 +1,8 @@
 import Link from 'next/link'
-import { getAllArticleMeta, getAllResourceMeta } from '@/lib/mdx'
+import { getAllArticleMeta, getAllProjectMeta, getAllResourceMeta } from '@/lib/mdx'
 import { ArticleCard } from '@/components/article-card'
 import { ServiceCard } from '@/components/service-card'
+import { ProjectCard } from '@/components/project-card'
 import { PILLARS } from '@/lib/pillars'
 import { HeroClient } from '@/components/hero-client'
 import { FadeUp, StaggerContainer, StaggerItem } from '@/components/scroll-reveal'
@@ -14,15 +15,17 @@ const PILLAR_HOVER_BG: Record<string, string> = {
 
 export default function HomePage() {
   const articles = getAllArticleMeta().slice(0, 3)
+  const projects = getAllProjectMeta()
   const resources = getAllResourceMeta()
   const featuredResource = resources[0]
-
-  const techStack = [
-    'Hyperledger Fabric', 'OP Stack / L2', 'Solidity', 'ERC-4337', 'Fireblocks NCW',
-    'BitGo', 'Node.js', 'NestJS', 'Go', 'Python', 'Claude API', 'Ethereum', 'Polygon',
-    'Solana', 'Base', 'Arbitrum', 'Account Abstraction', 'Docker', 'AWS EKS', 'HSM',
-    '7+ Years', '50+ Engineers Led', '15+ Platforms',
+  const featuredProjects = [
+    'cryptsync-ncw',
+    'pepe-unchained-l2',
+    'verionce',
+    'roomquery',
   ]
+    .map((slug) => projects.find((project) => project.slug === slug))
+    .filter((project): project is NonNullable<typeof project> => Boolean(project))
 
   const services = [
     {
@@ -53,6 +56,18 @@ export default function HomePage() {
     { value: '15+', label: 'Production Platforms' },
   ]
 
+  const summaryLinks = [
+    { href: '/projects', label: 'Selected case studies', detail: 'Wallets, L2, Fabric, AI systems' },
+    { href: '/writing', label: 'Latest writing', detail: 'Architecture, AI workflows, leadership' },
+    { href: '/speaking', label: 'Talks and sessions', detail: 'Blockchain, Docker, technical decision-making' },
+  ]
+  const techStack = [
+    'Hyperledger Fabric', 'OP Stack / L2', 'Solidity', 'ERC-4337', 'Fireblocks NCW',
+    'BitGo', 'Node.js', 'NestJS', 'Go', 'Python', 'Claude API', 'Ethereum', 'Polygon',
+    'Solana', 'Base', 'Arbitrum', 'Account Abstraction', 'Docker', 'AWS EKS', 'HSM',
+    '7+ Years', '50+ Engineers Led', '15+ Platforms',
+  ]
+
   return (
     <>
       {/* ── Hero ─────────────────────────────────────────── */}
@@ -62,7 +77,7 @@ export default function HomePage() {
       <div className="bg-primary overflow-hidden py-4 select-none">
         <div className="flex animate-marquee whitespace-nowrap">
           {[...techStack, ...techStack].map((item, i) => (
-            <span key={i} className="font-mono text-sm font-bold tracking-widest uppercase text-primary-foreground mx-8">
+            <span key={i} className="mx-8 font-mono text-sm font-bold uppercase tracking-widest text-primary-foreground">
               {item}
             </span>
           ))}
@@ -72,14 +87,14 @@ export default function HomePage() {
       <div className="mx-auto max-w-5xl xl:max-w-6xl 2xl:max-w-7xl 3xl:max-w-[1440px] px-6 sm:px-12">
 
         {/* ── Stats ────────────────────────────────────────── */}
-        <section className="py-20 sm:py-24 border-b border-border">
-          <StaggerContainer className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-0">
+        <section className="border-b border-border py-16 sm:py-18">
+          <StaggerContainer className="grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-0">
             {stats.map((stat, i) => (
               <StaggerItem
                 key={i}
                 className={`flex flex-col gap-3 ${i > 0 ? 'md:border-l md:border-border md:pl-12' : ''}`}
               >
-                <span className="font-extrabold text-7xl sm:text-8xl text-primary leading-none tabular-nums">
+                <span className="font-bold text-6xl sm:text-7xl text-primary leading-none tabular-nums">
                   {stat.value}
                 </span>
                 <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
@@ -90,12 +105,37 @@ export default function HomePage() {
           </StaggerContainer>
         </section>
 
-        {/* ── Latest writing ───────────────────────────────── */}
-        <section className="py-16 sm:py-20 border-b border-border">
+        <section className="border-b border-border py-14 sm:py-16">
           <FadeUp>
-            <div className="flex items-end justify-between mb-12 sm:mb-16">
-              <h2 className="font-extrabold text-3xl sm:text-4xl uppercase tracking-tighter">Latest Writing</h2>
-              <Link href="/writing" className="font-mono text-xs uppercase text-primary hover:underline underline-offset-8 transition-colors">
+            <div className="mb-8 max-w-2xl">
+              <p className="mb-4 font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">At A Glance</p>
+              <h2 className="mb-4 font-bold text-2xl sm:text-3xl uppercase tracking-tighter">Architecture, writing, and selective advisory work</h2>
+              <p className="text-base text-muted-foreground leading-[1.7]">
+                This site works best as a guide to three things: representative systems shipped, practical writing on technical trade-offs, and ways to work together when complexity is already high.
+              </p>
+            </div>
+          </FadeUp>
+          <StaggerContainer className="grid gap-px bg-border md:grid-cols-3">
+            {summaryLinks.map((item) => (
+              <StaggerItem key={item.href} className="bg-background">
+                <Link
+                  href={item.href}
+                  className="block cursor-pointer p-6 transition-colors duration-200 hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                >
+                  <p className="mb-3 font-bold text-lg uppercase tracking-tight">{item.label}</p>
+                  <p className="text-sm leading-[1.7] text-muted-foreground">{item.detail}</p>
+                </Link>
+              </StaggerItem>
+            ))}
+          </StaggerContainer>
+        </section>
+
+        {/* ── Latest writing ───────────────────────────────── */}
+        <section className="border-b border-border py-14 sm:py-16">
+          <FadeUp>
+            <div className="mb-10 flex items-end justify-between">
+              <h2 className="font-bold text-2xl sm:text-3xl uppercase tracking-tighter">Latest Writing</h2>
+              <Link href="/writing" className="cursor-pointer font-mono text-xs uppercase text-primary transition-colors duration-200 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
                 All articles →
               </Link>
             </div>
@@ -109,33 +149,56 @@ export default function HomePage() {
           </StaggerContainer>
         </section>
 
-        {/* ── Pillars ──────────────────────────────────────── */}
-        <section className="py-16 sm:py-20 border-b border-border">
+        <section className="border-b border-border py-14 sm:py-16">
           <FadeUp>
-            <h2 className="font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground mb-8">Focus Areas</h2>
+            <div className="mb-10 flex items-end justify-between">
+              <div>
+                <p className="mb-4 font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">Featured Case Studies</p>
+                <h2 className="font-bold text-2xl sm:text-3xl uppercase tracking-tighter">Representative systems, not a generic portfolio wall</h2>
+              </div>
+              <Link href="/projects" className="cursor-pointer font-mono text-xs uppercase text-primary transition-colors duration-200 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                Browse all projects →
+              </Link>
+            </div>
           </FadeUp>
-          <FadeUp delay={0.1}>
-          <div className="grid grid-cols-1 md:grid-cols-3 border border-border">
+          <StaggerContainer className="grid gap-px bg-border lg:grid-cols-2">
+            {featuredProjects.map((project) => (
+              <StaggerItem key={project.slug} className="bg-background">
+                <ProjectCard project={project} />
+              </StaggerItem>
+            ))}
+          </StaggerContainer>
+        </section>
+
+        <section className="border-b border-border py-14 sm:py-16">
+          <FadeUp>
+            <div className="mb-8 max-w-2xl">
+              <p className="mb-4 font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">Focus Areas</p>
+              <h2 className="font-bold text-2xl sm:text-3xl uppercase tracking-tighter">Three recurring themes</h2>
+            </div>
+          </FadeUp>
+          <FadeUp delay={0.05}>
+          <div className="grid grid-cols-1 border border-border md:grid-cols-3">
             {PILLARS.map((p, i) => (
               <Link
                 key={p.slug}
                 href={`/writing?pillar=${p.slug}`}
                 className={[
-                  'group p-8 md:p-10 transition-colors duration-300',
+                  'group cursor-pointer p-6 transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary md:p-7',
                   PILLAR_HOVER_BG[p.slug] ?? 'hover:bg-primary',
                   i < PILLARS.length - 1
                     ? 'border-b md:border-b-0 md:border-r border-border'
                     : '',
                 ].join(' ')}
               >
-                <div className="flex justify-between items-start mb-10">
-                  <span className="text-3xl">{p.emoji}</span>
+                <div className="mb-6 flex items-start justify-between">
+                  <span className="text-2xl">{p.emoji}</span>
                   <span className="text-muted-foreground group-hover:text-background transition-colors duration-300">→</span>
                 </div>
                 <p className={`font-mono text-[10px] uppercase tracking-widest mb-3 ${p.textClass} group-hover:text-background transition-colors duration-300`}>
                   Focus 0{i + 1}
                 </p>
-                <h4 className="font-bold text-2xl sm:text-3xl uppercase tracking-tight group-hover:text-background transition-colors duration-300">
+                <h4 className="font-bold text-xl sm:text-2xl uppercase tracking-tight group-hover:text-background transition-colors duration-300">
                   {p.label}
                 </h4>
               </Link>
@@ -146,43 +209,64 @@ export default function HomePage() {
 
         {/* ── Featured resource ────────────────────────────── */}
         {featuredResource && (
-          <section className="py-16 sm:py-20 border-b border-border">
+          <section className="border-b border-border py-14 sm:py-16">
             <FadeUp>
-              <h2 className="font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground mb-8">Free Resource</h2>
-            </FadeUp>
-            <FadeUp delay={0.1}>
-              <div className="relative border-2 border-primary p-8 sm:p-14 overflow-hidden flex flex-col sm:flex-row items-start sm:items-center gap-10">
-                {/* Decorative rotated square */}
-                <div
-                  aria-hidden="true"
-                  className="absolute -right-16 -top-16 w-56 h-56 border border-primary/20 rotate-45 pointer-events-none"
-                />
-                <div className="flex-1 relative z-10">
-                  <p className="font-mono text-xs uppercase tracking-[0.3em] text-primary mb-4">Download Free</p>
-                  <h3 className="font-bold text-3xl sm:text-4xl uppercase tracking-tight mb-4 leading-tight">
-                    {featuredResource.title}
-                  </h3>
-                  <p className="text-muted-foreground leading-[1.7] max-w-md mb-8 text-sm sm:text-base">
-                    {featuredResource.description}
-                  </p>
-                  <Link
-                    href="/resources"
-                    className="inline-block bg-primary text-primary-foreground px-8 py-4 font-mono font-bold uppercase text-xs tracking-widest hover:bg-foreground hover:text-background transition-colors duration-200"
-                  >
-                    Get It Free →
-                  </Link>
+              <div className="flex flex-col gap-6 border border-primary/25 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
+                <div className="max-w-xl">
+                  <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.22em] text-primary">Free Resource</p>
+                  <h2 className="mb-3 font-bold text-2xl uppercase tracking-tight">{featuredResource.title}</h2>
+                  <p className="text-sm leading-[1.8] text-muted-foreground">{featuredResource.description}</p>
                 </div>
+                <Link
+                  href="/resources"
+                  className="inline-flex cursor-pointer items-center bg-primary px-6 py-3 font-mono text-xs font-bold uppercase tracking-widest text-primary-foreground transition-colors duration-200 hover:bg-foreground hover:text-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                >
+                  Get It Free →
+                </Link>
               </div>
             </FadeUp>
           </section>
         )}
 
-        {/* ── Services ─────────────────────────────────────── */}
-        <section className="py-16 sm:py-20">
+        <section className="border-b border-border py-14 sm:py-16">
           <FadeUp>
-            <div className="flex items-end justify-between mb-12 sm:mb-16">
-              <h2 className="font-extrabold text-3xl sm:text-4xl uppercase tracking-tighter">Work With Me</h2>
-              <Link href="/work-with-me" className="font-mono text-xs uppercase text-primary hover:underline underline-offset-8 transition-colors">
+            <div className="mb-10 flex items-end justify-between">
+              <div>
+                <p className="mb-4 font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">How I Work</p>
+                <h2 className="font-bold text-2xl sm:text-3xl uppercase tracking-tighter">Technical direction with less noise</h2>
+              </div>
+              <Link href="/about" className="cursor-pointer font-mono text-xs uppercase text-primary transition-colors duration-200 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                More context →
+              </Link>
+            </div>
+          </FadeUp>
+          <div className="grid gap-px bg-border lg:grid-cols-[1.1fr_0.9fr]">
+            <div className="bg-background p-6 sm:p-8">
+              <p className="mb-4 font-mono text-[10px] uppercase tracking-[0.22em] text-primary">Field Notes</p>
+              <p className="max-w-xl text-sm leading-[1.8] text-muted-foreground">
+                I usually get pulled in where systems are already under stress: mid-flight architecture changes, multi-team delivery drift, or wallet and custody systems with hidden edge cases that need to survive production.
+              </p>
+            </div>
+            <div className="grid gap-px bg-border">
+              {[
+                'Translate rough product ambition into systems that scale',
+                'Bring security, delivery discipline, and architecture back into alignment',
+                'Use AI tactically to improve execution quality, not to replace thinking',
+              ].map((item) => (
+                <div key={item} className="bg-background px-6 py-5 text-sm leading-[1.8] text-muted-foreground">
+                  {item}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── Services ─────────────────────────────────────── */}
+        <section className="py-14 sm:py-16">
+          <FadeUp>
+            <div className="mb-10 flex items-end justify-between">
+              <h2 className="font-bold text-2xl sm:text-3xl uppercase tracking-tighter">Work With Me</h2>
+              <Link href="/work-with-me" className="cursor-pointer font-mono text-xs uppercase text-primary transition-colors duration-200 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
                 All services →
               </Link>
             </div>

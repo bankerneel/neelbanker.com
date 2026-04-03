@@ -1,4 +1,5 @@
 'use client'
+
 import { useState } from 'react'
 import type { ResourceMeta } from '@/types/content'
 
@@ -23,42 +24,67 @@ export function ResourceCard({ resource }: { resource: ResourceMeta }) {
   }
 
   return (
-    <div className="border border-border p-6">
-      <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground mb-3">Free Download</p>
-      <h3 className="font-extrabold text-base uppercase tracking-tight mb-2">{resource.title}</h3>
-      <p className="text-sm text-muted-foreground leading-relaxed mb-5">{resource.description}</p>
+    <div className="group h-full border border-border bg-background px-6 py-6 transition-colors duration-200 hover:border-primary/30 sm:px-7 sm:py-7">
+      <div className="mb-6 flex items-start justify-between gap-4">
+        <div>
+          <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.22em] text-primary">Free download</p>
+          <h3 className="max-w-lg text-lg font-semibold uppercase tracking-tight text-foreground">{resource.title}</h3>
+        </div>
+        <span className="shrink-0 border border-border px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground transition-colors duration-200 group-hover:border-primary/40">
+          PDF
+        </span>
+      </div>
+
+      <p className="mb-6 max-w-xl text-sm leading-[1.8] text-muted-foreground">{resource.description}</p>
 
       {state === 'done' ? (
-        <p className="font-mono text-xs text-primary uppercase tracking-widest">Download started. Check your inbox for a copy.</p>
+        <div className="border border-primary/20 bg-primary/5 px-5 py-5">
+          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-primary">Download started</p>
+          <p className="mt-2 text-sm leading-[1.8] text-muted-foreground">
+            The file should be opening now. A copy has also been sent to your inbox for later.
+          </p>
+        </div>
       ) : (
-        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-          <input
-            type="email"
-            required
-            placeholder="your@email.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            suppressHydrationWarning
-            className="border border-border bg-muted px-3 py-2.5 text-sm font-mono placeholder:text-muted-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"
-          />
-          <label className="flex items-start gap-2.5 text-xs text-muted-foreground cursor-pointer">
+        <form onSubmit={handleSubmit} className="space-y-4 border-t border-dashed border-border pt-5">
+          <div>
+            <label className="mb-1.5 block font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+              Work email
+            </label>
+            <input
+              type="email"
+              required
+              placeholder="your@email.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              suppressHydrationWarning
+              className="w-full border border-border bg-muted/30 px-3 py-3 text-sm text-foreground placeholder:text-muted-foreground transition-colors duration-200 [color-scheme:dark] hover:border-primary/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            />
+          </div>
+
+          <label className="flex cursor-pointer items-start gap-3 border border-border px-4 py-3 transition-colors duration-200 hover:border-primary/30">
             <input
               type="checkbox"
               checked={optIn}
               onChange={(e) => setOptIn(e.target.checked)}
               className="mt-0.5 cursor-pointer accent-[hsl(72_100%_49%)]"
             />
-            Send me The Architect&apos;s Brief — weekly insights on blockchain &amp; AI
+            <span className="text-sm leading-[1.7] text-muted-foreground">
+              Send me <span className="text-foreground">The Architect&apos;s Brief</span> as well. Weekly insights on blockchain, AI, and engineering leadership.
+            </span>
           </label>
+
           <button
             type="submit"
             disabled={state === 'loading'}
-            className="cursor-pointer bg-primary px-4 py-2.5 font-mono text-xs font-bold uppercase tracking-widest text-primary-foreground transition-colors hover:bg-foreground hover:text-background disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            className="cursor-pointer bg-primary px-5 py-3 font-mono text-[10px] uppercase tracking-[0.18em] text-primary-foreground transition-colors duration-200 hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {state === 'loading' ? 'Sending…' : 'Download Free →'}
+            {state === 'loading' ? 'Sending…' : 'Download guide →'}
           </button>
+
           {state === 'error' && (
-            <p className="font-mono text-xs text-red-400 uppercase tracking-widest">Something went wrong. Please try again.</p>
+            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-red-400">
+              Something went wrong. Please try again.
+            </p>
           )}
         </form>
       )}

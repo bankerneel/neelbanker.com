@@ -1,0 +1,32 @@
+---
+title: "Project Relay — Multi-Restaurant Marketplace"
+excerpt: "Marketplace platform spanning admin operations, customer ordering, delivery workflows, and backend coordination. A multi-surface product with strong operational complexity."
+chain: ""
+stack: ["Admin Panel", "User App", "Delivery App", "Node.js", "Marketplace Backend"]
+date: "2025-05-01"
+---
+
+## Problem
+
+Food-delivery marketplaces are not hard because of ordering UIs. They are hard because every surface has different failure modes: restaurant operations, driver assignment, customer expectations, refunds, and dispatch logic all need to stay coherent under real-time pressure.
+
+## Approach
+
+Design the system around operational flows rather than screens. Separate customer, delivery, and admin concerns clearly while keeping shared order-state logic centralised so all surfaces reflect the same truth.
+
+## Architecture
+
+- Backend coordination layer for order lifecycle and dispatch status
+- Separate surfaces for users, delivery drivers, and operators
+- Admin workflows for exceptions, order visibility, and operational oversight
+- State design that minimised disagreement between apps during live order updates
+
+## Outcome
+
+- Better operational control across marketplace roles
+- Cleaner separation between role-specific UI and shared order logic
+- Easier debugging of live-order failures because the state transitions were more explicit
+
+## Lessons
+
+Marketplace systems become fragile when teams duplicate state logic per app. Centralising lifecycle truth matters more than polishing each surface independently.

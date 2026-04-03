@@ -1,0 +1,71 @@
+---
+title: "AI-Augmented Engineering: How I Use Claude to Move Faster Without Creating Mess"
+date: "2026-03-30"
+pillar: "ai"
+excerpt: "The useful AI workflow is not 'generate code faster'. It is shortening feedback loops across debugging, architecture mapping, code review, and handoff quality."
+---
+
+## The Wrong Goal
+
+Most teams adopt AI as a speed experiment. The framing is usually: can we generate more code in less time?
+
+That is the wrong metric.
+
+The real question is: can we reduce wasted engineering time without increasing architectural entropy?
+
+That changes how you use the model.
+
+## Where AI Actually Helps Me
+
+These are the workflows that consistently pay off:
+
+### 1. Architecture mapping
+
+When I inherit a codebase or an unstable service, I use the model to accelerate orientation:
+- map routes to data flows
+- identify state transitions
+- surface likely coupling points
+- summarise where naming hides actual behaviour
+
+The model is not replacing system design. It is compressing the time it takes to get a defensible first map.
+
+### 2. Debugging dead ends
+
+When a system fails across multiple layers, AI is useful for narrowing the search space:
+- what changed recently?
+- which assumptions are now inconsistent?
+- what components can create this symptom without logging it directly?
+
+This is especially helpful in WebSocket-heavy systems and orchestration code where failure is often indirect.
+
+### 3. Review preparation
+
+I use AI before reviews, not instead of reviews. Good use looks like:
+- find likely failure modes
+- compare implementation against stated intent
+- challenge hidden coupling
+- propose test gaps
+
+The review still needs human judgment. But the first pass becomes faster and broader.
+
+## The Discipline That Keeps It Useful
+
+AI becomes destructive when teams skip the control layer. These are the rules I care about:
+- never trust output more than the surrounding evidence
+- keep architecture decisions human-owned
+- ask for narrower reasoning, not broader confidence
+- use the model to reveal ambiguity, not bury it
+
+## Practical Wins
+
+In real projects, the biggest gains came from:
+- faster onboarding into unfamiliar repos
+- quicker production incident triage
+- cleaner first drafts of internal docs and migration notes
+- less time wasted on repetitive diagnostics
+
+## The Rule I Come Back To
+
+If AI makes a team produce more code but less clarity, it is not helping.
+
+The useful version of AI-augmented engineering creates better local decisions and cleaner team handoffs. Speed is a side effect, not the objective.

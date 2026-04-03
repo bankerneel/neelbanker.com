@@ -63,6 +63,45 @@ const talks = [
   },
 ]
 
+const contactFacts = [
+  { label: 'Email', value: 'neelhbanker@gmail.com' },
+  { label: 'Location', value: 'Ahmedabad, Gujarat, India' },
+  { label: 'Open To', value: 'Global architecture leadership roles and long-term advisory work' },
+]
+
+const recognition = [
+  {
+    label: 'Leadership',
+    title: 'Best Team Lead of the Year',
+    meta: '2021 · SoluLab',
+    detail: 'Recognized for delivery leadership, team mentoring, and execution quality across blockchain programs.',
+  },
+  {
+    label: 'Leadership',
+    title: 'Best Team Lead of the Year',
+    meta: '2022 · SoluLab (consecutive)',
+    detail: 'Repeated recognition for maintaining standards while scaling technical ownership and team execution.',
+  },
+  {
+    label: 'Academic',
+    title: 'MTech Gold Medalist',
+    meta: 'Ranked 4th in University',
+    detail: 'Academic recognition grounded in systems thinking, research discipline, and technical depth.',
+  },
+  {
+    label: 'Team Building',
+    title: 'Scaled blockchain engineering org',
+    meta: '10 → 50+ engineers at SoluLab',
+    detail: 'Expanded the delivery organization while keeping architecture, mentoring, and execution aligned.',
+  },
+  {
+    label: 'Delivery',
+    title: 'Led architecture across live platforms',
+    meta: '15+ production systems in parallel',
+    detail: 'Oversaw multiple high-stakes platforms across custody, L2, and Web3 infrastructure delivery.',
+  },
+]
+
 export default function AboutPage() {
   return (
     <>
@@ -86,7 +125,7 @@ export default function AboutPage() {
             </p>
           </FadeUp>
           <FadeUp delay={0.25}>
-            <h1 className="font-extrabold text-4xl sm:text-5xl md:text-6xl uppercase tracking-tighter leading-[0.9] mb-6">
+            <h1 className="font-bold text-4xl sm:text-5xl md:text-6xl uppercase tracking-tighter leading-[0.9] mb-6">
               About Neel
             </h1>
           </FadeUp>
@@ -99,9 +138,18 @@ export default function AboutPage() {
       </section>
 
       {/* ── Bio ──────────────────────────────────────────── */}
-      <div className="mx-auto max-w-2xl px-6 sm:px-12 py-12 sm:py-16">
+      <div className="mx-auto max-w-3xl xl:max-w-4xl px-6 sm:px-12 py-12 sm:py-16">
         <FadeUp>
-          <div className="prose prose-invert prose-zinc max-w-none">
+          <div className="mb-10 border-l border-primary pl-5">
+            <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.22em] text-primary">Summary</p>
+            <p className="text-sm leading-[1.9] text-muted-foreground">
+              I work at the overlap of distributed systems, blockchain infrastructure, AI-assisted engineering, and technical leadership. Most of the time that means helping teams make better decisions while delivery is already in motion.
+            </p>
+          </div>
+        </FadeUp>
+
+        <FadeUp>
+          <div className="prose prose-invert prose-zinc prose-headings:font-bold prose-headings:tracking-tight prose-p:leading-[1.85] prose-li:leading-[1.8] max-w-none">
             <p>
               For the past 7+ years, I&apos;ve been deep in production environments across Web3 infrastructure, custody platforms,
               cross-chain integrations, and payments. Much of my work involves working with founders and product leaders early on
@@ -147,16 +195,27 @@ export default function AboutPage() {
             </p>
           </div>
         </FadeUp>
+
+        <FadeUp delay={0.1}>
+          <div className="mt-10 grid gap-px bg-border">
+            {contactFacts.map((fact) => (
+              <div key={fact.label} className="bg-background px-5 py-4">
+                <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">{fact.label}</p>
+                <p className="text-sm leading-[1.7] text-foreground">{fact.value}</p>
+              </div>
+            ))}
+          </div>
+        </FadeUp>
       </div>
 
       {/* ── Work Experience ──────────────────────────────── */}
       <div className="border-t border-border">
         <div className="mx-auto max-w-5xl xl:max-w-6xl 2xl:max-w-7xl 3xl:max-w-[1440px] px-6 sm:px-12 py-12 sm:py-16">
           <FadeUp>
-            <p className="font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground mb-12">Work Experience</p>
+            <p className="font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground mb-10">Work Experience</p>
           </FadeUp>
 
-          <div className="space-y-16">
+          <div className="space-y-14">
             {experience.map((exp, i) => (
               <FadeUp key={exp.company} delay={i * 0.1}>
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-10">
@@ -167,9 +226,9 @@ export default function AboutPage() {
                   </div>
                   {/* Right: content */}
                   <div className="md:col-span-3">
-                    <h3 className="font-extrabold text-xl uppercase tracking-tight mb-1">{exp.company}</h3>
+                    <h3 className="font-bold text-xl uppercase tracking-tight mb-1">{exp.company}</h3>
                     <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground mb-4">{exp.role}</p>
-                    <p className="text-sm text-muted-foreground leading-[1.7] mb-5">{exp.detail}</p>
+                    <p className="text-sm text-muted-foreground leading-[1.8] mb-5 max-w-3xl">{exp.detail}</p>
                     <ul className="space-y-2">
                       {exp.contributions.map((c) => (
                         <li key={c} className="flex items-start gap-2.5 text-sm">
@@ -198,31 +257,34 @@ export default function AboutPage() {
       {/* ── Education ────────────────────────────────────── */}
       <div className="border-t border-border">
         <div className="mx-auto max-w-5xl xl:max-w-6xl 2xl:max-w-7xl 3xl:max-w-[1440px] px-6 sm:px-12 py-12 sm:py-16">
-          <FadeUp>
-            <p className="font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground mb-8">Education</p>
-          </FadeUp>
-          <FadeUp delay={0.1}>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-10">
-              <div className="md:col-span-1">
-                <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">MTech</p>
-              </div>
-              <div className="md:col-span-3">
-                <h3 className="font-extrabold text-xl uppercase tracking-tight mb-1">Master of Technology</h3>
-                <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground mb-4">Information Technology</p>
-                <div className="flex flex-wrap gap-3 mb-4">
-                  <span className="border border-primary/30 px-3 py-1 font-mono text-[10px] uppercase tracking-widest text-primary">
-                    Gold Medalist
-                  </span>
-                  <span className="border border-border px-3 py-1 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-                    Ranked 4th in University
-                  </span>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  Review paper published: <em>Blockchain &amp; Web3 in Carbon Credits</em>
+          <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr]">
+            <FadeUp>
+              <div>
+                <p className="mb-4 font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">Education</p>
+                <h2 className="mb-3 font-bold text-2xl uppercase tracking-tight">Academic grounding</h2>
+                <p className="text-sm leading-[1.8] text-muted-foreground">
+                  Formal training in information technology, backed by research work and a strong bias toward systems thinking.
                 </p>
               </div>
-            </div>
-          </FadeUp>
+            </FadeUp>
+            <FadeUp delay={0.1}>
+              <div className="grid gap-px bg-border">
+                <div className="bg-background p-6">
+                  <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.22em] text-primary">Master of Technology</p>
+                  <p className="mb-2 font-bold text-lg uppercase tracking-tight">Information Technology</p>
+                  <p className="text-sm leading-[1.8] text-muted-foreground">
+                    Gold Medalist, ranked 4th in the university, with review work on <em>Blockchain &amp; Web3 in Carbon Credits</em>.
+                  </p>
+                </div>
+                <div className="bg-background p-6">
+                  <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">Research and skills</p>
+                  <p className="text-sm leading-[1.8] text-muted-foreground">
+                    Patent searching, research skills, and a habit of grounding technical decisions in underlying trade-offs rather than trend-driven claims.
+                  </p>
+                </div>
+              </div>
+            </FadeUp>
+          </div>
         </div>
       </div>
 
@@ -230,21 +292,21 @@ export default function AboutPage() {
       <div className="border-t border-border">
         <div className="mx-auto max-w-5xl xl:max-w-6xl 2xl:max-w-7xl 3xl:max-w-[1440px] px-6 sm:px-12 py-12 sm:py-16">
           <FadeUp>
-            <div className="flex items-end justify-between mb-10">
+            <div className="flex items-end justify-between mb-8">
               <p className="font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">Speaking</p>
               <Link href="/speaking" className="font-mono text-xs uppercase text-primary hover:underline underline-offset-8 transition-colors">
                 All talks →
               </Link>
             </div>
           </FadeUp>
-          <StaggerContainer className="space-y-0">
+          <StaggerContainer className="grid gap-px bg-border">
             {talks.map((talk) => (
               <StaggerItem key={talk.title}>
                 <a
                   href={talk.youtubeUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex flex-col md:flex-row md:items-center gap-3 md:gap-8 py-6 border-t border-border hover:bg-white/[0.015] transition-colors duration-200 cursor-pointer"
+                  className="group flex cursor-pointer flex-col gap-3 bg-background p-6 transition-colors duration-200 hover:bg-muted/40 md:flex-row md:items-center md:gap-8"
                 >
                   <div className="shrink-0 w-8 h-8 flex items-center justify-center border border-border group-hover:border-primary group-hover:bg-primary transition-all duration-200">
                     <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5 group-hover:text-primary-foreground transition-colors duration-200">
@@ -265,31 +327,76 @@ export default function AboutPage() {
       </div>
 
       {/* ── Full tech stack visual ───────────────────────── */}
-      <div className="mx-auto max-w-5xl xl:max-w-6xl 2xl:max-w-7xl 3xl:max-w-[1440px] px-6 sm:px-12 pb-16 sm:pb-20 border-t border-border pt-12">
-        <FadeUp>
-          <p className="font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground mb-8">Full Stack</p>
-        </FadeUp>
+      <div className="border-t border-border">
+        <div className="mx-auto max-w-5xl xl:max-w-6xl 2xl:max-w-7xl 3xl:max-w-[1440px] px-6 sm:px-12 py-12 sm:py-16">
+          <FadeUp>
+            <div className="mb-8 grid gap-4 lg:grid-cols-[0.85fr_1.15fr] lg:items-end">
+              <div>
+                <p className="mb-4 font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">Capability Map</p>
+                <h2 className="font-semibold text-2xl uppercase tracking-tight sm:text-3xl">
+                  Systems, stacks, and delivery muscle
+                </h2>
+              </div>
+              <p className="max-w-2xl text-sm leading-[1.8] text-muted-foreground">
+                The work spans protocol architecture, custody systems, backend delivery, cloud operations, and AI-assisted engineering.
+                This map is meant to show breadth without turning the page into a resume wall.
+              </p>
+            </div>
+          </FadeUp>
         <AboutTechStack />
+        </div>
       </div>
 
       {/* ── Awards & recognition ─────────────────────────── */}
       <div className="border-t border-border">
         <div className="mx-auto max-w-5xl xl:max-w-6xl 2xl:max-w-7xl 3xl:max-w-[1440px] px-6 sm:px-12 py-12 sm:py-16">
           <FadeUp>
-            <p className="font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground mb-8">Recognition</p>
+            <div className="mb-8 grid gap-4 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
+              <div>
+                <p className="mb-4 font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">Recognition</p>
+                <h2 className="font-semibold text-2xl uppercase tracking-tight sm:text-3xl">
+                  Signals of trust and delivery range
+                </h2>
+              </div>
+              <div className="space-y-4">
+                <p className="max-w-2xl text-sm leading-[1.8] text-muted-foreground">
+                  A few selected proof points that show the range of the work: leadership, academic rigor, and delivery across high-stakes systems.
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <span className="inline-flex min-h-11 items-center border border-border px-3 py-2 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                    5 selected recognition points
+                  </span>
+                  <span className="inline-flex min-h-11 items-center border border-border px-3 py-2 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                    Leadership + delivery + research
+                  </span>
+                </div>
+              </div>
+            </div>
           </FadeUp>
-          <StaggerContainer className="space-y-0">
-            {[
-              { label: 'Best Team Lead of the Year', meta: '2021 · SoluLab' },
-              { label: 'Best Team Lead of the Year', meta: '2022 · SoluLab (consecutive)' },
-              { label: 'MTech Gold Medalist', meta: 'Ranked 4th in University' },
-              { label: 'Built & scaled blockchain team', meta: '10 → 50+ engineers at SoluLab' },
-              { label: 'Led architecture', meta: '15+ live production blockchain platforms simultaneously' },
-            ].map((item) => (
-              <StaggerItem key={item.label + item.meta}>
-                <div className="flex items-start justify-between gap-4 py-4 border-b border-border last:border-0">
-                  <span className="font-semibold text-sm uppercase tracking-tight">{item.label}</span>
-                  <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground shrink-0 text-right">{item.meta}</span>
+          <StaggerContainer className="grid gap-4 md:grid-cols-2">
+            {recognition.map((item) => (
+              <StaggerItem key={item.title + item.meta}>
+                <div className="group relative flex h-full flex-col justify-between gap-6 border border-border bg-background px-5 py-5 transition-colors duration-200 hover:border-primary/30 sm:px-6 sm:py-6">
+                  <div className="absolute left-0 top-0 h-full w-[3px] bg-primary/70 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
+                  <div className="space-y-4">
+                    <div className="flex items-start justify-between gap-4">
+                      <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-primary">{item.label}</p>
+                      <span className="shrink-0 border border-border px-2.5 py-1 font-mono text-[10px] uppercase tracking-widest text-muted-foreground text-right transition-colors duration-200 group-hover:border-primary/40">
+                        {item.meta}
+                      </span>
+                    </div>
+                    <div className="space-y-3">
+                      <h3 className="max-w-sm font-semibold text-base uppercase tracking-tight text-foreground">
+                        {item.title}
+                      </h3>
+                      <p className="max-w-xl text-sm leading-[1.8] text-muted-foreground">{item.detail}</p>
+                    </div>
+                  </div>
+                  <div className="border-t border-dashed border-border pt-4">
+                    <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+                      Selected proof point
+                    </p>
+                  </div>
                 </div>
               </StaggerItem>
             ))}

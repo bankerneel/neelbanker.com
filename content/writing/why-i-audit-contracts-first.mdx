@@ -1,0 +1,67 @@
+---
+title: "Why I Stopped Writing Smart Contracts Before Auditing Them"
+date: "2026-04-01"
+pillar: "leadership"
+excerpt: "Auditing changed how I write Solidity. Once you spend enough time reading production-bound contracts for failure modes, your default design instincts change."
+---
+
+## Auditing Changes Your Mental Model
+
+When you only write contracts, your bias is toward feature completion.
+
+When you audit contracts, your bias shifts toward failure surface:
+- where can state drift?
+- who can call this unexpectedly?
+- what assumption stops being true after an upgrade?
+- what external dependency silently controls safety here?
+
+That shift permanently changes how you write.
+
+## The Biggest Difference
+
+Before auditing, I thought in terms of happy-path correctness.
+
+After auditing, I think in terms of adversarial sequencing.
+
+That means I now ask different questions first:
+- what if this function is called twice in one block?
+- what if the token is non-standard?
+- what if an initializer can be reached from the wrong deployment path?
+- what if the admin model is operationally weak even if it is technically valid?
+
+## UUPS Taught Me Caution
+
+Upgradeable contracts are where many teams become overconfident. UUPS in particular is elegant, but it also makes it easier to hide risk behind a clean abstraction.
+
+The common failures are familiar:
+- unprotected initializer flows
+- upgrade authorisation that is technically present but operationally weak
+- storage layout mistakes that do not fail loudly until it is too late
+
+Those are not exotic bugs. They are predictable mistakes.
+
+## Staking Contracts Expose Weak Thinking Quickly
+
+Staking systems are a great stress test because they combine:
+- token transfers
+- reward math
+- time-based assumptions
+- upgrade pressure
+- high user sensitivity to loss of funds
+
+If your design discipline is weak, staking contracts reveal it fast.
+
+## What Changed in My Own Process
+
+I now write contract logic in a different order:
+
+1. define invariants
+2. define roles and trust boundaries
+3. define failure and pause behaviour
+4. only then define the user-facing feature path
+
+That order feels slower early on. It is faster later because it avoids rewrites driven by audit findings that should have been obvious in design.
+
+## The Broader Lesson
+
+Auditing is useful even if you never become a full-time auditor. It forces you to look at systems from the point of view that production will eventually impose on you anyway: not "does this work?" but "how does this break?"
