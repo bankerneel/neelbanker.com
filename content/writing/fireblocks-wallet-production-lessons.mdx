@@ -1,0 +1,69 @@
+---
+title: "Building a Non-Custodial Wallet with Fireblocks: What Nobody Tells You"
+date: "2026-03-27"
+pillar: "blockchain"
+excerpt: "Fireblocks NCW solves part of the problem. The real complexity sits in recovery UX, session state, webhook timing, and transaction flows that fail halfway."
+---
+
+## The Marketing Version vs the Production Version
+
+On paper, non-custodial wallets look simple: user owns the keys, app provides the interface, signing happens securely, done.
+
+In production, that is not what consumes your time.
+
+The time goes into:
+- recovery and re-enrolment
+- transaction-state drift between UI and backend
+- handling slow or partial signing flows
+- making wallet errors understandable to users who do not care what an MPC shard is
+
+Fireblocks NCW gives you a serious foundation. It does not remove the product and systems work wrapped around that foundation.
+
+## The First Mistake: Thinking Wallet State Is a Frontend Concern
+
+Wallet teams often build the initial version as if the frontend can truthfully represent wallet state on its own. That breaks quickly.
+
+The actual state machine spans:
+- device enrolment
+- backend transaction orchestration
+- Fireblocks webhook events
+- chain confirmation status
+
+If you treat the UI as the source of truth, retries and partial failures turn into duplicate actions or false confidence.
+
+The fix is boring and necessary: model transaction lifecycle explicitly on the backend and let the UI subscribe to that model.
+
+## Recovery UX Is a Security Problem
+
+People discuss recovery as a UX feature. It is not. It is a security boundary wrapped in UX.
+
+If recovery is too hard, users lock themselves out.
+If recovery is too easy, attackers have a cleaner path than legitimate users.
+
+The best recovery flows I have seen share three traits:
+- they avoid exposing cryptographic concepts in the primary user path
+- they make device trust status visible
+- they fail closed when the system is unsure
+
+## Webhooks Are Where Operational Truth Arrives Late
+
+A clean signing prompt does not mean the system is done. In NCW products, the backend usually learns the final outcome asynchronously. That means:
+
+1. user initiates a transaction
+2. provider processes signing and internal policy checks
+3. webhook arrives later
+4. chain confirmation arrives later still
+
+If your product assumes all four happen in a neat sequence, you will get support tickets that sound random but are actually deterministic consequences of a bad state model.
+
+## What I Would Standardise Earlier
+
+If I were starting again, I would define these at the beginning:
+- a transaction state machine owned by the backend
+- idempotent retry rules for each step
+- event logging that product and support teams can read
+- explicit UX copy for pending, recoverable, and terminal failure cases
+
+## The Broader Point
+
+Most wallet complexity is not in the cryptography. It is in building a product that behaves honestly when security systems, backend orchestration, and chain infrastructure move at different speeds.

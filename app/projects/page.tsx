@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { getAllProjectMeta } from '@/lib/mdx'
-import { ProjectCard } from '@/components/project-card'
-import { FadeUp, StaggerContainer, StaggerItem } from '@/components/scroll-reveal'
+import { ProjectBrowser } from '@/components/project-browser'
+import { FadeUp } from '@/components/scroll-reveal'
 
 export const metadata: Metadata = {
   title: 'Projects',
@@ -11,6 +11,12 @@ export const metadata: Metadata = {
 
 export default function ProjectsPage() {
   const projects = getAllProjectMeta()
+  const signals = [
+    { label: 'Wallet & Custody', value: 'NCW, Fireblocks, BitGo, ERC-4337' },
+    { label: 'Chains & Infrastructure', value: 'OP Stack, Fabric, custom EVM, bridge systems' },
+    { label: 'AI Systems', value: 'Agent workflows, local LLMs, ranking and orchestration' },
+  ]
+
   return (
     <>
       {/* ── Page header ──────────────────────────────────── */}
@@ -47,13 +53,17 @@ export default function ProjectsPage() {
 
       {/* ── Project cards ────────────────────────────────── */}
       <div className="mx-auto max-w-5xl xl:max-w-6xl 2xl:max-w-7xl 3xl:max-w-[1440px] px-6 sm:px-12 py-12 sm:py-16">
-        <StaggerContainer className="grid gap-5 sm:grid-cols-2">
-          {projects.map((p) => (
-            <StaggerItem key={p.slug}>
-              <ProjectCard project={p} />
-            </StaggerItem>
-          ))}
-        </StaggerContainer>
+        <FadeUp>
+          <div className="mb-12 grid gap-px bg-border lg:grid-cols-3">
+            {signals.map((signal) => (
+              <div key={signal.label} className="bg-background p-6">
+                <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">{signal.label}</p>
+                <p className="text-sm leading-[1.7] text-foreground">{signal.value}</p>
+              </div>
+            ))}
+          </div>
+        </FadeUp>
+        <ProjectBrowser projects={projects} />
       </div>
     </>
   )

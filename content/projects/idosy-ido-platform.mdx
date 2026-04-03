@@ -1,0 +1,32 @@
+---
+title: "IDOSY — IDO Platform & Payment Flow"
+excerpt: "IDO platform with token-sale contracts, admin operations, and Stripe-connected off-chain payment flows. Combined smart contracts with a business-friendly operator layer."
+chain: "Ethereum, BNB Chain"
+stack: ["Solidity", "Node.js", "Admin Frontend", "Stripe", "MongoDB"]
+date: "2024-04-01"
+---
+
+## Problem
+
+Token-sale products often optimise for on-chain mechanics and neglect admin operations, payment reconciliation, and user support. This platform needed both sale-contract logic and an operator layer that could handle real customer and finance workflows.
+
+## Approach
+
+Design the system around two realities: the token-sale contracts must be deterministic and audit-friendly, while the business layer must support manual review, payment handling, and campaign control.
+
+## Architecture
+
+- Solidity sale contracts handling allocation and distribution logic
+- Admin frontend for campaign configuration, investor monitoring, and exception handling
+- Node.js backend bridging contract events, Stripe flows, and internal reporting
+- Reconciliation routines for on-chain and off-chain payment states
+
+## Outcome
+
+- Operators could manage sale configuration without touching contracts directly
+- Payment exceptions became observable instead of buried in support tickets
+- Finance and product teams had a shared operational view of sale status
+
+## Lessons
+
+The hard part of launch platforms is not contract deployment. It is making the business process resilient when users pay through multiple rails and expect immediate clarity.

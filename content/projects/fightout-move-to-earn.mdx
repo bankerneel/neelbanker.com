@@ -1,0 +1,31 @@
+---
+title: "FightOut — Move-to-Earn Fitness Platform"
+excerpt: "Web3 fitness platform combining token mechanics, NFTs, and user engagement loops. Built around move-to-earn and player-economy interactions under production delivery pressure."
+chain: "Ethereum, Layer 2"
+stack: ["Solidity", "NFTs", "Token Mechanics", "Node.js", "Web3 Product Delivery"]
+date: "2024-10-01"
+---
+
+## Problem
+
+Move-to-earn products combine game mechanics, token incentives, and user retention assumptions. That is a difficult mix because incentive design errors become product problems quickly, and on-chain logic can make iteration slower if the system is not partitioned carefully.
+
+## Approach
+
+Separate the incentive core from the broader product loop. Keep the smart contract layer focused on ownership and rewards primitives, while product iteration and engagement logic remain flexible at the application layer.
+
+## Architecture
+
+- NFT and token mechanics for user progression and reward models
+- Backend orchestration for product-side progression and event handling
+- Delivery structure designed to keep the on-chain layer stable while product features evolved
+
+## Outcome
+
+- Product incentives stayed coupled to auditable on-chain primitives
+- Iteration remained possible without redeploying every product change into smart contracts
+- Teams could reason more clearly about what belonged on-chain vs off-chain
+
+## Lessons
+
+The most important design decision in gamified Web3 products is boundary selection. If the chain owns too much, iteration slows. If it owns too little, the token model stops being trustworthy.

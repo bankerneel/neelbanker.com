@@ -63,6 +63,12 @@ const talks = [
   },
 ]
 
+const contactFacts = [
+  { label: 'Email', value: 'neelhbanker@gmail.com' },
+  { label: 'Location', value: 'Ahmedabad, Gujarat, India' },
+  { label: 'Open To', value: 'Global architecture leadership roles and long-term advisory work' },
+]
+
 export default function AboutPage() {
   return (
     <>
@@ -145,6 +151,17 @@ export default function AboutPage() {
               I write <em>The Architect&apos;s Brief</em> — a weekly newsletter covering blockchain architecture, AI × Web3, and
               engineering leadership. If you build distributed systems or lead technical teams, it&apos;s for you.
             </p>
+          </div>
+        </FadeUp>
+
+        <FadeUp delay={0.1}>
+          <div className="mt-12 grid gap-px bg-border">
+            {contactFacts.map((fact) => (
+              <div key={fact.label} className="bg-background px-5 py-4">
+                <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">{fact.label}</p>
+                <p className="text-sm leading-[1.7] text-foreground">{fact.value}</p>
+              </div>
+            ))}
           </div>
         </FadeUp>
       </div>

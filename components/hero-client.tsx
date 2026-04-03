@@ -210,6 +210,20 @@ const TECH_LOGOS: TechLogo[] = [
   { label: 'Hardhat', color: '#FFC517', Icon: HardhatIcon, size: 36, x: 10, y: 80, delay: 0.78, floatAmplitude: 11, floatDuration: 5.8 },
 ]
 
+const LEFT_TECH_LOGOS = TECH_LOGOS.filter((_, index) => index % 2 === 0).map((logo) => ({
+  ...logo,
+  size: Math.round(logo.size * 0.88),
+  x: 3 + logo.x * 0.28,
+  y: 6 + logo.y * 0.86,
+}))
+
+const RIGHT_TECH_LOGOS = TECH_LOGOS.filter((_, index) => index % 2 === 1).map((logo) => ({
+  ...logo,
+  size: Math.round(logo.size * 0.88),
+  x: 68 + logo.x * 0.24,
+  y: 6 + logo.y * 0.86,
+}))
+
 // ── Floating badge component ──────────────────────────────────────────────
 function TechBadge({ logo, shouldAnimate }: { logo: TechLogo; shouldAnimate: boolean }) {
   const floatY = shouldAnimate ? [0, -logo.floatAmplitude, 0] : [0]
@@ -287,6 +301,11 @@ function HeroWord({
 export function HeroClient() {
   const prefersReduced = useReducedMotion()
   const shouldAnimate = !prefersReduced
+  const highlightCards = [
+    { label: 'Current Focus', value: 'L2, NCW, AI Delivery' },
+    { label: 'Operating Mode', value: 'Architecture + Team Systems' },
+    { label: 'Base', value: 'Ahmedabad · Global Projects' },
+  ]
 
   return (
     <section className="mx-auto max-w-5xl xl:max-w-6xl 2xl:max-w-7xl 3xl:max-w-[1440px] px-6 sm:px-12 py-20 md:py-28 relative overflow-hidden border-b border-border">
@@ -301,19 +320,39 @@ export function HeroClient() {
         }}
       />
 
-      {/* Radial vignette to fade the dot-grid on the left */}
+      {/* Center-weighted vignette so background motion sits behind the copy */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            'radial-gradient(ellipse 55% 80% at 30% 50%, transparent 20%, hsl(var(--background)) 80%)',
+            'radial-gradient(ellipse 42% 60% at 50% 48%, transparent 0%, transparent 52%, hsl(var(--background) / 0.94) 78%, hsl(var(--background)) 100%)',
         }}
       />
 
-      <div className="relative flex flex-col lg:flex-row justify-between items-start gap-12">
-        {/* ── Left: text content ─────────────────────────────── */}
-        <div className="flex-1 z-10">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 hidden lg:block"
+      >
+        <svg className="absolute inset-0 h-full w-full opacity-[0.08]" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 180C180 200 250 300 430 320C600 340 760 250 920 260C1090 272 1190 360 1436 330" stroke="currentColor" strokeWidth="1" fill="none" />
+          <path d="M24 480C190 430 290 520 470 500C640 480 740 390 910 395C1080 400 1200 470 1400 430" stroke="currentColor" strokeWidth="1" fill="none" />
+          <path d="M110 90C260 150 350 110 500 155C650 200 780 160 920 180C1070 200 1180 145 1320 190" stroke="currentColor" strokeWidth="1" fill="none" />
+        </svg>
+
+        {LEFT_TECH_LOGOS.map((logo) => (
+          <TechBadge key={`left-${logo.label}`} logo={logo} shouldAnimate={shouldAnimate} />
+        ))}
+        {RIGHT_TECH_LOGOS.map((logo) => (
+          <TechBadge key={`right-${logo.label}`} logo={logo} shouldAnimate={shouldAnimate} />
+        ))}
+
+        <div className="absolute inset-y-0 left-[34%] w-px bg-gradient-to-b from-transparent via-border to-transparent opacity-40" />
+        <div className="absolute inset-y-0 right-[34%] w-px bg-gradient-to-b from-transparent via-border to-transparent opacity-40" />
+      </div>
+
+      <div className="relative z-10">
+        <div className="flex-1 max-w-3xl">
           <motion.p
             className="font-mono text-xs tracking-[0.2em] uppercase text-muted-foreground mb-8"
             initial={{ opacity: 0, x: -16 }}
@@ -349,63 +388,35 @@ export function HeroClient() {
             <div className="mt-8">
               <Link
                 href="/about"
-                className="inline-flex items-center border border-border px-5 py-3 text-sm font-semibold uppercase tracking-[0.14em] text-foreground transition-all duration-200 hover:border-primary hover:bg-primary hover:text-primary-foreground cursor-pointer focus-visible:ring-2 focus-visible:ring-primary"
+                className="inline-flex cursor-pointer items-center border border-border px-5 py-3 text-sm font-semibold uppercase tracking-[0.14em] text-foreground transition-colors duration-200 hover:border-primary hover:bg-primary hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               >
                 About Neel →
               </Link>
             </div>
           </motion.div>
-        </div>
 
-        {/* ── Right: tech logo constellation ─────────────────── */}
-        <div
-          aria-hidden="true"
-          className="relative hidden lg:block shrink-0 pointer-events-none select-none"
-          style={{ width: '48%', height: '500px' }}
-        >
-          {/* Faint connecting lines — decorative */}
-          <svg className="absolute inset-0 w-full h-full opacity-[0.06]" xmlns="http://www.w3.org/2000/svg">
-            <line x1="15%" y1="8%" x2="48%" y2="5%" stroke="currentColor" strokeWidth="1"/>
-            <line x1="48%" y1="5%" x2="80%" y2="8%" stroke="currentColor" strokeWidth="1"/>
-            <line x1="80%" y1="8%" x2="72%" y2="22%" stroke="currentColor" strokeWidth="1"/>
-            <line x1="85%" y1="55%" x2="72%" y2="22%" stroke="currentColor" strokeWidth="1"/>
-            <line x1="88%" y1="75%" x2="85%" y2="55%" stroke="currentColor" strokeWidth="1"/>
-            <line x1="60%" y1="72%" x2="88%" y2="75%" stroke="currentColor" strokeWidth="1"/>
-            <line x1="42%" y1="88%" x2="60%" y2="72%" stroke="currentColor" strokeWidth="1"/>
-            <line x1="28%" y1="80%" x2="42%" y2="88%" stroke="currentColor" strokeWidth="1"/>
-            <line x1="8%" y1="62%" x2="28%" y2="80%" stroke="currentColor" strokeWidth="1"/>
-            <line x1="5%" y1="35%" x2="8%" y2="62%" stroke="currentColor" strokeWidth="1"/>
-            <line x1="18%" y1="50%" x2="5%" y2="35%" stroke="currentColor" strokeWidth="1"/>
-            <line x1="15%" y1="8%" x2="18%" y2="50%" stroke="currentColor" strokeWidth="1"/>
-            {/* New icon connections */}
-            <line x1="22%" y1="22%" x2="15%" y2="8%" stroke="currentColor" strokeWidth="1"/>
-            <line x1="22%" y1="22%" x2="40%" y2="30%" stroke="currentColor" strokeWidth="1"/>
-            <line x1="59%" y1="14%" x2="72%" y2="22%" stroke="currentColor" strokeWidth="1"/>
-            <line x1="59%" y1="14%" x2="48%" y2="5%" stroke="currentColor" strokeWidth="1"/>
-            <line x1="40%" y1="30%" x2="53%" y2="46%" stroke="currentColor" strokeWidth="1"/>
-            <line x1="40%" y1="30%" x2="18%" y2="50%" stroke="currentColor" strokeWidth="1"/>
-            <line x1="75%" y1="40%" x2="72%" y2="22%" stroke="currentColor" strokeWidth="1"/>
-            <line x1="75%" y1="40%" x2="85%" y2="55%" stroke="currentColor" strokeWidth="1"/>
-            <line x1="53%" y1="46%" x2="60%" y2="72%" stroke="currentColor" strokeWidth="1"/>
-            <line x1="36%" y1="58%" x2="53%" y2="46%" stroke="currentColor" strokeWidth="1"/>
-            <line x1="65%" y1="84%" x2="88%" y2="75%" stroke="currentColor" strokeWidth="1"/>
-            <line x1="10%" y1="80%" x2="8%" y2="62%" stroke="currentColor" strokeWidth="1"/>
-          </svg>
-
-          {TECH_LOGOS.map((logo) => (
-            <TechBadge key={logo.label} logo={logo} shouldAnimate={shouldAnimate} />
-          ))}
-
-          {/* Central label */}
           <motion.div
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 1.6, duration: 0.8 }}
+            className="mt-10 grid gap-px bg-border sm:grid-cols-3"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.95, duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
           >
-            <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground/60 block">
-              The Stack
-            </span>
+            {highlightCards.map((item, index) => (
+              <motion.div
+                key={item.label}
+                className="bg-background px-4 py-4"
+                initial={{ opacity: 0, y: 18 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1.05 + index * 0.08, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+                  {item.label}
+                </p>
+                <p className="text-sm font-semibold uppercase tracking-tight text-foreground">
+                  {item.value}
+                </p>
+              </motion.div>
+            ))}
           </motion.div>
         </div>
       </div>

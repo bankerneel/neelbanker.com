@@ -1,10 +1,12 @@
 import Link from 'next/link'
-import { getAllArticleMeta, getAllResourceMeta } from '@/lib/mdx'
+import { getAllArticleMeta, getAllProjectMeta, getAllResourceMeta } from '@/lib/mdx'
 import { ArticleCard } from '@/components/article-card'
 import { ServiceCard } from '@/components/service-card'
+import { ProjectCard } from '@/components/project-card'
 import { PILLARS } from '@/lib/pillars'
 import { HeroClient } from '@/components/hero-client'
-import { FadeUp, StaggerContainer, StaggerItem } from '@/components/scroll-reveal'
+import { FadeUp, SlideIn, StaggerContainer, StaggerItem } from '@/components/scroll-reveal'
+import { TALKS } from '@/lib/talks'
 
 const PILLAR_HOVER_BG: Record<string, string> = {
   blockchain: 'hover:bg-primary',
@@ -13,9 +15,27 @@ const PILLAR_HOVER_BG: Record<string, string> = {
 }
 
 export default function HomePage() {
-  const articles = getAllArticleMeta().slice(0, 3)
+  const articles = getAllArticleMeta().slice(0, 4)
+  const projects = getAllProjectMeta()
   const resources = getAllResourceMeta()
   const featuredResource = resources[0]
+  const featuredProjects = [
+    'cryptsync-ncw',
+    'pepe-unchained-l2',
+    'verionce',
+    'roomquery',
+  ]
+    .map((slug) => projects.find((project) => project.slug === slug))
+    .filter((project): project is NonNullable<typeof project> => Boolean(project))
+
+  const writingCluster = [
+    'l2-chains-after-deployment',
+    'fireblocks-wallet-production-lessons',
+    'why-i-audit-contracts-first',
+    'designing-staking-contracts-that-wont-get-exploited',
+  ]
+    .map((slug) => articles.find((article) => article.slug === slug) ?? getAllArticleMeta().find((article) => article.slug === slug))
+    .filter((article): article is NonNullable<typeof article> => Boolean(article))
 
   const techStack = [
     'Hyperledger Fabric', 'OP Stack / L2', 'Solidity', 'ERC-4337', 'Fireblocks NCW',
@@ -52,6 +72,26 @@ export default function HomePage() {
     { value: '50+', label: 'Engineers Led' },
     { value: '15+', label: 'Production Platforms' },
   ]
+
+  const operatingLenses = [
+    {
+      label: 'Architecture',
+      title: 'Distributed systems with operational realism',
+      body: 'L2 chains, custody backends, Fabric networks, wallet orchestration, and the edges where product pressure meets infrastructure truth.',
+    },
+    {
+      label: 'AI Workflows',
+      title: 'AI used for leverage, not theatre',
+      body: 'I care about shorter feedback loops, better debugging, cleaner handoffs, and practical AI-assisted engineering that does not create long-term mess.',
+    },
+    {
+      label: 'Leadership',
+      title: 'Technical direction that survives scale',
+      body: 'Hiring, mentoring, delivery systems, and keeping teams moving without letting architecture drift every time urgency spikes.',
+    },
+  ]
+
+  const homeTalks = TALKS.slice(0, 3)
 
   return (
     <>
@@ -90,11 +130,32 @@ export default function HomePage() {
           </StaggerContainer>
         </section>
 
+        <section className="py-16 sm:py-20 border-b border-border">
+          <FadeUp>
+            <div className="mb-10 max-w-2xl">
+              <p className="mb-4 font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">Operating Lens</p>
+              <h2 className="font-bold text-3xl sm:text-4xl uppercase tracking-tighter mb-4">What this site is really about</h2>
+              <p className="text-base text-muted-foreground leading-[1.7]">
+                Not just blockchain work. It&apos;s the overlap between distributed systems, AI-assisted engineering, and the decisions required to ship under real constraints.
+              </p>
+            </div>
+          </FadeUp>
+          <StaggerContainer className="grid gap-px bg-border lg:grid-cols-3">
+            {operatingLenses.map((lens) => (
+              <StaggerItem key={lens.label} className="bg-background p-8 sm:p-10">
+                <p className="mb-4 font-mono text-[10px] uppercase tracking-[0.22em] text-primary">{lens.label}</p>
+                <h3 className="mb-4 font-bold text-xl sm:text-2xl uppercase tracking-tight">{lens.title}</h3>
+                <p className="text-sm leading-[1.8] text-muted-foreground">{lens.body}</p>
+              </StaggerItem>
+            ))}
+          </StaggerContainer>
+        </section>
+
         {/* ── Latest writing ───────────────────────────────── */}
         <section className="py-16 sm:py-20 border-b border-border">
           <FadeUp>
             <div className="flex items-end justify-between mb-12 sm:mb-16">
-              <h2 className="font-extrabold text-3xl sm:text-4xl uppercase tracking-tighter">Latest Writing</h2>
+              <h2 className="font-bold text-3xl sm:text-4xl uppercase tracking-tighter">Latest Writing</h2>
               <Link href="/writing" className="font-mono text-xs uppercase text-primary hover:underline underline-offset-8 transition-colors">
                 All articles →
               </Link>
@@ -104,6 +165,96 @@ export default function HomePage() {
             {articles.map((a) => (
               <StaggerItem key={a.slug}>
                 <ArticleCard article={a} />
+              </StaggerItem>
+            ))}
+          </StaggerContainer>
+        </section>
+
+        <section className="py-16 sm:py-20 border-b border-border">
+          <FadeUp>
+            <div className="mb-12 flex items-end justify-between">
+              <div>
+                <p className="mb-4 font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">Featured Case Studies</p>
+                <h2 className="font-bold text-3xl sm:text-4xl uppercase tracking-tighter">Representative systems, not a generic portfolio wall</h2>
+              </div>
+              <Link href="/projects" className="font-mono text-xs uppercase text-primary hover:underline underline-offset-8 transition-colors">
+                Browse all projects →
+              </Link>
+            </div>
+          </FadeUp>
+          <StaggerContainer className="grid gap-px bg-border lg:grid-cols-2">
+            {featuredProjects.map((project) => (
+              <StaggerItem key={project.slug} className="bg-background">
+                <ProjectCard project={project} />
+              </StaggerItem>
+            ))}
+          </StaggerContainer>
+        </section>
+
+        <section className="py-16 sm:py-20 border-b border-border">
+          <FadeUp>
+            <div className="mb-12 max-w-2xl">
+              <p className="mb-4 font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">Connected Reading</p>
+              <h2 className="mb-4 font-bold text-3xl sm:text-4xl uppercase tracking-tighter">A practical series on L2 operations, wallet systems, and contract risk</h2>
+              <p className="text-base leading-[1.7] text-muted-foreground">
+                If you want the strongest technical thread on this site, start here: post-deployment L2 realities, Fireblocks wallet lessons, audit-driven contract design, and staking-specific failure modes.
+              </p>
+            </div>
+          </FadeUp>
+          <div className="grid gap-px bg-border lg:grid-cols-2">
+            {writingCluster.map((article) => (
+              <Link
+                key={article.slug}
+                href={`/writing/${article.slug}`}
+                className="group bg-background p-8 transition-colors duration-200 hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              >
+                <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.22em] text-primary">
+                  {article.readingTime} min read
+                </p>
+                <h3 className="mb-4 font-bold text-xl uppercase tracking-tight transition-colors duration-200 group-hover:text-primary">
+                  {article.title}
+                </h3>
+                <p className="text-sm leading-[1.8] text-muted-foreground">{article.excerpt}</p>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        <section className="py-16 sm:py-20 border-b border-border">
+          <FadeUp>
+            <div className="mb-12 flex items-end justify-between">
+              <div>
+                <p className="mb-4 font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">Selected Talks</p>
+                <h2 className="font-bold text-3xl sm:text-4xl uppercase tracking-tighter">Speaking themes that complement the written work</h2>
+              </div>
+              <Link href="/speaking" className="font-mono text-xs uppercase text-primary hover:underline underline-offset-8 transition-colors">
+                View speaking →
+              </Link>
+            </div>
+          </FadeUp>
+          <StaggerContainer className="grid gap-px bg-border lg:grid-cols-3">
+            {homeTalks.map((talk) => (
+              <StaggerItem key={talk.title} className="bg-background">
+                <a
+                  href={talk.youtubeUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group block cursor-pointer p-8 transition-colors duration-200 hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                >
+                  <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.22em] text-primary">{talk.type}</p>
+                  <h3 className="mb-3 font-bold text-xl uppercase tracking-tight transition-colors duration-200 group-hover:text-primary">
+                    {talk.title}
+                  </h3>
+                  <p className="mb-4 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">{talk.venue}</p>
+                  <p className="mb-5 text-sm leading-[1.8] text-muted-foreground">{talk.description}</p>
+                  <div className="flex flex-wrap gap-2">
+                    {talk.topics.slice(0, 2).map((topic) => (
+                      <span key={topic} className="bg-muted px-3 py-1 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                        {topic}
+                      </span>
+                    ))}
+                  </div>
+                </a>
               </StaggerItem>
             ))}
           </StaggerContainer>
@@ -121,7 +272,7 @@ export default function HomePage() {
                 key={p.slug}
                 href={`/writing?pillar=${p.slug}`}
                 className={[
-                  'group p-8 md:p-10 transition-colors duration-300',
+                  'group cursor-pointer p-8 transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary md:p-10',
                   PILLAR_HOVER_BG[p.slug] ?? 'hover:bg-primary',
                   i < PILLARS.length - 1
                     ? 'border-b md:border-b-0 md:border-r border-border'
@@ -177,11 +328,49 @@ export default function HomePage() {
           </section>
         )}
 
+        <section className="py-16 sm:py-20 border-b border-border">
+          <FadeUp>
+            <div className="mb-12 flex items-end justify-between">
+              <div>
+                <p className="mb-4 font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">Signals</p>
+                <h2 className="font-bold text-3xl sm:text-4xl uppercase tracking-tighter">How I tend to work</h2>
+              </div>
+              <Link href="/about" className="font-mono text-xs uppercase text-primary hover:underline underline-offset-8 transition-colors">
+                More context →
+              </Link>
+            </div>
+          </FadeUp>
+          <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
+            <SlideIn from="left">
+              <div className="border border-border p-8 sm:p-10">
+                <p className="mb-4 font-mono text-[10px] uppercase tracking-[0.22em] text-primary">Field Notes</p>
+                <h3 className="mb-5 font-bold text-2xl sm:text-3xl uppercase tracking-tight">I usually get pulled in where systems are already under stress</h3>
+                <p className="max-w-xl text-sm leading-[1.8] text-muted-foreground">
+                  Mid-flight architecture changes, multi-team delivery drift, custody and wallet systems with hidden edge cases, or platform decisions that were made quickly and now need to survive production. That tends to be the operating environment.
+                </p>
+              </div>
+            </SlideIn>
+            <SlideIn from="right">
+              <div className="grid gap-px bg-border">
+                {[
+                  'Translate rough product ambition into systems that scale',
+                  'Bring security, delivery discipline, and architecture back into alignment',
+                  'Use AI tactically to improve execution quality, not to replace thinking',
+                ].map((item) => (
+                  <div key={item} className="bg-background px-6 py-6 text-sm leading-[1.8] text-muted-foreground">
+                    {item}
+                  </div>
+                ))}
+              </div>
+            </SlideIn>
+          </div>
+        </section>
+
         {/* ── Services ─────────────────────────────────────── */}
         <section className="py-16 sm:py-20">
           <FadeUp>
             <div className="flex items-end justify-between mb-12 sm:mb-16">
-              <h2 className="font-extrabold text-3xl sm:text-4xl uppercase tracking-tighter">Work With Me</h2>
+              <h2 className="font-bold text-3xl sm:text-4xl uppercase tracking-tighter">Work With Me</h2>
               <Link href="/work-with-me" className="font-mono text-xs uppercase text-primary hover:underline underline-offset-8 transition-colors">
                 All services →
               </Link>

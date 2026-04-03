@@ -5,7 +5,7 @@ export function PillarBadge({ pillar }: { pillar: PillarSlug }) {
   const p = getPillarBySlug(pillar)
   if (!p) return null
   return (
-    <span className={`inline-flex items-center gap-1 rounded-sm px-1.5 py-0.5 text-xs font-medium ${p.bgClass} ${p.textClass}`}>
+    <span className={`inline-flex min-h-[28px] items-center gap-1 rounded-sm px-2 py-1 text-[11px] font-medium leading-none sm:text-xs ${p.bgClass} ${p.textClass}`}>
       {p.emoji} {p.label}
     </span>
   )

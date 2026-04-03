@@ -72,6 +72,19 @@ export default function WorkWithMePage() {
       </section>
 
       <div className="mx-auto max-w-5xl xl:max-w-6xl 2xl:max-w-7xl 3xl:max-w-[1440px] px-6 sm:px-12 py-12 sm:py-16">
+        <FadeUp>
+          <div className="mb-12 grid gap-px bg-border lg:grid-cols-3">
+            {[
+              'Architecture reviews for blockchain and backend systems under delivery pressure',
+              'Audits and technical advisory for teams that need sharper security and execution discipline',
+              'Fractional leadership where founders need a technical sounding board before mistakes compound',
+            ].map((item, index) => (
+              <div key={index} className="bg-background p-6 text-sm leading-[1.8] text-muted-foreground">
+                {item}
+              </div>
+            ))}
+          </div>
+        </FadeUp>
 
         {/* ── Services ─────────────────────────────────────── */}
         <div className="mb-20">

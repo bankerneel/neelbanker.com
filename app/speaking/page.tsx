@@ -1,41 +1,29 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { FadeUp, StaggerContainer, StaggerItem } from '@/components/scroll-reveal'
+import { FadeUp, SlideIn, StaggerContainer, StaggerItem } from '@/components/scroll-reveal'
+import { TALKS } from '@/lib/talks'
 
 export const metadata: Metadata = {
   title: 'Speaking',
   description: 'Talks on blockchain fundamentals, NFTs, and practical engineering at GDG Ahmedabad, ICAI Centre of Excellence, and internal sessions.',
 }
 
-const talks = [
-  {
-    title: 'NFT: A New Gold Rush',
-    venue: 'GDG Ahmedabad',
-    type: 'Conference Talk',
-    description: 'Covered NFTs as a new asset class on blockchain for a Google Developer Group audience. Went into the mechanics of how NFTs work on-chain, ownership primitives, and what distinguishes speculative asset classes from infrastructure.',
-    youtubeUrl: 'https://www.youtube.com/watch?v=KYRgwRG-LF8',
-    eventUrl: 'https://gdg.community.dev/events/details/google-gdg-ahmedabad-presents-nft-a-new-gold-rush/',
-    topics: ['NFT Standards', 'ERC-721', 'Digital Ownership', 'Blockchain Fundamentals'],
-  },
-  {
-    title: 'Blockchain and Decentralisation',
-    venue: 'Centre of Excellence of ICAI · Jaipur',
-    type: 'Educational Session',
-    description: 'Session covering blockchain fundamentals and real-world use cases, positioned around the technology behind cryptocurrency. Tailored for a professional accountancy audience — explained consensus, distributed ledgers, and the economic incentive structures that make blockchains work without central authority.',
-    youtubeUrl: 'https://www.youtube.com/watch?v=ONUzNrt9plc',
-    topics: ['Consensus Mechanisms', 'Distributed Ledgers', 'Cryptocurrency', 'Use Cases'],
-  },
-  {
-    title: 'Getting Started with Docker',
-    venue: 'Internal Session · SoluLab',
-    type: 'Technical Workshop',
-    description: 'Demonstrated how to Dockerise a React.js application for dev, staging & production environments using Docker & Docker Compose. Covered multi-stage builds, environment variable management, and the mental model shift from "it works on my machine" to reproducible, environment-agnostic deployments.',
-    youtubeUrl: 'https://www.youtube.com/watch?v=rvjnvZ6utpM',
-    topics: ['Docker', 'Docker Compose', 'Multi-stage Builds', 'DevOps'],
-  },
-]
-
 export default function SpeakingPage() {
+  const speakingProfile = [
+    {
+      label: 'Event formats',
+      value: 'Conference talks, workshops, internal engineering sessions, and founder or leadership roundtables.',
+    },
+    {
+      label: 'Best topics',
+      value: 'Blockchain architecture, wallet and custody systems, AI-augmented engineering, and technical leadership under delivery pressure.',
+    },
+    {
+      label: 'Best audience fit',
+      value: 'Engineering teams, Web3 builders, founder communities, developer groups, and product leaders navigating technical complexity.',
+    },
+  ]
+
   return (
     <>
       {/* ── Page header ──────────────────────────────────── */}
@@ -72,8 +60,16 @@ export default function SpeakingPage() {
 
       {/* ── Talks ────────────────────────────────────────── */}
       <div className="mx-auto max-w-5xl xl:max-w-6xl 2xl:max-w-7xl 3xl:max-w-[1440px] px-6 sm:px-12 py-12 sm:py-16">
+        <SlideIn from="left">
+          <div className="mb-12 border border-border p-8 sm:p-10">
+            <p className="mb-4 font-mono text-xs uppercase tracking-[0.22em] text-primary">What I speak about</p>
+            <p className="max-w-2xl text-sm leading-[1.8] text-muted-foreground">
+              I tend to speak where technical fundamentals meet practical decision-making: blockchain architecture, digital ownership systems, and the engineering habits that make complex platforms easier to ship and explain.
+            </p>
+          </div>
+        </SlideIn>
         <StaggerContainer className="space-y-10">
-          {talks.map((talk) => (
+          {TALKS.map((talk) => (
             <StaggerItem key={talk.title}>
               <article className="border border-border p-8 sm:p-10 group hover:border-primary transition-colors duration-200">
                 {/* Header */}
@@ -131,6 +127,14 @@ export default function SpeakingPage() {
         {/* CTA */}
         <FadeUp delay={0.2}>
           <div className="mt-16 border-t border-border pt-12">
+            <div className="mb-12 grid gap-px bg-border lg:grid-cols-3">
+              {speakingProfile.map((item) => (
+                <div key={item.label} className="bg-background p-6">
+                  <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.22em] text-primary">{item.label}</p>
+                  <p className="text-sm leading-[1.8] text-muted-foreground">{item.value}</p>
+                </div>
+              ))}
+            </div>
             <p className="font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground mb-4">Invite to Speak</p>
             <h2 className="font-extrabold text-2xl sm:text-3xl uppercase tracking-tighter mb-3">Want me at your event?</h2>
             <p className="text-sm text-muted-foreground leading-[1.7] max-w-md mb-8">

@@ -47,9 +47,17 @@ export default function ResourcesPage() {
 
       {/* ── Resource cards ───────────────────────────────── */}
       <div className="mx-auto max-w-5xl xl:max-w-6xl 2xl:max-w-7xl 3xl:max-w-[1440px] px-6 sm:px-12 py-12 sm:py-16">
-        <StaggerContainer className="grid gap-6 sm:grid-cols-2">
+        <FadeUp>
+          <div className="mb-12 border border-border p-8 sm:p-10">
+            <p className="mb-4 font-mono text-xs uppercase tracking-[0.22em] text-primary">Built from live delivery</p>
+            <p className="max-w-2xl text-sm leading-[1.8] text-muted-foreground">
+              These are practical downloadables distilled from the same systems work shown in the projects and writing sections: wallet architecture, custody flows, smart contract review patterns, and operational lessons that teams can use immediately.
+            </p>
+          </div>
+        </FadeUp>
+        <StaggerContainer className="grid gap-px bg-border sm:grid-cols-2">
           {resources.map((r) => (
-            <StaggerItem key={r.slug}>
+            <StaggerItem key={r.slug} className="bg-background">
               <ResourceCard resource={r} />
             </StaggerItem>
           ))}

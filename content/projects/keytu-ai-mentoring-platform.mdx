@@ -1,0 +1,41 @@
+---
+title: "Keytu — AI Mentoring Platform"
+excerpt: "AI-enhanced mentoring platform for guided matching, mentor workflows, and internal knowledge capture. Built as a multi-service product with NestJS, Angular, and Python-based AI services."
+chain: ""
+stack: ["NestJS", "Nx Monorepo", "Angular", "Python (Flask)", "PostgreSQL", "Claude API"]
+date: "2025-12-01"
+---
+
+## Problem
+
+Mentoring products usually fail at the matching layer. They either rely on static profile tags or make mentors do too much manual triage. The brief here was to build a platform that could match users with relevant mentors while also capturing enough interaction data to improve recommendations over time.
+
+## Approach
+
+Split the system into a transactional core and an AI assistance layer. The core product handles identity, bookings, mentor availability, and session history. The AI layer handles mentor matching, summary generation, and recommendation support without becoming a black box that overrides user choice.
+
+## Architecture
+
+**Application Layer:**
+- Nx monorepo coordinating backend services and Angular apps
+- NestJS API for auth, booking flows, mentor profiles, and reporting
+- Role-based access for learners, mentors, operators, and admins
+
+**AI Services:**
+- Python Flask service for profile enrichment and mentor-fit scoring
+- Prompt pipeline for session summaries and follow-up action items
+- Recommendation scoring designed to explain "why this mentor" instead of only ranking
+
+**Data Layer:**
+- PostgreSQL for transactional data and scheduling records
+- Event-driven updates so recommendation inputs stay fresh after each interaction
+
+## Outcome
+
+- Matching became explainable instead of opaque
+- Mentor operations stayed manageable as the catalogue expanded
+- Product team could iterate on ranking logic without destabilising the booking system
+
+## Lessons
+
+AI works best here as a decision-support layer, not a decision-maker. The system improved once we made recommendation reasons visible to users and operators instead of hiding them behind a single confidence score.

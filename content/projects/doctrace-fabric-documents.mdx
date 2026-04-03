@@ -1,0 +1,32 @@
+---
+title: "DocTrace — Document Handling on Hyperledger Fabric"
+excerpt: "Decentralised document-handling platform on Hyperledger Fabric for controlled verification, auditability, and data-sensitive workflows."
+chain: "Hyperledger Fabric"
+stack: ["Hyperledger Fabric", "Go (Chaincode)", "Node.js", "CouchDB", "Docker"]
+date: "2023-06-01"
+---
+
+## Problem
+
+Document-heavy workflows in regulated environments need auditability and trust, but they also need strict control over who can access what. Traditional CRUD systems handle access reasonably well, yet they provide weak guarantees around tamper evidence and verification history.
+
+## Approach
+
+Use Hyperledger Fabric as a permissioned trust layer rather than as a general-purpose database. Store state transitions and verification events on-chain while keeping sensitive raw data outside the ledger boundary.
+
+## Architecture
+
+- Fabric network segmented by participant role and organisation
+- Chaincode for document registration, verification requests, and revocation state
+- CouchDB-backed world state for rich query support
+- Node.js gateway exposing controlled APIs to web clients and operators
+
+## Outcome
+
+- Verification trail became tamper-evident
+- Access remained organisation-aware without exposing sensitive data broadly
+- Teams could reason about document state transitions with much more confidence
+
+## Lessons
+
+Fabric helps when multiple parties need shared trust rules. It becomes painful when teams treat it like a drop-in database and ignore the network model.

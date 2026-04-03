@@ -52,6 +52,14 @@ export default function NewsletterPage() {
 
       {/* ── Subscribe + highlights ───────────────────────── */}
       <div className="mx-auto max-w-2xl px-6 sm:px-12 py-12 sm:py-16">
+        <FadeUp>
+          <div className="mb-10 border border-border px-6 py-5">
+            <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.22em] text-primary">Editorial cadence</p>
+            <p className="text-sm leading-[1.8] text-muted-foreground">
+              Expect one strong idea at a time: architecture trade-offs, AI workflow patterns, or leadership notes grounded in delivery rather than generic hot takes.
+            </p>
+          </div>
+        </FadeUp>
 
         {/* What you get */}
         <FadeUp>
