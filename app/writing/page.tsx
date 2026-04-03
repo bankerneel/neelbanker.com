@@ -18,7 +18,8 @@ export default async function WritingPage({
   const articles = getAllArticleMeta()
   const { pillar } = await searchParams
   const initialActive = pillar === 'blockchain' || pillar === 'ai' || pillar === 'leadership' ? pillar : 'all'
-  const visualFeatures = articles.slice(0, 3).map((article) => ({
+  const leadArticle = articles[0]
+  const sideHighlights = articles.slice(1, 3).map((article) => ({
     ...article,
     pillarMeta: getPillarBySlug(article.pillar),
   }))
@@ -67,7 +68,7 @@ export default async function WritingPage({
             </p>
           </FadeUp>
           <FadeUp delay={0.25}>
-            <h1 className="font-extrabold text-4xl sm:text-5xl md:text-6xl uppercase tracking-tighter leading-[0.9] mb-6">
+            <h1 className="font-bold text-4xl sm:text-5xl md:text-6xl uppercase tracking-tighter leading-[0.9] mb-6">
               Writing
             </h1>
           </FadeUp>
@@ -82,46 +83,64 @@ export default async function WritingPage({
       {/* ── Articles ─────────────────────────────────────── */}
       <div className="mx-auto max-w-5xl xl:max-w-6xl 2xl:max-w-7xl 3xl:max-w-[1440px] px-6 sm:px-12 py-12">
         <FadeUp>
-          <div className="mb-12 grid gap-px bg-border xl:grid-cols-3">
-            {visualFeatures.map((article) => (
+          <div className="mb-12 grid gap-px bg-border xl:grid-cols-[1.3fr_0.7fr]">
+            {leadArticle && (
               <Link
-                key={article.slug}
-                href={`/writing/${article.slug}`}
-                className="group relative min-h-[260px] cursor-pointer overflow-hidden bg-background p-8 transition-colors duration-200 hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                href={`/writing/${leadArticle.slug}`}
+                className="group relative min-h-[320px] cursor-pointer overflow-hidden bg-background p-8 sm:p-10 transition-colors duration-200 hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               >
                 <div
                   aria-hidden="true"
                   className="absolute inset-0 opacity-15 transition-opacity duration-300 group-hover:opacity-25"
                   style={{
-                    background: `radial-gradient(circle at top right, ${article.pillarMeta?.colour === 'cyan' ? 'rgba(34,211,238,0.25)' : article.pillarMeta?.colour === 'orange' ? 'rgba(251,146,60,0.24)' : 'rgba(163,230,53,0.24)'} 0%, transparent 60%)`,
+                    background: `radial-gradient(circle at top right, ${getPillarBySlug(leadArticle.pillar)?.colour === 'cyan' ? 'rgba(34,211,238,0.25)' : getPillarBySlug(leadArticle.pillar)?.colour === 'orange' ? 'rgba(251,146,60,0.24)' : 'rgba(163,230,53,0.24)'} 0%, transparent 60%)`,
                   }}
                 />
                 <div className="relative z-10 flex h-full flex-col justify-between">
                   <div>
-                    <p className={`mb-4 font-mono text-[10px] uppercase tracking-[0.22em] ${article.pillarMeta?.textClass ?? 'text-primary'}`}>
-                      {article.pillarMeta?.label ?? 'Writing'}
+                    <p className={`mb-4 font-mono text-[10px] uppercase tracking-[0.22em] ${getPillarBySlug(leadArticle.pillar)?.textClass ?? 'text-primary'}`}>
+                      {getPillarBySlug(leadArticle.pillar)?.label ?? 'Writing'}
                     </p>
-                    <h2 className="mb-4 font-bold text-2xl uppercase tracking-tight leading-tight transition-colors duration-200 group-hover:text-primary">
-                      {article.title}
+                    <h2 className="mb-4 max-w-2xl font-bold text-3xl uppercase tracking-tight leading-tight transition-colors duration-200 group-hover:text-primary sm:text-4xl">
+                      {leadArticle.title}
                     </h2>
-                    <p className="text-sm leading-[1.8] text-muted-foreground">{article.excerpt}</p>
+                    <p className="max-w-xl text-sm leading-[1.9] text-muted-foreground sm:text-base">{leadArticle.excerpt}</p>
                   </div>
                   <div className="mt-8 flex items-center justify-between">
-                    <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">{article.readingTime} min read</span>
-                    <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">Read →</span>
+                    <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">{leadArticle.readingTime} min read</span>
+                    <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">Featured essay →</span>
                   </div>
                 </div>
               </Link>
-            ))}
+            )}
+
+            <div className="grid gap-px bg-border">
+              {sideHighlights.map((article) => (
+                <Link
+                  key={article.slug}
+                  href={`/writing/${article.slug}`}
+                  className="group bg-background p-6 transition-colors duration-200 hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                >
+                  <p className={`mb-3 font-mono text-[10px] uppercase tracking-[0.22em] ${article.pillarMeta?.textClass ?? 'text-primary'}`}>
+                    {article.pillarMeta?.label ?? 'Writing'}
+                  </p>
+                  <h2 className="mb-3 font-bold text-xl uppercase tracking-tight transition-colors duration-200 group-hover:text-primary">
+                    {article.title}
+                  </h2>
+                  <p className="mb-4 text-sm leading-[1.8] text-muted-foreground">{article.excerpt}</p>
+                  <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">{article.readingTime} min read</span>
+                </Link>
+              ))}
+            </div>
           </div>
         </FadeUp>
 
         <FadeUp>
           <div className="mb-12 grid gap-px bg-border lg:grid-cols-2">
             {editorialClusters.map((cluster) => (
-              <div key={cluster.label} className="bg-background p-8 sm:p-10">
+              <div key={cluster.label} className="bg-background p-6 sm:p-8">
                 <p className="mb-4 font-mono text-[10px] uppercase tracking-[0.22em] text-primary">{cluster.label}</p>
-                <h2 className="mb-6 font-bold text-2xl uppercase tracking-tight">{cluster.title}</h2>
+                <h2 className="mb-5 font-bold text-xl uppercase tracking-tight sm:text-2xl">{cluster.title}</h2>
                 <div className="space-y-4">
                   {cluster.items.map((article) => (
                     <Link

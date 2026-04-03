@@ -7,7 +7,7 @@ export function ProjectCard({ project }: { project: ProjectMeta }) {
   return (
     <motion.div
       className="group relative flex h-full cursor-default flex-col justify-between border border-border bg-background p-6"
-      whileHover={{ y: -4, borderColor: 'hsl(var(--primary))' }}
+      whileHover={{ y: -3, borderColor: 'hsl(var(--primary))' }}
       transition={{ duration: 0.2, ease: 'easeOut' }}
     >
       <div className="absolute inset-x-0 top-0 h-px origin-left scale-x-0 bg-primary transition-transform duration-300 group-hover:scale-x-100" />
@@ -16,7 +16,7 @@ export function ProjectCard({ project }: { project: ProjectMeta }) {
           <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
             {project.date}
           </p>
-          <h3 className="font-extrabold text-base uppercase tracking-tight leading-snug transition-colors duration-200 group-hover:text-primary">
+          <h3 className="font-bold text-base uppercase tracking-tight leading-snug transition-colors duration-200 group-hover:text-primary">
             {project.title}
           </h3>
         </div>

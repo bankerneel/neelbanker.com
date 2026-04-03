@@ -39,7 +39,7 @@ export default function ProjectsPage() {
             </p>
           </FadeUp>
           <FadeUp delay={0.25}>
-            <h1 className="font-extrabold text-4xl sm:text-5xl md:text-6xl uppercase tracking-tighter leading-[0.9] mb-6">
+            <h1 className="font-bold text-4xl sm:text-5xl md:text-6xl uppercase tracking-tighter leading-[0.9] mb-6">
               Projects
             </h1>
           </FadeUp>
@@ -54,7 +54,7 @@ export default function ProjectsPage() {
       {/* ── Project cards ────────────────────────────────── */}
       <div className="mx-auto max-w-5xl xl:max-w-6xl 2xl:max-w-7xl 3xl:max-w-[1440px] px-6 sm:px-12 py-12 sm:py-16">
         <FadeUp>
-          <div className="mb-12 grid gap-px bg-border lg:grid-cols-3">
+          <div className="mb-10 grid gap-px bg-border lg:grid-cols-3">
             {signals.map((signal) => (
               <div key={signal.label} className="bg-background p-6">
                 <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">{signal.label}</p>

@@ -38,10 +38,20 @@ export function PillarFilter({
   }
 
   const filtered = active === 'all' ? articles : articles.filter((a) => a.pillar === active)
+  const activeLabel = active === 'all'
+    ? 'All articles'
+    : PILLARS.find((pillar) => pillar.slug === active)?.label ?? 'Filtered articles'
 
   return (
     <div>
-      <div className="mb-6 flex flex-wrap gap-2">
+      <div className="mb-8 flex flex-col gap-4 border-b border-border pb-6 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">Archive</p>
+          <p className="text-sm leading-[1.7] text-muted-foreground">
+            <span className="font-semibold text-foreground">{activeLabel}</span> · {filtered.length} of {articles.length} articles
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-2">
         <button
           type="button"
           onClick={() => setActive('all')}
@@ -59,9 +69,19 @@ export function PillarFilter({
             {p.label}
           </button>
         ))}
+        </div>
       </div>
       <div>
-        {filtered.map((a) => <ArticleCard key={a.slug} article={a} />)}
+        {filtered.length > 0 ? (
+          filtered.map((a) => <ArticleCard key={a.slug} article={a} />)
+        ) : (
+          <div className="border border-border px-6 py-10">
+            <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">No matches</p>
+            <p className="text-sm leading-[1.8] text-muted-foreground">
+              There are no articles in this pillar yet. Switch filters to explore the rest of the archive.
+            </p>
+          </div>
+        )}
       </div>
     </div>
   )

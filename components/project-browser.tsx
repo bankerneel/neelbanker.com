@@ -37,17 +37,17 @@ const PROJECT_CATEGORIES: Record<string, ProjectFilter[]> = {
 const FEATURED_SPOTLIGHTS = [
   {
     label: 'Wallet Systems',
-    title: 'CryptSync, TrueTiger, Best Wallet, Fireblocks vs BitGo',
+    title: 'Project Atlas, Project Tiger, Project Orbit, Fireblocks vs BitGo',
     body: 'A through-line across non-custodial wallets, custody choices, key-management UX, and production transaction orchestration.',
   },
   {
     label: 'Infrastructure',
-    title: 'Pepe Unchained, VeriOnce, Fabric–Polygon, NCOG Earth Chain',
+    title: 'Project Ember, VeriOnce, Fabric–Polygon, NCOG Earth Chain',
     body: 'L2 operations, Fabric architectures, cross-chain verification, and the trade-offs behind custom or specialised blockchain infrastructure.',
   },
   {
     label: 'AI Delivery',
-    title: 'RoomQuery, Keytu, PrivateGPT, AI Social Media Agent',
+    title: 'RoomQuery, Project Beacon, PrivateGPT, AI Social Media Agent',
     body: 'Applied AI systems focused on ranking, retrieval, orchestration, and practical workflow leverage instead of generic demo-layer novelty.',
   },
 ]
@@ -73,11 +73,10 @@ export function ProjectBrowser({ projects }: { projects: ProjectMeta[] }) {
   const [activeFilter, setActiveFilter] = useState<ProjectFilter>('all')
   const visibleProjects = projects.filter((project) => includesFilter(project, activeFilter))
   const activeMeta = FILTERS.find((filter) => filter.key === activeFilter) ?? FILTERS[0]
-  const featuredProjects = visibleProjects.slice(0, 2)
 
   return (
     <div>
-      <div className="mb-12 border border-border bg-background p-6 sm:p-8">
+      <div className="mb-10 border border-border bg-background p-6 sm:p-8">
         <div className="mb-6 flex flex-wrap gap-2">
           {FILTERS.map((filter) => (
             <button
@@ -99,72 +98,54 @@ export function ProjectBrowser({ projects }: { projects: ProjectMeta[] }) {
         </div>
 
         <div className="mb-8 max-w-2xl">
-          <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.22em] text-primary">Featured by category</p>
+          <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.22em] text-primary">Browse by category</p>
           <h2 className="mb-4 font-bold text-2xl sm:text-3xl uppercase tracking-tight">{activeMeta.label}</h2>
-          <p className="text-sm leading-[1.8] text-muted-foreground">
-            {activeMeta.description} <span className="font-mono uppercase tracking-widest text-foreground">{visibleProjects.length} projects</span>
-          </p>
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <p className="max-w-xl text-sm leading-[1.8] text-muted-foreground">
+              {activeMeta.description}
+            </p>
+            <div className="inline-flex w-fit items-center gap-3 border border-border bg-muted/40 px-4 py-3">
+              <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">In view</span>
+              <span className="font-bold text-lg leading-none text-foreground tabular-nums">{visibleProjects.length}</span>
+              <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+                {visibleProjects.length === 1 ? 'project' : 'projects'}
+              </span>
+            </div>
+          </div>
         </div>
-
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeFilter}
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-            className="grid gap-px bg-border lg:grid-cols-2"
-          >
-            {featuredProjects.map((project) => (
-              <div key={project.slug} className="bg-background">
-                <ProjectCard project={project} />
-              </div>
-            ))}
-          </motion.div>
-        </AnimatePresence>
       </div>
 
-      <div className="mb-12 grid gap-px bg-border lg:grid-cols-3">
+      <div className="mb-10 grid gap-px bg-border lg:grid-cols-3">
         {FEATURED_SPOTLIGHTS.map((spotlight) => (
-          <div key={spotlight.label} className="bg-background p-6 sm:p-8">
+          <div key={spotlight.label} className="bg-background p-6">
             <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.22em] text-primary">{spotlight.label}</p>
-            <h2 className="mb-4 font-extrabold text-xl uppercase tracking-tight">{spotlight.title}</h2>
+            <h2 className="mb-4 font-bold text-lg uppercase tracking-tight">{spotlight.title}</h2>
             <p className="text-sm leading-[1.8] text-muted-foreground">{spotlight.body}</p>
           </div>
         ))}
       </div>
 
-      <div className="mb-10">
-        <p className="mb-4 font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">Browse by lens</p>
-        <div className="mb-4 flex flex-wrap gap-2">
-          {FILTERS.map((filter) => (
-            <button
-              key={filter.key}
-              type="button"
-              onClick={() => setActiveFilter(filter.key)}
-              className={`cursor-pointer px-3 py-2 font-mono text-xs uppercase tracking-widest transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${activeFilter === filter.key ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:text-foreground'}`}
-            >
-              {filter.label}
-            </button>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={activeFilter}
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -8 }}
+          transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
+          className="grid gap-px bg-border sm:grid-cols-2"
+        >
+          {visibleProjects.map((project) => (
+            <div key={project.slug} className="bg-background">
+              <ProjectCard project={project} />
+            </div>
           ))}
-        </div>
-        <p className="text-sm leading-[1.7] text-muted-foreground">
-          {activeMeta.description} <span className="font-mono uppercase tracking-widest text-foreground">{visibleProjects.length} projects</span>
-        </p>
-      </div>
-
-      <div className="grid gap-px bg-border sm:grid-cols-2">
-        {visibleProjects.map((project) => (
-          <div key={project.slug} className="bg-background">
-            <ProjectCard project={project} />
-          </div>
-        ))}
-      </div>
+        </motion.div>
+      </AnimatePresence>
 
       <div className="mt-16 border-t border-border pt-12">
         <div className="mb-8 max-w-2xl">
           <p className="mb-4 font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">Selected SoluLab case studies</p>
-          <h2 className="mb-4 font-extrabold text-2xl sm:text-3xl uppercase tracking-tighter">Client delivery, grouped as proof rather than a raw archive</h2>
+          <h2 className="mb-4 font-bold text-2xl sm:text-3xl uppercase tracking-tighter">Client delivery, grouped as proof rather than a raw archive</h2>
           <p className="text-sm leading-[1.8] text-muted-foreground">
             Not every client system belongs in a public deep-dive. These external case studies give a representative view of the kinds of platforms delivered across NFT marketplaces, gaming, supply-chain, token systems, and broader blockchain product builds.
           </p>
@@ -176,14 +157,28 @@ export function ProjectBrowser({ projects }: { projects: ProjectMeta[] }) {
               href={study.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex min-h-[120px] cursor-pointer flex-col justify-between bg-background p-6 transition-colors duration-200 hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              className="group relative flex min-h-[132px] cursor-pointer flex-col justify-between overflow-hidden bg-background p-6 transition-colors duration-200 hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
-              <p className="font-extrabold text-base uppercase tracking-tight transition-colors duration-200 group-hover:text-primary">
-                {study.label}
-              </p>
-              <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-                External case study ↗
-              </span>
+              <div
+                aria-hidden="true"
+                className="absolute inset-x-0 top-0 h-px origin-left scale-x-0 bg-primary transition-transform duration-300 group-hover:scale-x-100"
+              />
+              <div className="relative z-10">
+                <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+                  External case study
+                </p>
+                <p className="max-w-[18ch] font-bold text-base uppercase tracking-tight leading-snug transition-colors duration-200 group-hover:text-primary">
+                  {study.label}
+                </p>
+              </div>
+              <div className="relative z-10 flex items-center justify-between gap-4">
+                <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+                  SoluLab archive
+                </span>
+                <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground transition-transform duration-200 group-hover:translate-x-1">
+                  View ↗
+                </span>
+              </div>
             </a>
           ))}
         </div>
