@@ -14,7 +14,7 @@ export function PillarFilter({ articles }: { articles: ArticleMeta[] }) {
       <div className="mb-6 flex flex-wrap gap-2">
         <button
           onClick={() => setActive('all')}
-          className={`rounded-md px-3 py-1.5 text-sm transition-colors ${active === 'all' ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:text-foreground'}`}
+          className={`cursor-pointer px-3 py-1.5 font-mono text-xs uppercase tracking-widest transition-colors duration-200 ${active === 'all' ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:text-foreground'}`}
         >
           All
         </button>
@@ -22,13 +22,13 @@ export function PillarFilter({ articles }: { articles: ArticleMeta[] }) {
           <button
             key={p.slug}
             onClick={() => setActive(p.slug)}
-            className={`rounded-md px-3 py-1.5 text-sm transition-colors ${active === p.slug ? `${p.bgClass} ${p.textClass}` : 'bg-muted text-muted-foreground hover:text-foreground'}`}
+            className={`cursor-pointer px-3 py-1.5 font-mono text-xs uppercase tracking-widest transition-colors duration-200 ${active === p.slug ? `${p.bgClass} ${p.textClass}` : 'bg-muted text-muted-foreground hover:text-foreground'}`}
           >
-            {p.emoji} {p.label}
+            {p.label}
           </button>
         ))}
       </div>
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div>
         {filtered.map((a) => <ArticleCard key={a.slug} article={a} />)}
       </div>
     </div>

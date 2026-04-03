@@ -45,3 +45,5 @@ next-env.d.ts
 *.pdf
 !public/resources/*.pdf
 .env*.local
+
+.claude/settings.local.json

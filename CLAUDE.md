@@ -17,4 +17,11 @@ Current setup highlights:
 - Husky pre-commit hook runs `npm run lint` and `npm run typecheck`
 - Standalone pages include in-page navigation CTAs to avoid dead-end flows
 
+Design conventions (enforced, see AGENTS.md for full rules):
+- Inner pages use a two-layer header: `font-mono text-xs uppercase tracking-[0.22em]` label + `font-extrabold text-4xl+ uppercase tracking-tighter` h1
+- All interactive elements need `cursor-pointer` and `focus-visible:ring-2 focus-visible:ring-primary` — never `focus:ring-0`
+- Hover animations use `transition-colors duration-200` only — no `transition-all`, no padding/margin animation
+- `app/globals.css` includes `prefers-reduced-motion: reduce` guard — all new keyframes must respect it
+- `ArticleCard` is a full-width row component — never put it in a `sm:grid-cols-2` grid
+
 When in doubt, follow `AGENTS.md` over this file.

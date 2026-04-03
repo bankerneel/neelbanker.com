@@ -17,29 +17,36 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
   }
 
   if (state === 'done') {
-    return <p className="text-sm text-emerald-400">✓ You&apos;re in. Check your inbox to confirm.</p>
+    return <p className="text-sm text-emerald-400 font-mono">✓ You&apos;re in. Check your inbox.</p>
   }
 
   return (
-    <form onSubmit={handleSubmit} className={`flex gap-2 ${compact ? 'flex-row' : 'flex-col sm:flex-row'}`}>
-      <input
-        type="email"
-        required
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="your@email.com"
-        className="flex-1 rounded-md border border-border bg-muted px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
-      />
-      <button
-        type="submit"
-        disabled={state === 'loading'}
-        className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground disabled:opacity-50 whitespace-nowrap"
+    <div className="space-y-2">
+      <form
+        onSubmit={handleSubmit}
+        className={`flex border border-border focus-within:border-primary transition-colors duration-200 ${compact ? 'flex-row' : 'flex-col sm:flex-row'}`}
       >
-        {state === 'loading' ? '…' : "Get The Architect's Brief →"}
-      </button>
+        <input
+          type="email"
+          required
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="your@email.com"
+          className="flex-1 bg-transparent border-none outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset text-foreground px-4 py-3.5 text-sm placeholder:text-muted-foreground font-mono"
+          suppressHydrationWarning
+        />
+        <button
+          type="submit"
+          disabled={state === 'loading'}
+          className="cursor-pointer bg-primary text-primary-foreground font-mono font-bold text-xs uppercase tracking-widest px-6 py-3.5 hover:bg-foreground hover:text-background transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          suppressHydrationWarning
+        >
+          {state === 'loading' ? '…' : 'Subscribe →'}
+        </button>
+      </form>
       {state === 'error' && (
-        <p className="text-sm text-red-400">Something went wrong. Try again.</p>
+        <p className="text-xs text-red-400 font-mono">Something went wrong. Try again.</p>
       )}
-    </form>
+    </div>
   )
 }
