@@ -839,7 +839,7 @@ export function HeroClient() {
             </p>
           </div>
 
-          <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
             {TECH_LOGOS.slice(0, 12).map((logo, index) => (
               <motion.div
                 key={logo.label}

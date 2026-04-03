@@ -24,6 +24,7 @@
 - Several Tech Alchemy-specific project names were intentionally anonymized in public content.
 - Preserve pseudo/codename references unless the user explicitly asks otherwise.
 - Public-facing content should avoid directly exposing NDA-sensitive client/project names.
+- Hindustan Ecolife should be described accurately: Neel built, developed, and hosts the site; the business is run by his uncle, who is the director.
 
 ## UI / UX Decisions Already Made
 
@@ -35,6 +36,7 @@
 - `pretext` was evaluated and rejected for current motion/performance needs.
 - Article body width stays narrow; only the article header was widened.
 - Footer wordmark “Neel Banker” was intentionally restored to the original heavier styling.
+- Some mobile touch-target and density cleanup has already been done on filters, hero fallback, and Cal embed height, but a true browser/device QA pass is still pending.
 
 ## Interaction Preferences Learned
 

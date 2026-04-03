@@ -25,6 +25,11 @@ Core routes now feel substantially more consistent, lighter, and more editorial 
   - improved eyebrow/readability treatment
   - sharper supporting copy and cleaner meta cards
   - mobile signal-band fallback
+- Targeted mobile pass completed on:
+  - hero mobile signal-band density
+  - Cal booking embed height
+  - writing filter touch targets
+  - project browser filter controls and count badge
 - `/writing` archive optimized with stronger hierarchy and cleaner filtering.
 - Article detail pages improved for readability and navigation flow.
 - `/projects` upgraded from flat list to stronger taxonomy/case-study browser.
@@ -40,6 +45,7 @@ Core routes now feel substantially more consistent, lighter, and more editorial 
 - `/speaking`, `/resources`, and `/newsletter` rebuilt into cleaner editorial pages.
 - Shared shell consistency pass completed across nav, footer, and CTA patterns.
 - NDA-sensitive project references anonymized in public-facing content.
+- About page wording corrected to state that Hindustan Ecolife is run by Neel's uncle and that Neel built/hosts the website.
 
 ## Current Hero State
 
@@ -56,6 +62,7 @@ Core routes now feel substantially more consistent, lighter, and more editorial 
   - footer spacing and nav density
   - hover density on very wide screens
   - hero interaction feel on low-power devices
+  - remaining route-by-route mobile QA in real browser, not just code-level pass
 - End-to-end form/download behavior in browser:
   - newsletter subscribe
   - contact form

@@ -14,6 +14,11 @@
   - mobile
   - small laptop
   - ultrawide desktop
+- Verify the recent mobile-specific code pass in a real browser:
+  - hero signal band
+  - project filters
+  - writing filters
+  - Cal booking embed
 - Verify form flows:
   - newsletter subscribe
   - contact form

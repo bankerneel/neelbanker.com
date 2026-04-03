@@ -49,7 +49,8 @@ Current stack: Next.js 16 App Router · Tailwind v4 · shadcn/ui · MDX · Resen
 - `STATES.md` is the current snapshot: what has been improved, what is in progress, and what should be reviewed next
 - `MEMORY.md` is the durable working memory for important decisions, constraints, and non-obvious context learned during the build
 - `ROADMAP.md` is the prioritized forward plan; update it when major workstreams change
-- When you complete a substantial UI/content pass, update these docs in the same change so the repo state stays legible
+- After every user prompt that changes project state, update these docs in the same change so the repo state stays legible
+- At minimum, refresh `STATES.md`; update `MEMORY.md` and `ROADMAP.md` whenever the prompt changes decisions, constraints, or priorities
 
 ## Email (Resend)
 
