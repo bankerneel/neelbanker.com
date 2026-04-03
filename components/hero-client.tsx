@@ -1,6 +1,6 @@
 'use client'
 
-import { motion, useReducedMotion } from 'framer-motion'
+import { motion, useMotionTemplate, useMotionValue, useReducedMotion, useSpring, useTransform, type MotionValue } from 'framer-motion'
 import Link from 'next/link'
 import { NewsletterForm } from '@/components/newsletter-form'
 
@@ -212,22 +212,58 @@ const TECH_LOGOS: TechLogo[] = [
 
 const LEFT_TECH_LOGOS = TECH_LOGOS.filter((_, index) => index % 2 === 0).map((logo) => ({
   ...logo,
-  size: Math.round(logo.size * 0.88),
-  x: 3 + logo.x * 0.28,
+  size: Math.round(logo.size * 0.84),
+  x: 2 + logo.x * 0.24,
   y: 6 + logo.y * 0.86,
 }))
 
 const RIGHT_TECH_LOGOS = TECH_LOGOS.filter((_, index) => index % 2 === 1).map((logo) => ({
   ...logo,
-  size: Math.round(logo.size * 0.88),
-  x: 68 + logo.x * 0.24,
+  size: Math.round(logo.size * 0.92),
+  x: 66 + logo.x * 0.27,
   y: 6 + logo.y * 0.86,
 }))
 
 // ── Floating badge component ──────────────────────────────────────────────
-function TechBadge({ logo, shouldAnimate }: { logo: TechLogo; shouldAnimate: boolean }) {
+function TechBadge({
+  logo,
+  shouldAnimate,
+  pointerX,
+  pointerY,
+  pointerOpacity,
+}: {
+  logo: TechLogo
+  shouldAnimate: boolean
+  pointerX: MotionValue<number>
+  pointerY: MotionValue<number>
+  pointerOpacity: MotionValue<number>
+}) {
   const floatY = shouldAnimate ? [0, -logo.floatAmplitude, 0] : [0]
   const floatX = shouldAnimate ? [0, logo.floatAmplitude * 0.3, 0] : [0]
+  const spotlightScale = useTransform(() => {
+    if (!shouldAnimate) return 1
+    const dx = pointerX.get() - logo.x
+    const dy = pointerY.get() - logo.y
+    const distance = Math.sqrt(dx * dx + dy * dy)
+    if (distance > 24) return 1
+    return 1 + ((24 - distance) / 24) * 0.18
+  })
+  const spotlightGlow = useTransform(() => {
+    if (!shouldAnimate) return 0.25
+    const dx = pointerX.get() - logo.x
+    const dy = pointerY.get() - logo.y
+    const distance = Math.sqrt(dx * dx + dy * dy)
+    const boost = distance > 28 ? 0 : ((28 - distance) / 28) * 0.45
+    return 0.25 + boost * pointerOpacity.get()
+  })
+  const spotlightBrightness = useTransform(() => {
+    if (!shouldAnimate) return 1
+    const dx = pointerX.get() - logo.x
+    const dy = pointerY.get() - logo.y
+    const distance = Math.sqrt(dx * dx + dy * dy)
+    if (distance > 28) return 1
+    return 1 + ((28 - distance) / 28) * 0.22 * pointerOpacity.get()
+  })
 
   return (
     <motion.div
@@ -263,7 +299,19 @@ function TechBadge({ logo, shouldAnimate }: { logo: TechLogo; shouldAnimate: boo
           className="absolute inset-0 rounded-full blur-md opacity-25 scale-110 group-hover:opacity-50 transition-opacity duration-500"
           style={{ background: logo.color }}
         />
-        <logo.Icon />
+        <motion.div
+          style={{
+            scale: spotlightScale,
+            filter: useMotionTemplate`brightness(${spotlightBrightness})`,
+          }}
+          className="h-full w-full"
+        >
+          <motion.div
+            className="absolute inset-0 rounded-full blur-md scale-125"
+            style={{ background: logo.color, opacity: spotlightGlow }}
+          />
+          <logo.Icon />
+        </motion.div>
         {/* tooltip */}
         <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
           <span className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground whitespace-nowrap">
@@ -297,10 +345,76 @@ function HeroWord({
   )
 }
 
+function HeroMetaCard({
+  item,
+  index,
+  shouldAnimate,
+  cardPullX,
+  cardPullY,
+}: {
+  item: { label: string; value: string }
+  index: number
+  shouldAnimate: boolean
+  cardPullX: MotionValue<number>
+  cardPullY: MotionValue<number>
+}) {
+  const x = useTransform(cardPullX, (value: number) => value * (index === 1 ? 0.3 : index === 0 ? -0.7 : 0.7))
+  const y = useTransform(cardPullY, (value: number) => value * (index === 1 ? -0.4 : 0.5))
+
+  return (
+    <motion.div
+      className="bg-background px-4 py-4"
+      initial={{ opacity: 0, y: 18 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 1.05 + index * 0.08, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      style={{
+        x: shouldAnimate ? x : 0,
+        y: shouldAnimate ? y : 0,
+      }}
+    >
+      <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+        {item.label}
+      </p>
+      <p className="text-sm font-semibold uppercase tracking-tight text-foreground">
+        {item.value}
+      </p>
+    </motion.div>
+  )
+}
+
 // ── Main exported hero ────────────────────────────────────────────────────
 export function HeroClient() {
   const prefersReduced = useReducedMotion()
   const shouldAnimate = !prefersReduced
+  const pointerX = useMotionValue(50)
+  const pointerY = useMotionValue(50)
+  const pointerOpacity = useSpring(0, { stiffness: 220, damping: 28 })
+  const smoothX = useSpring(pointerX, { stiffness: 180, damping: 24 })
+  const smoothY = useSpring(pointerY, { stiffness: 180, damping: 24 })
+  const parallaxX = useTransform(smoothX, [0, 100], [-18, 18])
+  const parallaxY = useTransform(smoothY, [0, 100], [-14, 14])
+  const spotlightBackground = useMotionTemplate`radial-gradient(circle at ${smoothX}% ${smoothY}%, rgba(250,255,210,0.18) 0%, rgba(120,255,210,0.09) 16%, rgba(0,0,0,0) 34%)`
+  const spotlightRing = useMotionTemplate`radial-gradient(circle at ${smoothX}% ${smoothY}%, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.05) 12%, rgba(0,0,0,0) 24%)`
+  const cardPullX = useTransform(smoothX, [0, 100], [-5, 5])
+  const cardPullY = useTransform(smoothY, [0, 100], [-4, 4])
+  const copyShiftX = useTransform(smoothX, [0, 50, 100], [7, 0, -7])
+  const copyShiftY = useTransform(smoothY, [0, 50, 100], [5, 0, -5])
+  const newsletterLift = useTransform(() => {
+    if (!shouldAnimate) return 0
+    const dx = smoothX.get() - 28
+    const dy = smoothY.get() - 60
+    const distance = Math.sqrt(dx * dx + dy * dy)
+    if (distance > 22) return 0
+    return -((22 - distance) / 22) * 8 * pointerOpacity.get()
+  })
+  const newsletterGlow = useTransform(() => {
+    if (!shouldAnimate) return 0
+    const dx = smoothX.get() - 28
+    const dy = smoothY.get() - 60
+    const distance = Math.sqrt(dx * dx + dy * dy)
+    if (distance > 22) return 0
+    return ((22 - distance) / 22) * 0.14 * pointerOpacity.get()
+  })
   const highlightCards = [
     { label: 'Current Focus', value: 'L2, NCW, AI Delivery' },
     { label: 'Operating Mode', value: 'Architecture + Team Systems' },
@@ -308,7 +422,21 @@ export function HeroClient() {
   ]
 
   return (
-    <section className="mx-auto max-w-5xl xl:max-w-6xl 2xl:max-w-7xl 3xl:max-w-[1440px] px-6 sm:px-12 py-20 md:py-28 relative overflow-hidden border-b border-border">
+    <section
+      className="relative overflow-hidden border-b border-border"
+      onPointerMove={(event) => {
+        if (!shouldAnimate) return
+        const rect = event.currentTarget.getBoundingClientRect()
+        pointerX.set(((event.clientX - rect.left) / rect.width) * 100)
+        pointerY.set(((event.clientY - rect.top) / rect.height) * 100)
+        pointerOpacity.set(1)
+      }}
+      onPointerLeave={() => {
+        pointerOpacity.set(0)
+      }}
+      >
+      <div className="absolute inset-0 bg-background" />
+
       {/* Subtle dot-grid background */}
       <div
         aria-hidden="true"
@@ -330,10 +458,32 @@ export function HeroClient() {
         }}
       />
 
-      <div
+      <motion.div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 hidden lg:block"
-      >
+        style={{
+          background: spotlightBackground,
+          opacity: pointerOpacity,
+        }}
+      />
+
+      <motion.div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 hidden lg:block mix-blend-screen"
+        style={{
+          background: spotlightRing,
+          opacity: pointerOpacity,
+        }}
+      />
+
+      <motion.div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 hidden lg:block"
+        style={{
+          x: shouldAnimate ? parallaxX : 0,
+          y: shouldAnimate ? parallaxY : 0,
+        }}
+        >
         <svg className="absolute inset-0 h-full w-full opacity-[0.08]" xmlns="http://www.w3.org/2000/svg">
           <path d="M4 180C180 200 250 300 430 320C600 340 760 250 920 260C1090 272 1190 360 1436 330" stroke="currentColor" strokeWidth="1" fill="none" />
           <path d="M24 480C190 430 290 520 470 500C640 480 740 390 910 395C1080 400 1200 470 1400 430" stroke="currentColor" strokeWidth="1" fill="none" />
@@ -341,18 +491,62 @@ export function HeroClient() {
         </svg>
 
         {LEFT_TECH_LOGOS.map((logo) => (
-          <TechBadge key={`left-${logo.label}`} logo={logo} shouldAnimate={shouldAnimate} />
+          <TechBadge
+            key={`left-${logo.label}`}
+            logo={logo}
+            shouldAnimate={shouldAnimate}
+            pointerX={smoothX}
+            pointerY={smoothY}
+            pointerOpacity={pointerOpacity}
+          />
         ))}
         {RIGHT_TECH_LOGOS.map((logo) => (
-          <TechBadge key={`right-${logo.label}`} logo={logo} shouldAnimate={shouldAnimate} />
+          <TechBadge
+            key={`right-${logo.label}`}
+            logo={logo}
+            shouldAnimate={shouldAnimate}
+            pointerX={smoothX}
+            pointerY={smoothY}
+            pointerOpacity={pointerOpacity}
+          />
         ))}
 
         <div className="absolute inset-y-0 left-[34%] w-px bg-gradient-to-b from-transparent via-border to-transparent opacity-40" />
         <div className="absolute inset-y-0 right-[34%] w-px bg-gradient-to-b from-transparent via-border to-transparent opacity-40" />
-      </div>
+      </motion.div>
 
-      <div className="relative z-10">
-        <div className="flex-1 max-w-3xl">
+      <motion.div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-y-0 left-[-20%] hidden w-[42%] lg:block"
+        animate={shouldAnimate ? { x: ['0%', '180%'] } : {}}
+        transition={shouldAnimate ? { duration: 10.5, ease: 'linear', repeat: Infinity, repeatDelay: 1.4 } : {}}
+      >
+        <div className="h-full w-full bg-gradient-to-r from-transparent via-primary/12 to-transparent blur-2xl" />
+      </motion.div>
+
+      <motion.div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 hidden lg:block"
+        style={{ opacity: pointerOpacity }}
+      >
+        <motion.div
+          className="absolute h-40 w-40 rounded-full border border-primary/25 bg-primary/6 blur-xl"
+          style={{
+            left: useMotionTemplate`calc(${smoothX}% - 5rem)`,
+            top: useMotionTemplate`calc(${smoothY}% - 5rem)`,
+            scale: 1.1,
+          }}
+        />
+      </motion.div>
+
+      <div className="relative z-10 mx-auto max-w-5xl xl:max-w-6xl 2xl:max-w-7xl 3xl:max-w-[1440px] px-6 sm:px-12 py-20 md:py-28">
+        <motion.div
+          className="flex-1 max-w-3xl"
+          style={{
+            x: shouldAnimate ? copyShiftX : 0,
+            y: shouldAnimate ? copyShiftY : 0,
+          }}
+        >
           <motion.p
             className="font-mono text-xs tracking-[0.2em] uppercase text-muted-foreground mb-8"
             initial={{ opacity: 0, x: -16 }}
@@ -381,7 +575,15 @@ export function HeroClient() {
               7+ years building production blockchain infrastructure, custody platforms, and AI-augmented engineering systems.
               Writing weekly on the architecture of what&apos;s next.
             </p>
-            <NewsletterForm />
+            <motion.div
+              style={{
+                y: shouldAnimate ? newsletterLift : 0,
+                boxShadow: useMotionTemplate`0 0 0 1px rgba(163,230,53,${newsletterGlow}), 0 18px 48px rgba(0,0,0,${newsletterGlow})`,
+              }}
+              className="rounded-sm"
+            >
+              <NewsletterForm />
+            </motion.div>
             <p className="font-mono text-[10px] text-muted-foreground mt-3 tracking-widest uppercase">
               Free · Weekly · No Spam
             </p>
@@ -402,23 +604,17 @@ export function HeroClient() {
             transition={{ delay: 0.95, duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
           >
             {highlightCards.map((item, index) => (
-              <motion.div
+              <HeroMetaCard
                 key={item.label}
-                className="bg-background px-4 py-4"
-                initial={{ opacity: 0, y: 18 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.05 + index * 0.08, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-                  {item.label}
-                </p>
-                <p className="text-sm font-semibold uppercase tracking-tight text-foreground">
-                  {item.value}
-                </p>
-              </motion.div>
+                item={item}
+                index={index}
+                shouldAnimate={shouldAnimate}
+                cardPullX={cardPullX}
+                cardPullY={cardPullY}
+              />
             ))}
           </motion.div>
-        </div>
+        </motion.div>
       </div>
 
       {/* Mobile: horizontal logo strip ────────────────────────── */}
