@@ -55,7 +55,7 @@ export function PillarFilter({
         <button
           type="button"
           onClick={() => setActive('all')}
-          className={`cursor-pointer px-3 py-1.5 font-mono text-xs uppercase tracking-widest transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${active === 'all' ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:text-foreground'}`}
+          className={`cursor-pointer min-h-11 px-3 py-2 font-mono text-xs uppercase tracking-widest transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${active === 'all' ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:text-foreground'}`}
         >
           All
         </button>
@@ -64,7 +64,7 @@ export function PillarFilter({
             key={p.slug}
             type="button"
             onClick={() => setActive(p.slug)}
-            className={`cursor-pointer px-3 py-1.5 font-mono text-xs uppercase tracking-widest transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${active === p.slug ? `${p.bgClass} ${p.textClass}` : 'bg-muted text-muted-foreground hover:text-foreground'}`}
+            className={`cursor-pointer min-h-11 px-3 py-2 font-mono text-xs uppercase tracking-widest transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${active === p.slug ? `${p.bgClass} ${p.textClass}` : 'bg-muted text-muted-foreground hover:text-foreground'}`}
           >
             {p.label}
           </button>

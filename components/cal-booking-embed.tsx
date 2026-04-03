@@ -12,7 +12,7 @@ export function CalBookingEmbed() {
   }, [])
 
   return (
-    <div className="h-[700px] overflow-hidden rounded-lg border border-border bg-muted/20">
+    <div className="h-[620px] overflow-hidden rounded-lg border border-border bg-muted/20 sm:h-[700px]">
       <Cal
         namespace="15min"
         calLink="neelbanker/15min"

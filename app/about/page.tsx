@@ -183,9 +183,9 @@ export default function AboutPage() {
 
             <h2>Beyond Work</h2>
             <p>
-              I run <a href="https://hindustanecolife.com" target="_blank" rel="noopener noreferrer">Hindustan Ecolife</a> — a
-              nature and eco product business — as a side project. It keeps me honest about the full product stack: not just the
-              backend, but the customer experience end to end.
+              I designed, developed, and host the website for <a href="https://hindustanecolife.com" target="_blank" rel="noopener noreferrer">Hindustan Ecolife</a>, a
+              nature and eco product business run by my uncle, who is the company&apos;s director. It keeps me close to the full
+              product stack: not just the backend, but the customer experience end to end.
             </p>
 
             <h2>Writing</h2>

@@ -83,7 +83,7 @@ export function ProjectBrowser({ projects }: { projects: ProjectMeta[] }) {
               key={filter.key}
               type="button"
               onClick={() => setActiveFilter(filter.key)}
-              className={`relative cursor-pointer overflow-hidden px-3 py-2 font-mono text-xs uppercase tracking-widest transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${activeFilter === filter.key ? 'text-primary-foreground' : 'bg-muted text-muted-foreground hover:text-foreground'}`}
+              className={`relative min-h-11 cursor-pointer overflow-hidden px-3 py-2 font-mono text-xs uppercase tracking-widest transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${activeFilter === filter.key ? 'text-primary-foreground' : 'bg-muted text-muted-foreground hover:text-foreground'}`}
             >
               {activeFilter === filter.key && (
                 <motion.span
@@ -104,7 +104,7 @@ export function ProjectBrowser({ projects }: { projects: ProjectMeta[] }) {
             <p className="max-w-xl text-sm leading-[1.8] text-muted-foreground">
               {activeMeta.description}
             </p>
-            <div className="inline-flex w-fit items-center gap-3 border border-border bg-muted/40 px-4 py-3">
+            <div className="inline-flex w-full items-center gap-3 border border-border bg-muted/40 px-4 py-3 sm:w-fit">
               <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">In view</span>
               <span className="font-bold text-lg leading-none text-foreground tabular-nums">{visibleProjects.length}</span>
               <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">

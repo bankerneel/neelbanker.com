@@ -10,7 +10,7 @@ const navLinks = [
   { href: '/newsletter', label: 'Newsletter' },
   { href: '/work-with-me', label: 'Work With Me' },
   { href: 'https://linkedin.com/in/neelbanker', label: 'LinkedIn ↗', external: true },
-  { href: 'https://github.com/neelbanker', label: 'GitHub ↗', external: true },
+  { href: 'https://github.com/bankerneel', label: 'GitHub ↗', external: true },
 ]
 
 export function Footer() {
