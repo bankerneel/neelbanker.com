@@ -1,0 +1,77 @@
+---
+title: "AI Social Media Post Agent"
+excerpt: "Autonomous agent that monitors industry trends, messages the founder on Telegram for approval, drafts LinkedIn posts in the founder's voice, and publishes on confirmation. Built with Claude API."
+chain: ""
+stack: ["Python", "Claude API", "Telegram Bot API", "LinkedIn API", "LangChain"]
+date: "2026-01-15"
+---
+
+## Problem
+
+A founder wanted to post consistently on LinkedIn without the overhead of content creation. The constraint: posts had to sound like them — specific voice, specific opinions — not generic AI output. And they wanted to approve every post before it went live. Zero autonomous publishing.
+
+## Approach
+
+Build an agent loop that monitors for relevant content, drafts posts using a voice-calibrated prompt, and routes every draft through a Telegram approval flow before touching LinkedIn.
+
+## Architecture
+
+```
+Trend Monitor → Claude Drafter → Telegram Bot → LinkedIn Publisher
+     ↑                                ↓
+  RSS feeds                    Founder approval
+  Twitter API                  (approve / edit / reject)
+  HN/Reddit
+```
+
+**Trend Monitor (Python scheduler, runs 2x/day):**
+- Pulls from curated RSS feeds (blockchain, AI, Web3 publications)
+- Scores articles by relevance to founder's topic areas using embeddings
+- Surfaces top 3 candidates per run
+
+**Claude Drafter:**
+```python
+system_prompt = """
+You are writing LinkedIn posts for [Founder]. Their voice is:
+- Direct, no fluff
+- Uses specific numbers and examples, not vague claims
+- Ends with a question or provocation
+- Never uses: "game-changer", "exciting", "thrilled"
+- First person, present tense
+Write a 150-200 word post about the article below.
+"""
+```
+
+- Claude API (claude-3-5-sonnet) generates 2 draft variants per article
+- Drafts include suggested hashtags and a note on the angle chosen
+
+**Telegram Approval Bot:**
+- Sends draft to founder's Telegram with inline keyboard: Approve / Edit / Skip
+- If Approve: queues for LinkedIn posting
+- If Edit: opens thread for founder to reply with edits; Claude regenerates
+- If Skip: logs and moves to next candidate
+
+**LinkedIn Publisher:**
+- LinkedIn API v2 for post creation
+- Rate limit aware — maximum 1 post per day enforced in code
+- Posts logged to MongoDB with timestamp, source article, draft iteration count
+
+## Key Design Decisions
+
+**Why Telegram for approval?** The founder lives in Telegram. Email would have been ignored. Meeting the user where they are is a UX decision, not a technical one.
+
+**Why 2 drafts, not 1?** Giving the founder a choice between two angles dramatically reduced "edit" requests — they'd pick the one closer to their intent. One draft felt like an assignment; two felt like a decision.
+
+**Why Claude specifically?** Instruction-following quality and the ability to maintain voice constraints across many outputs. The system prompt is the product — getting it right took ~15 iterations.
+
+## Outcome
+
+- Founder went from 0 to 3-4 posts/week without spending time on drafting
+- Approval rate: ~60% approve on first draft, ~30% after one edit, ~10% skip
+- Zero posts published without explicit founder approval
+
+## Lessons
+
+The hardest part of AI agents isn't the AI — it's the human-in-the-loop design. The Telegram approval flow needed to be frictionless enough that the founder actually used it. If the UX of the approval step is bad, the whole system gets abandoned.
+
+Voice calibration in the system prompt is non-trivial. The most effective technique was giving Claude specific anti-examples ("never write X") rather than just positive examples of the target voice.

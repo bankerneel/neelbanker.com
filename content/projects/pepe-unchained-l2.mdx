@@ -1,0 +1,49 @@
+---
+title: "Pepe Unchained — OP Stack L2 + Bridge"
+excerpt: "Production Layer 2 chain built on OP Stack for a meme token ecosystem. Includes L1/L2 bridge, backend oracle, and staking contracts — deployed for a live token project."
+chain: "OP Stack (Ethereum L2)"
+stack: ["OP Stack", "Solidity", "Node.js", "Smart Contracts", "L1/L2 Bridge", "Oracle"]
+date: "2024-08-01"
+---
+
+## Problem
+
+A meme token project needed gas-efficient infrastructure for high-frequency token interactions — staking, claiming, marketplace transactions. Ethereum L1 gas costs made micropayment-scale operations economically unviable. The team wanted their own L2 rather than deploying on an existing chain.
+
+## Approach
+
+Deploy a custom OP Stack chain (Pepe Unchained L2) with a native bridge to Ethereum mainnet. This gives the project full control over sequencing, fee structure, and chain parameters — while inheriting Ethereum's security model via the optimistic rollup mechanism.
+
+## Architecture
+
+**L2 Chain:**
+- OP Stack deployment with custom chain ID and genesis configuration
+- Optimistic rollup — state is posted to Ethereum L1 as calldata
+- Challenge period: 7 days (standard OP Stack default for mainnet)
+
+**L1/L2 Bridge:**
+- Standard OP Stack bridge contracts for ETH and ERC-20 token bridging
+- Custom bridge for the native PEPU token with additional claim logic
+- Event listener backend (Node.js) that monitors L1 deposits and triggers L2 minting
+
+**Backend Oracle:**
+- Monitors L1 staking contracts for deposit events
+- Relays deposit confirmations to L2 staking contract
+- Signs messages with a hot wallet; production path has multi-sig upgrade
+
+**Staking Contracts:**
+- ERC-20 staking with configurable lock periods and reward rates
+- UUPS upgradeable pattern — owner can adjust reward parameters post-deploy
+- Reentrancy guards and withdrawal cooldown to prevent flash-loan attacks
+
+## Deployment
+
+- L2 chain live on mainnet with active users
+- Bridge processing deposits and withdrawals between Ethereum and Pepe Unchained
+- Staking contract TVL grew to significant USD value post-launch
+
+## Lessons
+
+OP Stack is production-ready and surprisingly approachable to deploy — the hard part is operations after launch, not the initial deployment. Running a sequencer means you're responsible for uptime, transaction ordering, and the L1 state posting schedule. Plan the operational runbook before you go live, not after.
+
+The bridge is the highest-risk component. All bridge deposits and withdrawals must be audited before launch — any logic error here is an irreversible loss of funds.

@@ -1,0 +1,78 @@
+---
+title: "Fabric–Polygon Cross-Chain Credential Bridge"
+excerpt: "Commit-reveal pattern bridging Hyperledger Fabric (private) and Polygon Amoy (public) for academic credential verification. Anchors private-chain state to a public blockchain without exposing raw data."
+chain: "Hyperledger Fabric + Polygon Amoy"
+stack: ["Go (Chaincode)", "Solidity", "JavaScript SDK", "Truffle", "Polygon", "Hyperledger Fabric"]
+date: "2025-08-01"
+---
+
+## Problem
+
+Universities want their credentials verifiable on public blockchains — so anyone with a phone can verify a degree. But all the actual data lives in a private Fabric network run by the institution. How do you bridge private-chain state to a public chain without exporting sensitive data?
+
+## Approach
+
+Implement a commit-reveal pattern across chains. The private chain commits a cryptographic hash commitment. A lightweight oracle bridge relays the commitment to a Solidity contract on Polygon. Verifiers interact with the public chain only — they never touch Fabric.
+
+## Three-Transaction Flow
+
+**Step 1 — Commit (Fabric → Oracle):**
+```
+Institution issues credential on Fabric
+Chaincode emits: CommitEvent { hash, nonce, timestamp }
+Oracle service (Node.js) picks up event
+```
+
+**Step 2 — Relay (Oracle → Polygon):**
+```
+Oracle signs and submits: CredentialRegistry.commit(hash, nonce)
+Polygon contract stores commitment with block timestamp
+```
+
+**Step 3 — Reveal + Verify (Public):**
+```
+Verifier calls: CredentialRegistry.verify(hash, metadata)
+Contract checks: hash matches commitment AND timestamp within validity window
+Returns: verified / revoked / not-found
+```
+
+## Latency Tradeoff
+
+End-to-end verification: ~16 seconds.
+
+- Fabric block: ~2s
+- Oracle relay: ~3s
+- Polygon finality: ~11s (Amoy testnet)
+
+For credential verification this is acceptable. For real-time use cases (DeFi, payments) this model wouldn't work — but for a graduation certificate, 16 seconds is fine.
+
+## Solidity Registry Contract
+
+```solidity
+mapping(bytes32 => Commitment) public commitments;
+
+struct Commitment {
+    bytes32 hash;
+    uint256 timestamp;
+    bool revoked;
+}
+
+function commit(bytes32 hash, bytes32 nonce) external onlyOracle {
+    commitments[keccak256(abi.encode(hash, nonce))] = Commitment(hash, block.timestamp, false);
+}
+
+function verify(bytes32 hash, bytes32 nonce) external view returns (bool valid) {
+    Commitment memory c = commitments[keccak256(abi.encode(hash, nonce))];
+    return c.hash != bytes32(0) && !c.revoked;
+}
+```
+
+## Outcome
+
+- End-to-end verification flow working on Fabric v2.4 + Polygon Amoy
+- Full implementation documented as a Gist (see project link)
+- Revocation works non-destructively — sets `revoked = true` without deleting history
+
+## Lessons
+
+The oracle is the single point of trust. In production, this must be a multi-sig committee with threshold signing — not a single key. The commit-reveal pattern is sound; the oracle trust model is where most cross-chain bridges get exploited.

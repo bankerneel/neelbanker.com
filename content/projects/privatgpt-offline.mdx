@@ -1,0 +1,93 @@
+---
+title: "PrivateGPT — 100% Offline Document Q&A"
+excerpt: "Local LLM pipeline for querying documents without any internet connection. GPT4All + LlamaCpp + Chroma vector DB. No data leaves the machine — built for sensitive enterprise and legal document use cases."
+chain: ""
+stack: ["Python", "GPT4All", "LlamaCpp", "Chroma (Vector DB)", "LangChain", "Sentence Transformers"]
+date: "2025-07-01"
+---
+
+## Problem
+
+Enterprises with sensitive documents — legal contracts, audit reports, HR records — cannot send data to OpenAI's API or any external service. They need document Q&A with the privacy guarantee that nothing leaves the air-gapped machine. Most "private AI" solutions still phone home for embeddings or model inference.
+
+## Approach
+
+Build a fully offline RAG (retrieval-augmented generation) pipeline. Embeddings computed locally with Sentence Transformers. Vector storage in Chroma (local SQLite backend). Inference via LlamaCpp running a quantised GGUF model. Zero network calls after initial model download.
+
+## Architecture
+
+```
+Documents (PDF, TXT, DOCX)
+    → Text chunking (LangChain RecursiveTextSplitter)
+    → Local embeddings (sentence-transformers/all-MiniLM-L6-v2)
+    → Chroma vector store (local SQLite)
+
+Query
+    → Embed query (same local model)
+    → Cosine similarity search → top-k chunks
+    → Prompt assembly
+    → LlamaCpp inference (Mistral 7B Q4_K_M GGUF)
+    → Answer
+```
+
+## Ingestion Pipeline
+
+```python
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.embeddings import HuggingFaceEmbeddings
+from langchain.vectorstores import Chroma
+
+splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
+embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+db = Chroma(persist_directory="./db", embedding_function=embeddings)
+
+for doc in load_documents("./source_docs"):
+    chunks = splitter.split_documents([doc])
+    db.add_documents(chunks)
+db.persist()
+```
+
+**Chunk size decision:** 500 tokens with 50-token overlap. Smaller chunks improve retrieval precision for specific facts; the overlap prevents splitting mid-sentence on key information.
+
+## Inference with LlamaCpp
+
+```python
+from llama_cpp import Llama
+
+llm = Llama(
+    model_path="./models/mistral-7b-instruct-v0.2.Q4_K_M.gguf",
+    n_ctx=4096,
+    n_threads=8,
+    n_gpu_layers=0  # CPU-only for true air-gap compatibility
+)
+
+def answer(query: str, context_chunks: list[str]) -> str:
+    context = "\n\n".join(context_chunks)
+    prompt = f"[INST] Answer based only on the context below.\n\n{context}\n\nQuestion: {query} [/INST]"
+    return llm(prompt, max_tokens=512)["choices"][0]["text"]
+```
+
+**Model choice:** Mistral 7B Q4_K_M quantisation — best quality/speed ratio for CPU-only inference. Q4 loses ~1% accuracy vs full precision but runs 4x faster and fits in 8GB RAM.
+
+## Performance on Commodity Hardware
+
+| Hardware | Ingestion (100 pages) | Query latency |
+|----------|----------------------|---------------|
+| MacBook M1 (CPU) | ~45s | ~8s |
+| 8-core Intel (CPU) | ~90s | ~18s |
+| RTX 3080 (GPU) | ~12s | ~2s |
+
+CPU-only performance is adequate for occasional Q&A use cases. For high-frequency enterprise deployment, GPU inference is strongly recommended.
+
+## Use Cases Where This Fits
+
+- Legal firms querying contract archives
+- HR teams searching policy documents
+- Regulated financial institutions with data residency requirements
+- Air-gapped government environments
+
+## Lessons
+
+RAG quality is dominated by chunking strategy, not model quality. Bad chunking (chunks too large, no overlap, poor document parsing) produces worse answers than a smaller model with good chunking. Spend 80% of tuning time on the ingestion pipeline.
+
+For enterprise deployment: Chroma's local SQLite backend is fine for <10M chunks. Beyond that, switch to a proper vector database (Qdrant, Milvus) — but you lose the zero-dependency simplicity.

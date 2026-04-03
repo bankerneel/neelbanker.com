@@ -1,0 +1,86 @@
+---
+title: "What I Learned Leading a Blockchain Team from 10 to 50+ Engineers"
+date: "2026-01-15"
+pillar: "leadership"
+excerpt: "The technical and organisational challenges of scaling a specialist blockchain team — hiring signals that actually matter, managing technical direction at scale, and what breaks when you grow too fast."
+---
+
+## The Context
+
+From 2019 to 2024 at SoluLab, I built and led a blockchain engineering team that grew from 10 people to over 50. We were building custom blockchain platforms for clients across DeFi, enterprise, and infrastructure — so the team needed both specialist knowledge (Solidity, Fabric, custody systems) and the ability to context-switch across very different project types.
+
+These are the things I wish I'd known at the start.
+
+## Hiring: What Actually Signals Blockchain Competence
+
+The standard interview trap in blockchain hiring: ask about consensus mechanisms or EVM internals. Candidates who can recite Nakamoto consensus from memory aren't necessarily the engineers you want. Blockchain is a narrow specialist domain on top of a wide engineering base. The order of evaluation should be:
+
+**First: General engineering quality.** Can they write clean, testable, debuggable code? Do they understand distributed systems concepts — eventual consistency, failure modes, idempotency? Most blockchain systems are just distributed systems with a shared ledger. If the distributed systems fundamentals aren't there, blockchain knowledge won't save them.
+
+**Second: Intellectual honesty about trade-offs.** Blockchain has genuine trade-offs (decentralisation vs performance, custody vs UX, on-chain vs off-chain). I look for candidates who can articulate when *not* to use a blockchain — or when a simpler solution would work better. The engineers who understand the costs are more valuable than those who see every problem as a nail for the blockchain hammer.
+
+**Third: Blockchain-specific depth.** Only after the above. The domain knowledge is learnable; the engineering fundamentals and intellectual honesty are harder to develop.
+
+**Red flags in interviews:**
+- Can explain how things work but can't reason about what could go wrong
+- Blockchain maximalism — "this is always better than traditional systems"
+- No opinion on smart contract security beyond "we'll audit it later"
+
+## The 10-to-20 Transition: Building the Foundation
+
+At 10 people, everyone knows everyone's work. Context is shared implicitly. Code review is conversational. Decisions are fast.
+
+The 10-to-20 transition is where implicit coordination breaks down. You need:
+
+**Technical standards documents.** Not as bureaucracy, but as shared understanding. When someone new joins, what's the standard for smart contract architecture in this codebase? What's the deployment process? What does a security review require? If this isn't written down, every new engineer invents their own answers.
+
+**On-call and incident ownership.** At 10, everyone is on-call implicitly. At 20, you need explicit ownership. Who is responsible when the staking contract has a withdrawal issue at 2am? Ambiguous ownership means slow responses to critical failures in production.
+
+**A principal-level engineer.** Not just a team lead (which is partly administrative) but an engineer who can set technical direction, review architecture decisions, and maintain quality standards as the team grows. This person is worth finding early. They're hard to find; don't compromise.
+
+## The 20-to-50 Transition: What Breaks
+
+**Knowledge silos.** At 20, most engineers have worked on most parts of the system. At 50, you have people who only know the custody integration, or only know the DeFi contracts, or only know the infrastructure layer. This is somewhat unavoidable and not entirely bad — specialisation improves depth. But it creates risk: what happens when your one expert on the HSM integration leaves?
+
+Cross-functional rotation, documentation requirements, and explicit knowledge-transfer practices mitigate this. We built an internal "architecture decision records" (ADR) system — every significant architectural decision is documented with the context, options considered, and the reasoning for the choice made. New engineers can read the history of why the system is the way it is.
+
+**Technical debt accumulates faster.** With 10 engineers, you can see all the debt. With 50, you can't. Some teams at this scale introduce a rotating "debt sprint" where 20% of engineering capacity each sprint goes to addressing known debt items. Whether this works depends heavily on the culture and on how willing leadership is to slow feature delivery.
+
+**Communication costs compound.** The number of communication channels in a team grows as n(n-1)/2. At 10: 45 channels. At 50: 1,225. You can't solve this with meetings; you solve it with clear ownership boundaries, well-defined interfaces between sub-teams, and writing things down.
+
+## Technical Direction at Scale
+
+In a 10-person team, the technical lead can review every significant decision. In a 50-person team, they cannot. You need to distribute technical judgment.
+
+The approach that worked for us: a small architecture guild (4-5 senior engineers) who collectively own technical standards and make cross-cutting decisions. Not a committee that slows everything down — a group with delegated authority to make decisions and communicate them clearly.
+
+The guild's job is to:
+1. Maintain and evolve technical standards
+2. Review decisions that cross team boundaries
+3. Surface and address technical risks before they become incidents
+4. Be approachable — junior engineers should be able to bring questions without fear
+
+The leader's job at scale shifts from making technical decisions to creating the conditions for others to make good ones.
+
+## The Hardest Part: Senior-Level Attrition
+
+Specialist blockchain engineers are scarce and in demand. At 50 people, losing a senior Solidity engineer or a Fabric specialist is a significant event. You can't just backfill with a generalist.
+
+Retention is partly compensation (it has to be competitive) but more importantly it's about work quality and autonomy. The engineers I've seen stay long-term are the ones who:
+- Have genuine ownership over something meaningful
+- Are learning continuously — working with new chains, new problem types, new architectures
+- Trust the technical direction they're working within
+
+The engineers who leave quickly are those who feel like they're implementing tickets without understanding why, or who are working on systems they can see are architecturally broken with no path to fixing them.
+
+Giving senior engineers real ownership — over an architecture decision, over a new platform, over an on-boarding process — is worth more than almost any other retention lever.
+
+## What I'd Do Differently
+
+**Document technical context earlier.** The first six months of building a team, everyone is in a hurry. Nothing gets written down. By the time you realise knowledge is siloed, the original architects have moved on. Write the ADRs from day one.
+
+**Hire a technical writer earlier.** At 30+ engineers, the cost of inconsistent documentation exceeds the cost of a dedicated technical writer. We waited too long.
+
+**Be more explicit about promotion criteria.** Ambiguous promotion paths create internal politics and undermine trust. Writing down what a Senior Engineer vs Staff Engineer looks like — and being honest when someone isn't there yet — is uncomfortable but necessary.
+
+The biggest mistake is assuming that what worked at 10 will work at 50. It won't. The systems, processes, and communication patterns need to evolve as the team grows. Build them ahead of the need, not in response to it.
