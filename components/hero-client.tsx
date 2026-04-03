@@ -750,13 +750,13 @@ export function HeroClient() {
             }}
           />
           <motion.div
-            className="mb-8 inline-flex items-center gap-3"
+            className="mb-8 flex max-w-full items-start gap-3"
             initial={{ opacity: 0, x: -16 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.1, duration: 0.6, ease: 'easeOut' }}
           >
             <span className="h-px w-8 bg-gradient-to-r from-primary/80 to-transparent" aria-hidden="true" />
-            <p className="bg-gradient-to-r from-foreground via-foreground/92 to-muted-foreground bg-clip-text font-mono text-xs uppercase tracking-[0.2em] text-transparent">
+            <p className="min-w-0 bg-gradient-to-r from-foreground via-foreground/92 to-muted-foreground bg-clip-text font-mono text-xs uppercase tracking-[0.2em] text-transparent">
               Distributed Systems & Blockchain Architect · Ahmedabad, India
             </p>
           </motion.div>
