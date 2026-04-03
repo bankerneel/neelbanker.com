@@ -1,0 +1,72 @@
+---
+title: "CryptSync — Multi-Chain Non-Custodial Wallet"
+excerpt: "Production NCW platform supporting Bitcoin (BDK/UTXO), Ethereum, and EVM chains. Flutter frontend, Django backend, Noise protocol WebSocket, CloudFront infrastructure."
+chain: "Bitcoin, Ethereum, EVM chains"
+stack: ["Flutter (Dart)", "Django", "Python", "Bitcoin Dev Kit (BDK)", "Noise Protocol", "WebSocket", "AWS CloudFront", "MongoDB"]
+date: "2024-09-01"
+---
+
+## Problem
+
+Build a non-custodial wallet that handles Bitcoin and EVM chains with the same user experience. The challenge: Bitcoin's UTXO model is fundamentally different from Ethereum's account model, and most wallets handle one or the other well — not both. Add a secure real-time sync layer and production-grade key management.
+
+## Approach
+
+Use Bitcoin Dev Kit (BDK) for all Bitcoin operations — UTXO selection, PSBT construction, change address strategy. Use standard ethers.js-equivalent libraries for EVM. Build a unified abstraction layer in the Flutter client that presents a consistent UX regardless of underlying chain.
+
+## Architecture
+
+**Frontend (Flutter/Dart):**
+- Unified wallet interface across BTC, ETH, and EVM chains
+- BDK integration for Bitcoin — UTXO management, descriptor wallets, coin selection
+- In-memory key storage with encrypted local persistence
+- Biometric authentication gate
+
+**Backend (Django + Python):**
+- WebSocket server using Noise protocol for encrypted communication
+- Noise_XX handshake — mutual authentication, forward secrecy, no certificate authority
+- UTXO consolidation scheduler for Bitcoin (reduces future transaction fees)
+- Chain sync service — monitors mempool and confirmed transactions
+
+**Infrastructure:**
+- AWS CloudFront + S3 for static assets and firmware updates
+- MongoDB for transaction history and wallet metadata (never private keys)
+- Redis for WebSocket session state
+
+## Bitcoin UTXO Handling
+
+BDK's descriptor wallets made UTXO management tractable:
+
+```python
+# UTXO selection strategy
+descriptor = "wpkh([fingerprint/84h/0h/0h]xpub...)"
+wallet = Wallet(descriptor, None, Network.BITCOIN, memory_db)
+
+# BDK handles coin selection, change outputs, fee estimation
+psbt = wallet.build_tx()
+    .add_recipient(address, amount_sats)
+    .fee_rate(fee_rate)
+    .finish()
+```
+
+The key insight: UTXO consolidation at low-fee periods significantly reduces future transaction costs. We scheduled automatic consolidation via the Django backend when mempool fees dropped below a configurable threshold.
+
+## Noise Protocol Choice
+
+Standard TLS was rejected — it requires a certificate authority and has a larger attack surface for a wallet product. Noise_XX provides:
+- Mutual authentication (server and client verify each other)
+- Forward secrecy (compromised long-term key doesn't expose past sessions)
+- No CA dependency — key fingerprints are baked into the app
+
+## Outcome
+
+- Multi-chain wallet supporting BTC, ETH, and major EVM networks
+- Bitcoin UTXO selection optimised for fee efficiency
+- Noise protocol WebSocket operational with <50ms latency on good connections
+- CloudFront infrastructure handling update distribution
+
+## Lessons
+
+Bitcoin and Ethereum require genuinely different mental models, not just different API calls. Developers who understand Ethereum accounts often underestimate how much UTXO selection strategy affects both fees and privacy. BDK abstracts the mechanics well but you still need to understand what you're asking it to do.
+
+The Noise protocol is excellent — but documentation is sparse. Budget time for handshake debugging if you haven't used it before.

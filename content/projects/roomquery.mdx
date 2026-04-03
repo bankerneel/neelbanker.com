@@ -1,0 +1,88 @@
+---
+title: "RoomQuery — AI Hotel Recommendation API"
+excerpt: "REST API for intelligent hotel matching: budget, location, amenities, rating, and availability. NestJS + MongoDB with full Swagger documentation and Docker deployment."
+chain: ""
+stack: ["NestJS", "TypeScript", "MongoDB", "Docker", "Swagger", "Claude API"]
+date: "2025-11-01"
+---
+
+## Problem
+
+Build a hotel recommendation API that goes beyond simple filter queries — one that can understand a natural language request like "budget hotel near the airport with a pool, under $120/night, for a business traveller" and return ranked, relevant results.
+
+## Approach
+
+NestJS API with a MongoDB hotel dataset. Queries run through a hybrid pipeline: structured filters first (price, location radius, amenity flags), then an LLM-based relevance ranking pass for ambiguous or compound queries.
+
+## Architecture
+
+**Query Pipeline:**
+```
+User query (natural language or structured)
+    → Param extractor (Claude API)
+    → MongoDB aggregation (price, location, amenities)
+    → LLM relevance ranker (Claude API — scores each result)
+    → Ranked response
+```
+
+**MongoDB Schema:**
+```typescript
+@Schema()
+export class Hotel {
+  @Prop({ required: true }) name: string;
+  @Prop({ required: true }) location: GeoPoint;
+  @Prop({ required: true }) pricePerNight: number;
+  @Prop() amenities: string[];
+  @Prop() rating: number;
+  @Prop() reviewCount: number;
+  @Prop() category: 'budget' | 'business' | 'luxury' | 'boutique';
+}
+```
+
+Geospatial indexing (`2dsphere`) enables location-radius filtering without external mapping services.
+
+**Parameter Extraction:**
+```python
+# Claude extracts structured params from natural language
+response = claude.messages.create(
+    model="claude-3-5-haiku",
+    system="Extract hotel search parameters. Return JSON only.",
+    messages=[{"role": "user", "content": query}]
+)
+params = json.loads(response.content[0].text)
+```
+
+**Relevance Ranking:**
+Results from the structured query are passed back to Claude with the original query context. Claude scores each hotel 0–10 for relevance and provides a one-line justification. The top 5 are returned.
+
+## NestJS Module Structure
+
+```
+src/
+  hotels/
+    hotels.module.ts
+    hotels.controller.ts    # GET /hotels, GET /hotels/:id
+    hotels.service.ts       # query pipeline
+    hotels.schema.ts        # Mongoose schema
+  search/
+    search.module.ts
+    search.service.ts       # LLM param extraction + ranking
+  common/
+    filters/                # exception filters
+    interceptors/           # response transform
+```
+
+Swagger documentation auto-generated via `@nestjs/swagger` decorators — each endpoint fully typed with request/response schemas.
+
+## Outcome
+
+- API returns relevant results for free-text queries without pre-defined keyword matching
+- p95 query latency: ~800ms (structured MongoDB query ~50ms, LLM passes ~750ms)
+- Swagger UI available at `/api` for full interactive documentation
+- Docker Compose setup for local development with seeded hotel data
+
+## Lessons
+
+Hybrid pipelines (structured DB + LLM) are significantly better than either alone. Pure LLM recommendations hallucinate — the DB filter grounds the results. Pure filter queries miss intent — the LLM pass surfaces what the user actually wanted.
+
+The LLM parameter extraction step is the most fragile. Prompt engineering for JSON extraction needs explicit error handling for malformed output — always validate the extracted params before hitting the database.

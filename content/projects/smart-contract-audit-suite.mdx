@@ -1,0 +1,74 @@
+---
+title: "Smart Contract Audit — Token, Staking & Vesting"
+excerpt: "Security and logic review of three production-bound upgradeable contracts: ERC-20 token, staking platform, and vesting schedule. Caught four critical issues before mainnet deployment."
+chain: "Ethereum"
+stack: ["Solidity", "OpenZeppelin UUPS", "Hardhat", "ethers.js", "Slither", "Mythril"]
+date: "2025-03-01"
+---
+
+## Scope
+
+Full audit of three interconnected upgradeable contracts for a DeFi protocol:
+1. **Token** — ERC-20 with mint/burn controls and pausability
+2. **Staking** — Deposit, reward distribution, and withdrawal with lock periods
+3. **Vesting** — Linear and cliff vesting schedules for team and investor allocations
+
+## Critical Findings
+
+### 1. Staking Contract — Reentrancy in Withdrawal
+
+```solidity
+// VULNERABLE: state update after external call
+function withdraw(uint256 amount) external {
+    require(stakedBalance[msg.sender] >= amount);
+    token.transfer(msg.sender, amount); // external call FIRST
+    stakedBalance[msg.sender] -= amount; // state update AFTER
+}
+```
+
+A malicious ERC-20 receiver contract could re-enter `withdraw` before the balance update, draining the staking pool. Fixed by applying the checks-effects-interactions pattern and adding `ReentrancyGuard`.
+
+### 2. UUPS Proxy — Unprotected Initializer
+
+The implementation contract's `initialize()` function was callable after deployment:
+
+```solidity
+// MISSING: initializer modifier
+function initialize(address admin) public {
+    _grantRole(DEFAULT_ADMIN_ROLE, admin);
+}
+```
+
+Without `initializer`, an attacker could call `initialize` on the implementation directly and seize admin rights. Fixed with OpenZeppelin's `initializer` modifier.
+
+### 3. Vesting — Integer Overflow in Reward Calculation
+
+```solidity
+// Can overflow if totalStaked is small and rewardPerSecond is large
+uint256 pendingReward = (block.timestamp - lastUpdate) * rewardPerSecond * stakedBalance[msg.sender] / totalStaked;
+```
+
+Solidity 0.8+ prevents overflow in arithmetic operations, but the multiplication order still mattered — intermediate values could overflow before division. Fixed by reordering operations.
+
+### 4. Storage Slot Collision (V2 Upgrade)
+
+The proposed V2 implementation added a new storage variable at slot 5, which was already occupied by an inherited OpenZeppelin contract. Silent storage corruption. Fixed using the OpenZeppelin storage layout checker before finalising the V2 implementation.
+
+## Methodology
+
+1. Manual code review against known vulnerability patterns (SWC registry)
+2. Automated static analysis with Slither — identified 3 of the 4 issues
+3. Symbolic execution with Mythril for the reentrancy and overflow checks
+4. Storage layout audit using `hardhat-storage-layout` plugin
+
+## Outcome
+
+- 4 critical issues remediated before mainnet deployment
+- Contracts redeployed with fixes; second audit confirmed clean
+- Audit report delivered with SWC references and remediation code
+
+## Lessons
+
+Staking contracts are disproportionately exploited because they hold TVL, are frequently cloned from tutorials (which often predate modern patterns), and have complex reward calculation math that's easy to get wrong.
+
+UUPS proxies require careful initializer management. If you're not using `initializer` and `onlyInitializing`, you have a vulnerability. Run the OpenZeppelin storage layout checker before every upgrade — it catches silent collisions that Slither won't.

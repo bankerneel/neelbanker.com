@@ -107,6 +107,73 @@ const AAIcon = () => (
   </svg>
 )
 
+const HyperledgerIcon = () => (
+  <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+    <polygon points="16,3 29,9 29,23 16,29 3,23 3,9" fill="none" stroke="currentColor" strokeWidth="1.5"/>
+    <path d="M10 10V22M22 10V22M10 16H22" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+  </svg>
+)
+
+const SolanaIcon = () => (
+  <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+    <path d="M6 8H22L26 12H6V8Z" fill="currentColor"/>
+    <path d="M6 14H26L22 18H6V14Z" fill="currentColor" opacity="0.75"/>
+    <path d="M6 20H22L26 24H6V20Z" fill="currentColor" opacity="0.5"/>
+  </svg>
+)
+
+const GoIcon = () => (
+  <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+    <circle cx="16" cy="16" r="13" fill="currentColor" opacity="0.15" stroke="currentColor" strokeWidth="1.5"/>
+    <text x="16" y="21" textAnchor="middle" fill="currentColor" fontSize="12" fontWeight="bold" fontFamily="monospace">Go</text>
+  </svg>
+)
+
+const PythonIcon = () => (
+  <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+    <path d="M16 3C11 3 8 5 8 9V15H20C21.1 15 22 15.9 22 17V22C22 25 19 28 16 28C13 28 10 25 10 22V20" fill="none" stroke="currentColor" strokeWidth="1.5"/>
+    <path d="M16 29C21 29 24 27 24 23V17H12C10.9 17 10 16.1 10 15V10C10 7 13 4 16 4C19 4 22 7 22 10V12" fill="none" stroke="currentColor" strokeWidth="1.5"/>
+    <circle cx="13" cy="10.5" r="1.5" fill="currentColor"/>
+    <circle cx="19" cy="21.5" r="1.5" fill="currentColor"/>
+  </svg>
+)
+
+const DockerIcon = () => (
+  <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+    <rect x="5" y="8" width="5" height="4" rx="0.5" fill="currentColor" opacity="0.5"/>
+    <rect x="12" y="8" width="5" height="4" rx="0.5" fill="currentColor" opacity="0.75"/>
+    <rect x="19" y="8" width="5" height="4" rx="0.5" fill="currentColor"/>
+    <rect x="12" y="4" width="5" height="4" rx="0.5" fill="currentColor" opacity="0.65"/>
+    <path d="M3 18C3 18 4.5 15.5 8 15.5H24C27.5 15.5 29 18 29 18C27 22.5 22 25 16 25C10 25 5 22.5 3 18Z" fill="currentColor" opacity="0.45"/>
+    <circle cx="27" cy="13" r="2" fill="currentColor" opacity="0.7"/>
+    <line x1="27" y1="15" x2="24" y2="15.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+  </svg>
+)
+
+const AWSIcon = () => (
+  <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+    <path d="M8 17C5.2 17 3 14.8 3 12C3 9.5 4.8 7.4 7.2 7.1C7.6 4.8 9.6 3 12 3C14.4 3 16.4 4.8 16.8 7.1C17.5 6.7 18.2 6.5 19 6.5C21.5 6.5 23.5 8.5 23.5 11C23.5 14 21 17 18 17H8Z" fill="currentColor" opacity="0.35" stroke="currentColor" strokeWidth="1"/>
+    <path d="M10 24L13 28L16 24" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M16 24L19 28L22 24" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" opacity="0.55"/>
+  </svg>
+)
+
+const NestJSIcon = () => (
+  <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+    <circle cx="16" cy="16" r="13" fill="currentColor" opacity="0.15" stroke="currentColor" strokeWidth="1.5"/>
+    <path d="M10 22V10L22 22V10" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+)
+
+const HardhatIcon = () => (
+  <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+    <rect x="5" y="22" width="22" height="3" rx="1" fill="currentColor" opacity="0.45"/>
+    <path d="M7 21C7 21 8 12 16 12C24 12 25 21 25 21H7Z" fill="currentColor" opacity="0.8"/>
+    <line x1="16" y1="12" x2="16" y2="6" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
+    <line x1="12" y1="7" x2="20" y2="7" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+  </svg>
+)
+
 // ── Logo constellation data ───────────────────────────────────────────────
 interface TechLogo {
   label: string
@@ -133,6 +200,14 @@ const TECH_LOGOS: TechLogo[] = [
   { label: 'Claude', color: '#D4A574', Icon: ClaudeIcon, size: 44, x: 88, y: 75, delay: 0.9, floatAmplitude: 10, floatDuration: 6.0 },
   { label: 'React', color: '#61DAFB', Icon: ReactIcon, size: 40, x: 42, y: 88, delay: 1.2, floatAmplitude: 8, floatDuration: 5.2 },
   { label: 'ERC-4337', color: '#E8A838', Icon: AAIcon, size: 36, x: 18, y: 50, delay: 0.15, floatAmplitude: 12, floatDuration: 4.6 },
+  { label: 'Hyperledger', color: '#2D9CDB', Icon: HyperledgerIcon, size: 40, x: 40, y: 30, delay: 0.55, floatAmplitude: 7, floatDuration: 4.4 },
+  { label: 'Solana', color: '#9945FF', Icon: SolanaIcon, size: 44, x: 59, y: 14, delay: 0.38, floatAmplitude: 9, floatDuration: 5.3 },
+  { label: 'Go', color: '#00ADD8', Icon: GoIcon, size: 38, x: 75, y: 40, delay: 0.65, floatAmplitude: 8, floatDuration: 4.8 },
+  { label: 'Python', color: '#3776AB', Icon: PythonIcon, size: 38, x: 36, y: 58, delay: 0.48, floatAmplitude: 10, floatDuration: 5.6 },
+  { label: 'Docker', color: '#2496ED', Icon: DockerIcon, size: 42, x: 53, y: 46, delay: 0.85, floatAmplitude: 7, floatDuration: 4.2 },
+  { label: 'AWS', color: '#FF9900', Icon: AWSIcon, size: 38, x: 22, y: 22, delay: 0.28, floatAmplitude: 9, floatDuration: 5.0 },
+  { label: 'NestJS', color: '#E0234E', Icon: NestJSIcon, size: 36, x: 65, y: 84, delay: 1.05, floatAmplitude: 8, floatDuration: 4.5 },
+  { label: 'Hardhat', color: '#FFC517', Icon: HardhatIcon, size: 36, x: 10, y: 80, delay: 0.78, floatAmplitude: 11, floatDuration: 5.8 },
 ]
 
 // ── Floating badge component ──────────────────────────────────────────────
@@ -245,7 +320,7 @@ export function HeroClient() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.1, duration: 0.6, ease: 'easeOut' }}
           >
-            Senior Blockchain Architect · Ahmedabad, India
+            Distributed Systems & Blockchain Architect · Ahmedabad, India
           </motion.p>
 
           <h1
@@ -264,8 +339,8 @@ export function HeroClient() {
             transition={{ delay: 0.7, duration: 0.6, ease: 'easeOut' }}
           >
             <p className="text-base leading-[1.7] text-muted-foreground mb-8">
-              6+ years designing smart contracts, custody infrastructure, and AI-native Web3 systems.
-              Writing weekly on the future of decentralised tech.
+              7+ years building production blockchain infrastructure, custody platforms, and AI-augmented engineering systems.
+              Writing weekly on the architecture of what&apos;s next.
             </p>
             <NewsletterForm />
             <p className="font-mono text-[10px] text-muted-foreground mt-3 tracking-widest uppercase">
@@ -302,6 +377,19 @@ export function HeroClient() {
             <line x1="5%" y1="35%" x2="8%" y2="62%" stroke="currentColor" strokeWidth="1"/>
             <line x1="18%" y1="50%" x2="5%" y2="35%" stroke="currentColor" strokeWidth="1"/>
             <line x1="15%" y1="8%" x2="18%" y2="50%" stroke="currentColor" strokeWidth="1"/>
+            {/* New icon connections */}
+            <line x1="22%" y1="22%" x2="15%" y2="8%" stroke="currentColor" strokeWidth="1"/>
+            <line x1="22%" y1="22%" x2="40%" y2="30%" stroke="currentColor" strokeWidth="1"/>
+            <line x1="59%" y1="14%" x2="72%" y2="22%" stroke="currentColor" strokeWidth="1"/>
+            <line x1="59%" y1="14%" x2="48%" y2="5%" stroke="currentColor" strokeWidth="1"/>
+            <line x1="40%" y1="30%" x2="53%" y2="46%" stroke="currentColor" strokeWidth="1"/>
+            <line x1="40%" y1="30%" x2="18%" y2="50%" stroke="currentColor" strokeWidth="1"/>
+            <line x1="75%" y1="40%" x2="72%" y2="22%" stroke="currentColor" strokeWidth="1"/>
+            <line x1="75%" y1="40%" x2="85%" y2="55%" stroke="currentColor" strokeWidth="1"/>
+            <line x1="53%" y1="46%" x2="60%" y2="72%" stroke="currentColor" strokeWidth="1"/>
+            <line x1="36%" y1="58%" x2="53%" y2="46%" stroke="currentColor" strokeWidth="1"/>
+            <line x1="65%" y1="84%" x2="88%" y2="75%" stroke="currentColor" strokeWidth="1"/>
+            <line x1="10%" y1="80%" x2="8%" y2="62%" stroke="currentColor" strokeWidth="1"/>
           </svg>
 
           {TECH_LOGOS.map((logo) => (
@@ -329,7 +417,7 @@ export function HeroClient() {
         animate={{ opacity: 1 }}
         transition={{ delay: 1.0, duration: 0.8 }}
       >
-        {TECH_LOGOS.slice(0, 8).map((logo) => (
+        {TECH_LOGOS.slice(0, 12).map((logo) => (
           <div
             key={logo.label}
             className="flex items-center gap-1.5"

@@ -1,8 +1,15 @@
+'use client'
+
+import { motion } from 'framer-motion'
 import type { ProjectMeta } from '@/types/content'
 
 export function ProjectCard({ project }: { project: ProjectMeta }) {
   return (
-    <div className="border border-border p-6">
+    <motion.div
+      className="border border-border p-6 cursor-default h-full"
+      whileHover={{ y: -3, borderColor: 'hsl(var(--primary))' }}
+      transition={{ duration: 0.2, ease: 'easeOut' }}
+    >
       <div className="mb-4 flex items-start justify-between gap-4">
         <h3 className="font-extrabold text-base uppercase tracking-tight leading-snug">{project.title}</h3>
         {project.chain && (
@@ -19,6 +26,6 @@ export function ProjectCard({ project }: { project: ProjectMeta }) {
           </span>
         ))}
       </div>
-    </div>
+    </motion.div>
   )
 }

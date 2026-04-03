@@ -1,0 +1,72 @@
+---
+title: "NCOG Earth Chain — Custom EVM Blockchain"
+excerpt: "Fork of Go Ethereum with a custom 'Forest' consensus algorithm. Built to be marketed as one of the fastest EVM-compatible blockchains. Full node implementation in Go with Docker-based deployment."
+chain: "Custom EVM (Go Ethereum fork)"
+stack: ["Go", "Go Ethereum (geth)", "Docker", "EVM", "Custom Consensus"]
+date: "2024-06-01"
+---
+
+## Problem
+
+Build a custom EVM-compatible blockchain from scratch that could legitimately claim performance advantages over mainnet Ethereum while maintaining full EVM compatibility for existing Solidity tooling.
+
+## Approach
+
+Fork Go Ethereum (geth) and replace the consensus engine with a custom algorithm called "Forest." The goal was to reduce block time and increase throughput while keeping the EVM execution layer untouched — so existing Solidity contracts, wallets, and tooling work without modification.
+
+## "Forest" Consensus
+
+The Forest consensus is a delegated authority model:
+- A fixed set of validators are pre-designated at genesis
+- Block production rotates among validators in a deterministic schedule
+- Finality is near-instant (no probabilistic finality — a block is final when N/2+1 validators have signed)
+- Block time configurable at genesis; production deployed at ~2s
+
+This is conceptually similar to Clique (PoA) but with a different fork-choice rule and a reputation-weighted tie-breaking mechanism.
+
+**Trade-off acknowledged:** Delegated authority means less decentralisation than PoW or modern PoS. For an enterprise or ecosystem chain, this is often the right call — you get finality and throughput in exchange for a known, trusted validator set.
+
+## Implementation
+
+**Modified consensus engine:**
+```go
+// Forest engine replaces Ethereum's Clique
+type Forest struct {
+    config  *params.ForestConfig
+    db      ethdb.Database
+    sigcache *lru.ARCCache
+}
+
+func (f *Forest) Seal(chain consensus.ChainHeaderReader, block *types.Block, ...) error {
+    // Validator rotation + weighted selection
+}
+```
+
+**Key changes from upstream geth:**
+- `consensus/forest/` — new consensus package
+- `params/config.go` — added `ForestConfig` chain config
+- `genesis.json` — validator set encoded in extra data field
+- Docker-compose setup for multi-node testnet
+
+## EVM Compatibility
+
+Unchanged components:
+- EVM execution engine
+- RPC API (eth_, net_, web3_ namespaces)
+- Transaction pool
+- JSON-RPC and WebSocket interfaces
+
+Any tool that works with geth works with NCOG Earth Chain without modification.
+
+## Outcome
+
+- Functional custom blockchain node with 2-second block times
+- Full EVM compatibility verified — Hardhat, Remix, MetaMask all work
+- Docker Compose setup for local multi-node testnet
+- Published as part of the NCOG ecosystem
+
+## Lessons
+
+Forking geth is approachable — the codebase is well-structured and the consensus interface is clean. The consensus engine is a well-defined interface; swap it out and everything else just works. The hard part is long-term maintenance as upstream geth evolves and your fork diverges.
+
+Never underestimate the operational cost of running a custom chain. The node is step one; the validator operations, monitoring, and upgrade path are where the real work begins.

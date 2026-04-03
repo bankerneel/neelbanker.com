@@ -1,0 +1,52 @@
+---
+title: "VeriOnce — Blockchain Credential Verification"
+excerpt: "Credential verification system on Hyperledger Fabric. Hashes academic and professional documents on-chain without storing raw data outside client infrastructure — built for government-grade data sovereignty."
+chain: "Hyperledger Fabric v2.4+"
+stack: ["Hyperledger Fabric", "Go (Chaincode)", "AWS EKS", "MongoDB", "CouchDB", "Node.js"]
+date: "2025-10-01"
+---
+
+## Problem
+
+Government and enterprise credential issuance is broken. Physical certificates get forged, verification takes days, and institutions have no cryptographic proof of what they issued. Adding blockchain naively — storing raw data on-chain — violates data sovereignty requirements in regulated environments.
+
+## Approach
+
+Design a system where the blockchain stores only cryptographic hashes, never personally identifiable information. Each credential hash anchors to the Fabric ledger with an immutable audit trail. Verifiers query the chain to confirm authenticity without accessing raw data.
+
+## Architecture
+
+**Fabric Network Design:**
+- Separate channels per institution type (government, university, employer)
+- Private data collections for access-controlled off-chain data pointers
+- CouchDB state database enabling rich JSON queries by issuer, type, and timestamp
+
+**Chaincode (Go):**
+- `IssueCredential(hash, metadata)` — emits an event, stores hash + issuer DID
+- `VerifyCredential(hash)` — returns verification status + audit trail
+- `RevokeCredential(hash, reason)` — appends revocation without deleting history (append-only audit)
+
+**Infrastructure:**
+- AWS EKS for peer/orderer nodes with persistent storage
+- MongoDB for off-chain document metadata (never raw PII)
+- Node.js REST gateway exposing chaincode to web clients
+
+## MeeSeva Integration Research
+
+Designed three deployment tiers for integration with MeeSeva (Andhra Pradesh's government service delivery network):
+
+| Tier | Model | Cost |
+|------|-------|------|
+| API Gateway | Cloud-hosted, MeeSeva queries via HTTPS | ~$5–10K/month |
+| Hybrid | Shared infrastructure, state in government VPC | ~$25–50K/month |
+| On-Premise | Full Fabric network inside government data center | ~$100K+ setup |
+
+## Outcome
+
+- Chaincode handles 500+ credential operations/minute on a 3-peer test network
+- Revocation is non-destructive — full audit trail preserved
+- Zero raw PII on chain; verification is hash-comparison only
+
+## Lessons
+
+Private data collections in Fabric are the right tool for regulated environments — but they add deployment complexity. The collection policy must be defined at chaincode deployment and cannot be changed without a new chaincode version. Plan the access model upfront.
