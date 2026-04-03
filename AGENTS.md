@@ -42,6 +42,14 @@ Current stack: Next.js 16 App Router · Tailwind v4 · shadcn/ui · MDX · Resen
 - Content authoring instructions live in `docs/content-authoring.md` and are indexed from `docs/README.md`
 - Article slugs are filename-based and resolve under `/writing/[slug]`
 - Standalone pages and article pages include local navigation CTAs; preserve that flow when adding new pages
+- Tech Alchemy-sensitive public project names are intentionally anonymized in user-facing content; preserve pseudo/codename treatment unless explicitly asked to change it
+
+## Project Tracking Docs
+
+- `STATES.md` is the current snapshot: what has been improved, what is in progress, and what should be reviewed next
+- `MEMORY.md` is the durable working memory for important decisions, constraints, and non-obvious context learned during the build
+- `ROADMAP.md` is the prioritized forward plan; update it when major workstreams change
+- When you complete a substantial UI/content pass, update these docs in the same change so the repo state stays legible
 
 ## Email (Resend)
 
@@ -80,6 +88,7 @@ Current stack: Next.js 16 App Router · Tailwind v4 · shadcn/ui · MDX · Resen
 - Spacing and typography create hierarchy — avoid adding new colour variables without reason
 - Favicon source is `public/favicon.svg`; do not reintroduce `app/favicon.ico` unless intentionally switching back to file-based icons
 - OG images should match the live editorial brand: dark background, warm text, and lime/cyan/orange accents
+- Homepage hero is intentionally motion-rich and uses `components/hero-client.tsx` as a layered interactive surface; improve it carefully and do not casually remove depth/motion systems without checking the broader visual direction
 
 ## Design: Responsive container scale
 
@@ -143,6 +152,14 @@ Prefer `grid gap-px bg-border` + `bg-background` on cells for hairline dividers 
 ## Design: Motion preferences
 
 `app/globals.css` includes `@media (prefers-reduced-motion: reduce)` that disables all animations/transitions for users who opt out. The marquee on the homepage pauses automatically. Do not add new `@keyframes` without respecting this rule.
+
+## Design: Current UI direction
+
+- The site has been refactored toward a cleaner editorial dark aesthetic with lighter heading weights than the original first pass
+- Shared shell elements (`nav`, `footer`, inner page headers, forms, CTA links) should stay visually consistent with the newer page optimizations
+- Repeated “boxed grid” treatments can get visually heavy quickly; use `grid gap-px bg-border` intentionally, not by default everywhere
+- On the homepage hero, keep the `HeroWord` `span.block` treatment intact unless explicitly asked to change it
+- The hero eyebrow line and supporting paragraph have already been intentionally strengthened for readability against motion; do not casually fade them back down
 
 ## What NOT to do
 

@@ -174,6 +174,52 @@ const HardhatIcon = () => (
   </svg>
 )
 
+const KubernetesIcon = () => (
+  <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+    <circle cx="16" cy="16" r="12" fill="currentColor" opacity="0.15" stroke="currentColor" strokeWidth="1.5"/>
+    <circle cx="16" cy="16" r="4" fill="currentColor"/>
+    <path d="M16 4V10M16 22V28M4 16H10M22 16H28M8 8L11.5 11.5M20.5 20.5L24 24M24 8L20.5 11.5M11.5 20.5L8 24" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+  </svg>
+)
+
+const MongoIcon = () => (
+  <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+    <path d="M16 5C13 9 11.5 13 11.5 17.5C11.5 23 14.3 26.8 16 28C17.7 26.8 20.5 23 20.5 17.5C20.5 13 19 9 16 5Z" fill="currentColor"/>
+    <path d="M16 8V26" stroke="hsl(var(--background))" strokeWidth="1.5" strokeLinecap="round" opacity="0.45"/>
+  </svg>
+)
+
+const PostgresIcon = () => (
+  <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+    <ellipse cx="16" cy="11" rx="8.5" ry="5.5" fill="currentColor" opacity="0.15" stroke="currentColor" strokeWidth="1.5"/>
+    <path d="M7.5 11V20C7.5 23 11.3 25.5 16 25.5C20.7 25.5 24.5 23 24.5 20V11" stroke="currentColor" strokeWidth="1.5"/>
+    <path d="M12 16H20M12 20H18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+  </svg>
+)
+
+const BitGoIcon = () => (
+  <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+    <circle cx="16" cy="16" r="12" fill="currentColor" opacity="0.12" stroke="currentColor" strokeWidth="1.5"/>
+    <path d="M16 9C12.5 9 10 11.5 10 15.5C10 19.5 12.5 22 16 22C18.7 22 20.8 20.5 21.7 18H15.5V15H22.2C22.3 15.4 22.3 15.8 22.3 16.2C22.3 20.8 19.2 24 16 24C11.2 24 7.8 20.4 7.8 15.6C7.8 10.8 11.2 7.2 16 7.2C18.2 7.2 20 7.9 21.5 9.4L19.8 11.1C18.8 10 17.5 9 16 9Z" fill="currentColor"/>
+  </svg>
+)
+
+const WalletConnectIcon = () => (
+  <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+    <path d="M6 12C11.5 7 20.5 7 26 12" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
+    <path d="M10 16C13.3 13 18.7 13 22 16" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" opacity="0.7"/>
+    <path d="M13.5 20C15 18.6 17 18.6 18.5 20L16 22.5L13.5 20Z" fill="currentColor"/>
+  </svg>
+)
+
+const LangChainIcon = () => (
+  <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+    <rect x="5" y="8" width="9" height="9" rx="1.5" fill="currentColor" opacity="0.75"/>
+    <rect x="18" y="15" width="9" height="9" rx="1.5" fill="currentColor" opacity="0.45"/>
+    <path d="M14 12.5H18M23 15V11H19" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+)
+
 // ── Logo constellation data ───────────────────────────────────────────────
 interface TechLogo {
   label: string
@@ -185,6 +231,14 @@ interface TechLogo {
   delay: number
   floatAmplitude: number
   floatDuration: number
+}
+
+interface SignalDot {
+  x: number
+  y: number
+  delay: number
+  duration: number
+  color: string
 }
 
 const TECH_LOGOS: TechLogo[] = [
@@ -208,21 +262,36 @@ const TECH_LOGOS: TechLogo[] = [
   { label: 'AWS', color: '#FF9900', Icon: AWSIcon, size: 38, x: 22, y: 22, delay: 0.28, floatAmplitude: 9, floatDuration: 5.0 },
   { label: 'NestJS', color: '#E0234E', Icon: NestJSIcon, size: 36, x: 65, y: 84, delay: 1.05, floatAmplitude: 8, floatDuration: 4.5 },
   { label: 'Hardhat', color: '#FFC517', Icon: HardhatIcon, size: 36, x: 10, y: 80, delay: 0.78, floatAmplitude: 11, floatDuration: 5.8 },
+  { label: 'Kubernetes', color: '#326CE5', Icon: KubernetesIcon, size: 38, x: 12, y: 14, delay: 0.52, floatAmplitude: 8, floatDuration: 5.4 },
+  { label: 'MongoDB', color: '#47A248', Icon: MongoIcon, size: 34, x: 30, y: 10, delay: 0.92, floatAmplitude: 7, floatDuration: 4.7 },
+  { label: 'PostgreSQL', color: '#336791', Icon: PostgresIcon, size: 36, x: 70, y: 11, delay: 0.62, floatAmplitude: 8, floatDuration: 5.2 },
+  { label: 'BitGo', color: '#F7931A', Icon: BitGoIcon, size: 38, x: 90, y: 26, delay: 1.16, floatAmplitude: 9, floatDuration: 5.9 },
+  { label: 'WalletConnect', color: '#3B99FC', Icon: WalletConnectIcon, size: 36, x: 82, y: 62, delay: 0.44, floatAmplitude: 8, floatDuration: 4.9 },
+  { label: 'LangChain', color: '#10A37F', Icon: LangChainIcon, size: 34, x: 22, y: 90, delay: 0.88, floatAmplitude: 7, floatDuration: 5.1 },
 ]
 
 const LEFT_TECH_LOGOS = TECH_LOGOS.filter((_, index) => index % 2 === 0).map((logo) => ({
   ...logo,
-  size: Math.round(logo.size * 0.84),
-  x: 2 + logo.x * 0.24,
-  y: 6 + logo.y * 0.86,
+  size: Math.round(logo.size * 0.8),
+  x: 3 + logo.x * 0.28,
+  y: 5 + logo.y * 0.84,
 }))
 
 const RIGHT_TECH_LOGOS = TECH_LOGOS.filter((_, index) => index % 2 === 1).map((logo) => ({
   ...logo,
-  size: Math.round(logo.size * 0.92),
-  x: 66 + logo.x * 0.27,
-  y: 6 + logo.y * 0.86,
+  size: Math.round(logo.size * 0.84),
+  x: 63 + logo.x * 0.31,
+  y: 5 + logo.y * 0.84,
 }))
+
+const SIGNAL_DOTS: SignalDot[] = [
+  { x: 14, y: 22, delay: 0.2, duration: 4.2, color: 'rgba(163,230,53,0.65)' },
+  { x: 24, y: 72, delay: 0.6, duration: 5.4, color: 'rgba(56,189,248,0.55)' },
+  { x: 41, y: 18, delay: 0.9, duration: 4.8, color: 'rgba(251,146,60,0.55)' },
+  { x: 58, y: 74, delay: 0.4, duration: 5.1, color: 'rgba(163,230,53,0.45)' },
+  { x: 78, y: 30, delay: 1.1, duration: 4.5, color: 'rgba(56,189,248,0.65)' },
+  { x: 86, y: 66, delay: 0.75, duration: 5.7, color: 'rgba(251,146,60,0.5)' },
+]
 
 // ── Floating badge component ──────────────────────────────────────────────
 function TechBadge({
@@ -267,7 +336,7 @@ function TechBadge({
 
   return (
     <motion.div
-      className="absolute"
+      className="absolute pointer-events-auto"
       style={{
         left: `${logo.x}%`,
         top: `${logo.y}%`,
@@ -284,7 +353,7 @@ function TechBadge({
       }}
     >
       <motion.div
-        className="w-full h-full relative group"
+        className="group relative h-full w-full"
         animate={shouldAnimate ? { y: floatY, x: floatX } : {}}
         transition={shouldAnimate ? {
           duration: logo.floatDuration,
@@ -292,28 +361,67 @@ function TechBadge({
           ease: 'easeInOut',
           delay: logo.delay,
         } : {}}
+        whileHover={
+          shouldAnimate
+            ? {
+                scale: 1.18,
+                zIndex: 4,
+              }
+            : {}
+        }
         title={logo.label}
       >
         {/* glow halo */}
-        <div
-          className="absolute inset-0 rounded-full blur-md opacity-25 scale-110 group-hover:opacity-50 transition-opacity duration-500"
+        <motion.div
+          className="absolute inset-0 scale-110 rounded-full blur-md transition-opacity duration-300 group-hover:opacity-100"
           style={{ background: logo.color }}
+          animate={
+            shouldAnimate
+              ? {
+                  opacity: [0.12, 0.24, 0.12],
+                }
+              : { opacity: 0.14 }
+          }
+          whileHover={{
+            opacity: 0.9,
+            scale: 1.55,
+          }}
+          transition={
+            shouldAnimate
+              ? {
+                  opacity: {
+                    duration: logo.floatDuration * 0.9,
+                    repeat: Infinity,
+                    ease: 'easeInOut',
+                    delay: logo.delay,
+                  },
+                  scale: { duration: 0.22 },
+                }
+              : { duration: 0.22 }
+          }
         />
         <motion.div
           style={{
             scale: spotlightScale,
             filter: useMotionTemplate`brightness(${spotlightBrightness})`,
           }}
+          whileHover={{
+            filter: 'brightness(1.35)',
+          }}
           className="h-full w-full"
         >
           <motion.div
             className="absolute inset-0 rounded-full blur-md scale-125"
             style={{ background: logo.color, opacity: spotlightGlow }}
+            whileHover={{
+              opacity: 0.95,
+              scale: 1.8,
+            }}
           />
           <logo.Icon />
         </motion.div>
         {/* tooltip */}
-        <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+        <div className="pointer-events-none absolute -bottom-6 left-1/2 -translate-x-1/2 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
           <span className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground whitespace-nowrap">
             {logo.label}
           </span>
@@ -363,7 +471,7 @@ function HeroMetaCard({
 
   return (
     <motion.div
-      className="bg-background px-4 py-4"
+      className="group relative bg-background/90 px-4 py-4 backdrop-blur-sm sm:px-5"
       initial={{ opacity: 0, y: 18 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 1.05 + index * 0.08, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
@@ -372,12 +480,54 @@ function HeroMetaCard({
         y: shouldAnimate ? y : 0,
       }}
     >
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/35 to-transparent opacity-70" />
       <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
         {item.label}
       </p>
-      <p className="text-sm font-semibold uppercase tracking-tight text-foreground">
+      <p className="text-sm font-semibold uppercase tracking-tight text-foreground transition-colors duration-200 group-hover:text-primary">
         {item.value}
       </p>
+    </motion.div>
+  )
+}
+
+function SignalDotBadge({ dot, shouldAnimate }: { dot: SignalDot; shouldAnimate: boolean }) {
+  return (
+    <motion.div
+      aria-hidden="true"
+      className="absolute"
+      style={{
+        left: `${dot.x}%`,
+        top: `${dot.y}%`,
+      }}
+      initial={{ opacity: 0, scale: 0.6 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ delay: dot.delay + 0.9, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+    >
+      <motion.div
+        className="relative h-2.5 w-2.5 rounded-full"
+        style={{ background: dot.color }}
+        animate={
+          shouldAnimate
+            ? {
+                opacity: [0.35, 0.95, 0.35],
+                scale: [1, 1.8, 1],
+              }
+            : {}
+        }
+        transition={
+          shouldAnimate
+            ? {
+                duration: dot.duration,
+                repeat: Infinity,
+                delay: dot.delay,
+                ease: 'easeInOut',
+              }
+            : {}
+        }
+      >
+        <div className="absolute inset-0 rounded-full blur-md" style={{ background: dot.color }} />
+      </motion.div>
     </motion.div>
   )
 }
@@ -393,8 +543,11 @@ export function HeroClient() {
   const smoothY = useSpring(pointerY, { stiffness: 180, damping: 24 })
   const parallaxX = useTransform(smoothX, [0, 100], [-18, 18])
   const parallaxY = useTransform(smoothY, [0, 100], [-14, 14])
+  const fieldDriftX = useTransform(smoothX, [0, 100], [-12, 12])
+  const fieldDriftY = useTransform(smoothY, [0, 100], [-8, 8])
   const spotlightBackground = useMotionTemplate`radial-gradient(circle at ${smoothX}% ${smoothY}%, rgba(250,255,210,0.18) 0%, rgba(120,255,210,0.09) 16%, rgba(0,0,0,0) 34%)`
   const spotlightRing = useMotionTemplate`radial-gradient(circle at ${smoothX}% ${smoothY}%, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.05) 12%, rgba(0,0,0,0) 24%)`
+  const centerField = useMotionTemplate`radial-gradient(ellipse 40% 52% at ${useTransform(smoothX, [0, 100], [44, 56])}% ${useTransform(smoothY, [0, 100], [45, 55])}%, rgba(10,10,10,0) 0%, rgba(10,10,10,0.18) 46%, rgba(10,10,10,0.82) 100%)`
   const cardPullX = useTransform(smoothX, [0, 100], [-5, 5])
   const cardPullY = useTransform(smoothY, [0, 100], [-4, 4])
   const copyShiftX = useTransform(smoothX, [0, 50, 100], [7, 0, -7])
@@ -432,6 +585,8 @@ export function HeroClient() {
         pointerOpacity.set(1)
       }}
       onPointerLeave={() => {
+        pointerX.set(50)
+        pointerY.set(50)
         pointerOpacity.set(0)
       }}
       >
@@ -457,6 +612,24 @@ export function HeroClient() {
             'radial-gradient(ellipse 42% 60% at 50% 48%, transparent 0%, transparent 52%, hsl(var(--background) / 0.94) 78%, hsl(var(--background)) 100%)',
         }}
       />
+
+      <motion.div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-y-[-12%] left-[-10%] hidden w-[34%] lg:block"
+        animate={shouldAnimate ? { y: [0, -16, 0], x: [0, 10, 0] } : {}}
+        transition={shouldAnimate ? { duration: 11, ease: 'easeInOut', repeat: Infinity } : {}}
+      >
+        <div className="h-full w-full rounded-full bg-[radial-gradient(circle,_rgba(163,230,53,0.10)_0%,_rgba(163,230,53,0.04)_26%,_transparent_72%)] blur-3xl" />
+      </motion.div>
+
+      <motion.div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-y-[-16%] right-[-8%] hidden w-[38%] lg:block"
+        animate={shouldAnimate ? { y: [0, 18, 0], x: [0, -14, 0] } : {}}
+        transition={shouldAnimate ? { duration: 13, ease: 'easeInOut', repeat: Infinity, delay: 0.6 } : {}}
+      >
+        <div className="h-full w-full rounded-full bg-[radial-gradient(circle,_rgba(56,189,248,0.11)_0%,_rgba(56,189,248,0.05)_24%,_transparent_70%)] blur-3xl" />
+      </motion.div>
 
       <motion.div
         aria-hidden="true"
@@ -490,6 +663,21 @@ export function HeroClient() {
           <path d="M110 90C260 150 350 110 500 155C650 200 780 160 920 180C1070 200 1180 145 1320 190" stroke="currentColor" strokeWidth="1" fill="none" />
         </svg>
 
+        <motion.div
+          className="absolute inset-0"
+          style={{
+            x: shouldAnimate ? fieldDriftX : 0,
+            y: shouldAnimate ? fieldDriftY : 0,
+          }}
+        >
+          <div className="absolute left-[8%] top-[14%] h-px w-[26%] bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-60" />
+          <div className="absolute right-[8%] top-[32%] h-px w-[22%] bg-gradient-to-r from-transparent via-cyan-300/30 to-transparent opacity-50" />
+          <div className="absolute left-[18%] bottom-[20%] h-px w-[18%] bg-gradient-to-r from-transparent via-orange-300/25 to-transparent opacity-45" />
+          {SIGNAL_DOTS.map((dot) => (
+            <SignalDotBadge key={`${dot.x}-${dot.y}`} dot={dot} shouldAnimate={shouldAnimate} />
+          ))}
+        </motion.div>
+
         {LEFT_TECH_LOGOS.map((logo) => (
           <TechBadge
             key={`left-${logo.label}`}
@@ -514,6 +702,12 @@ export function HeroClient() {
         <div className="absolute inset-y-0 left-[34%] w-px bg-gradient-to-b from-transparent via-border to-transparent opacity-40" />
         <div className="absolute inset-y-0 right-[34%] w-px bg-gradient-to-b from-transparent via-border to-transparent opacity-40" />
       </motion.div>
+
+      <motion.div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 hidden lg:block"
+        style={{ background: centerField }}
+      />
 
       <motion.div
         aria-hidden="true"
@@ -547,14 +741,25 @@ export function HeroClient() {
             y: shouldAnimate ? copyShiftY : 0,
           }}
         >
-          <motion.p
-            className="font-mono text-xs tracking-[0.2em] uppercase text-muted-foreground mb-8"
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute left-0 top-[10%] hidden h-[72%] w-[56%] lg:block"
+            style={{
+              background:
+                'linear-gradient(90deg, hsl(var(--background) / 0.96) 0%, hsl(var(--background) / 0.82) 48%, transparent 100%)',
+            }}
+          />
+          <motion.div
+            className="mb-8 inline-flex items-center gap-3"
             initial={{ opacity: 0, x: -16 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.1, duration: 0.6, ease: 'easeOut' }}
           >
-            Distributed Systems & Blockchain Architect · Ahmedabad, India
-          </motion.p>
+            <span className="h-px w-8 bg-gradient-to-r from-primary/80 to-transparent" aria-hidden="true" />
+            <p className="bg-gradient-to-r from-foreground via-foreground/92 to-muted-foreground bg-clip-text font-mono text-xs uppercase tracking-[0.2em] text-transparent">
+              Distributed Systems & Blockchain Architect · Ahmedabad, India
+            </p>
+          </motion.div>
 
           <h1
             className="font-extrabold uppercase leading-[0.85] tracking-tighter mb-12"
@@ -572,8 +777,8 @@ export function HeroClient() {
             transition={{ delay: 0.7, duration: 0.6, ease: 'easeOut' }}
           >
             <p className="text-base leading-[1.7] text-muted-foreground mb-8">
-              7+ years building production blockchain infrastructure, custody platforms, and AI-augmented engineering systems.
-              Writing weekly on the architecture of what&apos;s next.
+              Seven years building blockchain infrastructure, custody systems, and AI-augmented engineering workflows for teams shipping under real delivery pressure.
+              Writing weekly about architecture, execution, and what holds up in production.
             </p>
             <motion.div
               style={{
@@ -617,27 +822,45 @@ export function HeroClient() {
         </motion.div>
       </div>
 
-      {/* Mobile: horizontal logo strip ────────────────────────── */}
+      {/* Mobile: compact signal band ────────────────────────── */}
       <motion.div
-        className="flex lg:hidden flex-wrap gap-4 mt-10 pointer-events-none select-none"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.0, duration: 0.8 }}
+        className="pointer-events-none mt-12 lg:hidden select-none"
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.0, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
       >
-        {TECH_LOGOS.slice(0, 12).map((logo) => (
-          <div
-            key={logo.label}
-            className="flex items-center gap-1.5"
-            title={logo.label}
-          >
-            <div style={{ width: 22, height: 22, color: logo.color }}>
-              <logo.Icon />
-            </div>
-            <span className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground">
-              {logo.label}
-            </span>
+        <div className="border border-border bg-background/70 px-4 py-4 backdrop-blur-sm">
+          <div className="mb-4 flex items-center justify-between gap-4">
+            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+              Signal field
+            </p>
+            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-primary">
+              Stack in motion
+            </p>
           </div>
-        ))}
+
+          <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
+            {TECH_LOGOS.slice(0, 12).map((logo, index) => (
+              <motion.div
+                key={logo.label}
+                className="border border-border bg-background/80 px-2 py-2.5"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1.05 + index * 0.04, duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <div className="mb-2 flex items-center justify-between gap-2">
+                  <div style={{ width: 20, height: 20, color: logo.color }}>
+                    <logo.Icon />
+                  </div>
+                  <div className="h-1.5 w-1.5 rounded-full" style={{ background: logo.color }} />
+                </div>
+                <span className="block truncate font-mono text-[8px] uppercase tracking-[0.18em] text-muted-foreground">
+                  {logo.label}
+                </span>
+              </motion.div>
+            ))}
+          </div>
+        </div>
       </motion.div>
     </section>
   )
