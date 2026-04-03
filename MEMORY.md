@@ -28,6 +28,7 @@
 
 ## UI / UX Decisions Already Made
 
+- Mobile side-scroll is handled at component level in the hero eyebrow row (`flex max-w-full` + `min-w-0`), rather than document-level overflow clipping.
 - Homepage was intentionally de-cluttered after becoming too dense.
 - Marquee was re-added because the user preferred it as a separator.
 - Hero is intentionally animation-forward, but the text treatment should remain unchanged.

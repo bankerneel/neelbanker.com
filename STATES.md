@@ -1,6 +1,6 @@
 # States
 
-Last updated: 2026-04-04
+Last updated: 2026-04-03
 
 ## File Purpose
 
@@ -15,6 +15,7 @@ Core routes now feel substantially more consistent, lighter, and more editorial 
 
 ## Completed
 
+- Fixed mobile horizontal scroll at the source by making the hero eyebrow row responsive (`flex max-w-full` + `min-w-0` on the label text) so the long copy can shrink/wrap instead of forcing viewport overflow.
 - Homepage de-cluttered and rebuilt around a cleaner section rhythm.
 - Hero upgraded into a motion-rich interactive surface with:
   - full-bleed background treatment
