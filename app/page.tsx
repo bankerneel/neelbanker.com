@@ -1,9 +1,9 @@
 import Link from 'next/link'
 import { getAllArticleMeta, getAllResourceMeta } from '@/lib/mdx'
 import { ArticleCard } from '@/components/article-card'
-import { NewsletterForm } from '@/components/newsletter-form'
 import { ServiceCard } from '@/components/service-card'
 import { PILLARS } from '@/lib/pillars'
+import { HeroClient } from '@/components/hero-client'
 
 const PILLAR_HOVER_BG: Record<string, string> = {
   blockchain: 'hover:bg-primary',
@@ -54,56 +54,7 @@ export default function HomePage() {
   return (
     <>
       {/* ── Hero ─────────────────────────────────────────── */}
-      <section className="mx-auto max-w-5xl xl:max-w-6xl 2xl:max-w-7xl 3xl:max-w-[1440px] px-6 sm:px-12 py-20 md:py-28 relative overflow-hidden border-b border-border">
-        <div className="flex flex-col lg:flex-row justify-between items-start gap-12">
-          <div className="flex-1 z-10">
-            <p className="font-mono text-xs tracking-[0.2em] uppercase text-muted-foreground mb-8">
-              Senior Blockchain Architect · Ahmedabad, India
-            </p>
-            <h1
-              className="font-extrabold uppercase leading-[0.85] tracking-tighter mb-12"
-              style={{ fontSize: 'clamp(3rem, 9vw, 10rem)' }}
-            >
-              Building<br />
-              <span className="italic text-stroke">What&apos;s</span><br />
-              Next.
-            </h1>
-            <div className="max-w-[420px]">
-              <p className="text-base leading-[1.7] text-muted-foreground mb-8">
-                6+ years designing smart contracts, custody infrastructure, and AI-native Web3 systems.
-                Writing weekly on the future of decentralised tech.
-              </p>
-              <NewsletterForm />
-              <p className="font-mono text-[10px] text-muted-foreground mt-3 tracking-widest uppercase">
-                Free · Weekly · No Spam
-              </p>
-              <div className="mt-8">
-                <Link
-                  href="/about"
-                  className="inline-flex items-center border border-border px-5 py-3 text-sm font-semibold uppercase tracking-[0.14em] text-foreground transition-all duration-200 hover:border-primary hover:bg-primary hover:text-primary-foreground"
-                >
-                  About Neel →
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          {/* Decorative vertical watermark — large screens only */}
-          <div aria-hidden="true" className="hidden lg:flex items-start pt-2 pointer-events-none select-none shrink-0">
-            <span
-              className="font-extrabold uppercase text-foreground/[0.035]"
-              style={{
-                writingMode: 'vertical-rl',
-                fontSize: '7rem',
-                letterSpacing: '0.28em',
-                lineHeight: 1,
-              }}
-            >
-              Proof·of·Work
-            </span>
-          </div>
-        </div>
-      </section>
+      <HeroClient />
 
       {/* ── Tech marquee ─────────────────────────────────── */}
       <div className="bg-primary overflow-hidden py-4 select-none">
