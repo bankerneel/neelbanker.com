@@ -12,6 +12,16 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    "node_modules/**",
+    ".claude/**",
+    ".agents/**",
+    "test-results/**",
+    "profile-data/**",
+    "AGENTS.md",
+    "CLAUDE.md",
+    "MEMORY.md",
+    "STATES.md",
+    "ROADMAP.md"
   ]),
 ]);
 
