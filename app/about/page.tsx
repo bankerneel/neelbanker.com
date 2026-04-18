@@ -140,7 +140,7 @@ export default function AboutPage() {
       {/* ── Bio ──────────────────────────────────────────── */}
       <div className="mx-auto max-w-3xl xl:max-w-4xl px-6 sm:px-12 py-12 sm:py-16">
         <FadeUp>
-          <div className="mb-10 border-l border-primary pl-5">
+          <div className="mb-10">
             <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.22em] text-primary">Summary</p>
             <p className="text-sm leading-[1.9] text-muted-foreground">
               I work at the overlap of distributed systems, blockchain infrastructure, AI-assisted engineering, and technical leadership. Most of the time that means helping teams make better decisions while delivery is already in motion.
@@ -308,7 +308,7 @@ export default function AboutPage() {
                   rel="noopener noreferrer"
                   className="group flex cursor-pointer flex-col gap-3 bg-background p-6 transition-colors duration-200 hover:bg-muted/40 md:flex-row md:items-center md:gap-8"
                 >
-                  <div className="shrink-0 w-8 h-8 flex items-center justify-center border border-border group-hover:border-primary group-hover:bg-primary transition-all duration-200">
+                  <div className="shrink-0 w-8 h-8 flex items-center justify-center border border-border group-hover:border-primary group-hover:bg-primary transition-colors duration-200">
                     <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5 group-hover:text-primary-foreground transition-colors duration-200">
                       <path d="M8 5v14l11-7z"/>
                     </svg>
@@ -376,8 +376,7 @@ export default function AboutPage() {
           <StaggerContainer className="grid gap-4 md:grid-cols-2">
             {recognition.map((item) => (
               <StaggerItem key={item.title + item.meta}>
-                <div className="group relative flex h-full flex-col justify-between gap-6 border border-border bg-background px-5 py-5 transition-colors duration-200 hover:border-primary/30 sm:px-6 sm:py-6">
-                  <div className="absolute left-0 top-0 h-full w-[3px] bg-primary/70 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
+                <div className="group relative flex h-full flex-col justify-between gap-6 border border-border bg-background px-5 py-5 transition-colors duration-200 hover:border-primary/30 hover:bg-muted/10 sm:px-6 sm:py-6">
                   <div className="space-y-4">
                     <div className="flex items-start justify-between gap-4">
                       <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-primary">{item.label}</p>

@@ -25,7 +25,7 @@ export default async function WritingPage({
   }))
   const editorialClusters = [
     {
-      label: 'Operations Cluster',
+      label: 'L2 & Smart Contract Risk',
       title: 'L2 operations, wallet flows, and smart-contract risk',
       items: [
         'l2-chains-after-deployment',
@@ -35,7 +35,7 @@ export default async function WritingPage({
       ],
     },
     {
-      label: 'Sovereignty Cluster',
+      label: 'Private Chains & Regulated Systems',
       title: 'Private-chain verification and regulated-system design',
       items: [
         'cross-chain-credential-verification',
@@ -146,7 +146,7 @@ export default async function WritingPage({
                     <Link
                       key={article.slug}
                       href={`/writing/${article.slug}`}
-                      className="block cursor-pointer border-l border-border pl-4 transition-colors duration-200 hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                      className="block cursor-pointer pl-4 transition-colors duration-200 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                     >
                       <p className="font-semibold leading-[1.6]">{article.title}</p>
                       <p className="mt-1 text-sm leading-[1.7] text-muted-foreground">{article.excerpt}</p>

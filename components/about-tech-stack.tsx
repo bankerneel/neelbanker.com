@@ -31,7 +31,7 @@ const categories = [
     tint: 'text-[hsl(25_100%_60%)]',
     summary: 'Wallet infrastructure, security boundaries, HSM-backed systems, and account abstraction rails.',
     signal: '5 custody rails',
-    items: ['Fireblocks NCW', 'BitGo', 'AWS CloudHSM', 'ERC-4337 AA', 'WalletConnect'],
+    items: ['Fireblocks (Non-Custodial)', 'BitGo', 'AWS CloudHSM', 'Account Abstraction (ERC-4337)', 'WalletConnect'],
   },
   {
     label: 'Backend & APIs',
@@ -94,10 +94,9 @@ export function AboutTechStack() {
             whileInView={reduced ? {} : { opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-80px' }}
             transition={{ duration: 0.6, delay: ci * 0.06, ease }}
-            className="group relative overflow-hidden bg-background"
+            className="group relative overflow-hidden bg-background transition-colors duration-200 hover:bg-muted/20"
           >
             <div className="absolute inset-x-0 top-0 h-px bg-border" />
-            <div className={`absolute left-0 top-0 h-full w-[3px] ${cat.accent} opacity-80 transition-opacity duration-200 group-hover:opacity-100`} />
 
             <div className="flex h-full flex-col gap-6 px-5 py-6 sm:px-6 sm:py-7">
               <div className="flex items-start justify-between gap-4">

@@ -12,7 +12,7 @@ export function ServiceCard({
   const num = index !== undefined ? String(index + 1).padStart(2, '0') : null
 
   return (
-    <div className="group grid grid-cols-1 md:grid-cols-4 md:items-center gap-2 md:gap-6 py-8 border-t border-border hover:bg-white/[0.015] transition-colors duration-200">
+    <div className="group grid grid-cols-1 md:grid-cols-4 md:items-center gap-2 md:gap-6 py-8 border-t border-border hover:bg-muted/20 transition-colors duration-200">
       {num && (
         <span className="font-mono text-xs text-muted-foreground select-none">{num}</span>
       )}

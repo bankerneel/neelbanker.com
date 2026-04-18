@@ -569,7 +569,7 @@ export function HeroClient() {
     return ((22 - distance) / 22) * 0.14 * pointerOpacity.get()
   })
   const highlightCards = [
-    { label: 'Current Focus', value: 'L2, NCW, AI Delivery' },
+    { label: 'Current Focus', value: 'L2, Custody, AI Delivery' },
     { label: 'Operating Mode', value: 'Architecture + Team Systems' },
     { label: 'Base', value: 'Ahmedabad · Global Projects' },
   ]
@@ -756,7 +756,7 @@ export function HeroClient() {
             transition={{ delay: 0.1, duration: 0.6, ease: 'easeOut' }}
           >
             <span className="h-px w-8 bg-gradient-to-r from-primary/80 to-transparent" aria-hidden="true" />
-            <p className="min-w-0 bg-gradient-to-r from-foreground via-foreground/92 to-muted-foreground bg-clip-text font-mono text-xs uppercase tracking-[0.2em] text-transparent">
+            <p className="min-w-0 font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
               Distributed Systems & Blockchain Architect · Ahmedabad, India
             </p>
           </motion.div>
@@ -792,7 +792,13 @@ export function HeroClient() {
             <p className="font-mono text-[10px] text-muted-foreground mt-3 tracking-widest uppercase">
               Free · Weekly · No Spam
             </p>
-            <div className="mt-8">
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link
+                href="/work-with-me"
+                className="inline-flex cursor-pointer items-center bg-primary px-5 py-3 text-sm font-semibold uppercase tracking-[0.14em] text-primary-foreground transition-colors duration-200 hover:bg-foreground hover:text-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              >
+                Book a Call →
+              </Link>
               <Link
                 href="/about"
                 className="inline-flex cursor-pointer items-center border border-border px-5 py-3 text-sm font-semibold uppercase tracking-[0.14em] text-foreground transition-colors duration-200 hover:border-primary hover:bg-primary hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
@@ -832,10 +838,10 @@ export function HeroClient() {
         <div className="border border-border bg-background/70 px-4 py-4 backdrop-blur-sm">
           <div className="mb-4 flex items-center justify-between gap-4">
             <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-              Signal field
+              Tech stack
             </p>
             <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-primary">
-              Stack in motion
+              In production
             </p>
           </div>
 

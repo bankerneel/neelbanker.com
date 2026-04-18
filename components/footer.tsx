@@ -26,7 +26,7 @@ export function Footer() {
                 Neel Banker
               </p>
               <p className="mb-8 font-mono text-xs uppercase tracking-widest text-muted-foreground italic">
-                Senior Blockchain Architect · Ahmedabad, India
+                Distributed Systems & Blockchain Architect · Ahmedabad, India
               </p>
               <p className="max-w-xl text-sm leading-[1.8] text-muted-foreground">
                 Architecture for blockchain, AI-native systems, and technical organizations that need calm technical direction when complexity is already high.

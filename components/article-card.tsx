@@ -7,11 +7,8 @@ export function ArticleCard({ article }: { article: ArticleMeta }) {
   return (
     <Link
       href={`/writing/${article.slug}`}
-      className="group relative grid cursor-pointer gap-5 border-t border-border py-8 pl-4 pr-2 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary [touch-action:manipulation] sm:py-10 sm:pl-5 md:grid-cols-[220px_minmax(0,1fr)_auto] md:items-start md:gap-6"
+      className="group grid cursor-pointer gap-5 border-t border-border py-8 pl-4 pr-2 transition-colors duration-200 hover:bg-muted/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary [touch-action:manipulation] sm:py-10 sm:pl-5 md:grid-cols-[220px_minmax(0,1fr)_auto] md:items-start md:gap-6"
     >
-      {/* Animated left accent bar */}
-      <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-primary origin-top scale-y-0 group-hover:scale-y-100 transition-transform duration-300 ease-out" />
-
       {/* Metadata column — fixed width on desktop */}
       <div className="flex min-h-[44px] flex-wrap items-center gap-2.5 pr-4 md:min-h-0 md:items-start md:pt-1">
         <PillarBadge pillar={article.pillar} />
