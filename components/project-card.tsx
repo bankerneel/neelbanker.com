@@ -11,7 +11,7 @@ export function ProjectCard({
 }) {
   return (
     <div
-      className={`group relative flex h-full cursor-default flex-col justify-between overflow-hidden border border-border bg-background transition-[transform,border-color] duration-200 hover:-translate-y-[3px] hover:border-primary ${featured ? 'p-8' : 'p-6'}`}
+      className={`group relative flex h-full cursor-default flex-col justify-between overflow-hidden border border-border bg-background transition-[transform,border-color] duration-200 hover:-translate-y-[3px] hover:border-primary ${featured ? 'p-6 sm:p-8' : 'p-6'}`}
     >
       <div className="absolute inset-x-0 top-0 h-px origin-left scale-x-0 bg-primary transition-transform duration-300 group-hover:scale-x-100" />
       {featured && typeof index === 'number' && (
@@ -22,8 +22,8 @@ export function ProjectCard({
           {String(index + 1).padStart(2, '0')}
         </span>
       )}
-      <div className="relative z-10 mb-4 flex items-start justify-between gap-4">
-        <div>
+      <div className="relative z-10 mb-4 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+        <div className="min-w-0">
           <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
             {project.date}
           </p>
@@ -32,7 +32,7 @@ export function ProjectCard({
           </h3>
         </div>
         {project.chain && (
-          <span className="shrink-0 font-mono text-[10px] uppercase tracking-widest text-muted-foreground border border-border px-2 py-0.5">
+          <span className="w-fit max-w-full shrink-0 border border-border px-2 py-0.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
             {project.chain}
           </span>
         )}
