@@ -144,7 +144,9 @@
     size: A4;
     margin: 14mm;
   }
-  header,
+  /* Hide only the site chrome — scope to the top-level nav header so the
+     resume sheet's own <header> (name + contact) still prints. */
+  body > header,
   footer,
   .no-print {
     display: none !important;
