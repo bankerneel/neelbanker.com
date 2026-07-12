@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
 import { ProjectCard } from '@/components/project-card'
 import type { ProjectMeta } from '@/types/content'
 
@@ -83,15 +82,8 @@ export function ProjectBrowser({ projects }: { projects: ProjectMeta[] }) {
               key={filter.key}
               type="button"
               onClick={() => setActiveFilter(filter.key)}
-              className={`relative min-h-11 cursor-pointer overflow-hidden px-3 py-2 font-mono text-xs uppercase tracking-widest transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${activeFilter === filter.key ? 'text-primary-foreground' : 'bg-muted text-muted-foreground hover:text-foreground'}`}
+              className={`relative min-h-11 cursor-pointer overflow-hidden px-3 py-2 font-mono text-xs uppercase tracking-widest transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${activeFilter === filter.key ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:text-foreground'}`}
             >
-              {activeFilter === filter.key && (
-                <motion.span
-                  layoutId="project-filter-pill"
-                  className="absolute inset-0 bg-primary"
-                  transition={{ type: 'spring', stiffness: 280, damping: 26 }}
-                />
-              )}
               <span className="relative z-10">{filter.label}</span>
             </button>
           ))}
@@ -125,22 +117,16 @@ export function ProjectBrowser({ projects }: { projects: ProjectMeta[] }) {
         ))}
       </div>
 
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={activeFilter}
-          initial={{ opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -8 }}
-          transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
-          className="grid gap-px bg-border sm:grid-cols-2"
-        >
-          {visibleProjects.map((project) => (
-            <div key={project.slug} className="bg-background">
-              <ProjectCard project={project} />
-            </div>
-          ))}
-        </motion.div>
-      </AnimatePresence>
+      <div
+        key={activeFilter}
+        className="animate-fade-in grid gap-px bg-border sm:grid-cols-2"
+      >
+        {visibleProjects.map((project) => (
+          <div key={project.slug} className="bg-background">
+            <ProjectCard project={project} />
+          </div>
+        ))}
+      </div>
 
       <div className="mt-16 border-t border-border pt-12">
         <div className="mb-8 max-w-2xl">

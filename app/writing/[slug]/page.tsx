@@ -65,7 +65,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
 
       <div className="mx-auto max-w-2xl px-6 sm:px-12">
         <FadeUp delay={0.15}>
-          <div className="prose prose-invert prose-zinc prose-headings:font-bold prose-headings:tracking-tight prose-p:leading-[1.85] prose-p:text-foreground/92 prose-li:leading-[1.8] prose-strong:text-foreground prose-a:text-primary prose-a:no-underline hover:prose-a:text-foreground prose-pre:border prose-pre:border-border prose-pre:bg-muted/30 prose-code:text-foreground max-w-none">
+          <div className="prose prose-lg prose-invert prose-zinc prose-headings:font-bold prose-headings:tracking-tight prose-p:leading-[1.85] prose-p:text-foreground/92 prose-li:leading-[1.8] prose-strong:text-foreground prose-a:text-primary prose-a:no-underline hover:prose-a:text-foreground prose-pre:border prose-pre:border-border prose-pre:bg-muted/30 prose-code:text-foreground max-w-none">
             <MDXRemote source={article.content} />
           </div>
         </FadeUp>

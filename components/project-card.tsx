@@ -1,6 +1,3 @@
-'use client'
-
-import { motion } from 'framer-motion'
 import type { ProjectMeta } from '@/types/content'
 
 export function ProjectCard({
@@ -13,10 +10,8 @@ export function ProjectCard({
   index?: number
 }) {
   return (
-    <motion.div
-      className={`group relative flex h-full cursor-default flex-col justify-between overflow-hidden border border-border bg-background ${featured ? 'p-8' : 'p-6'}`}
-      whileHover={{ y: -3, borderColor: 'hsl(var(--primary))' }}
-      transition={{ duration: 0.2, ease: 'easeOut' }}
+    <div
+      className={`group relative flex h-full cursor-default flex-col justify-between overflow-hidden border border-border bg-background transition-[transform,border-color] duration-200 hover:-translate-y-[3px] hover:border-primary ${featured ? 'p-8' : 'p-6'}`}
     >
       <div className="absolute inset-x-0 top-0 h-px origin-left scale-x-0 bg-primary transition-transform duration-300 group-hover:scale-x-100" />
       {featured && typeof index === 'number' && (
@@ -42,7 +37,7 @@ export function ProjectCard({
           </span>
         )}
       </div>
-      <p className={`relative z-10 mb-5 text-muted-foreground leading-relaxed ${featured ? 'text-[15px]' : 'text-sm'}`}>{project.excerpt}</p>
+      <p className={`relative z-10 mb-5 text-muted-foreground leading-relaxed ${featured ? 'text-[15px]' : 'text-[15px]'}`}>{project.excerpt}</p>
       <div className="relative z-10 flex flex-wrap gap-1.5">
         {project.stack.map((s) => (
           <span key={s} className="bg-muted px-2 py-0.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
@@ -50,6 +45,6 @@ export function ProjectCard({
           </span>
         ))}
       </div>
-    </motion.div>
+    </div>
   )
 }

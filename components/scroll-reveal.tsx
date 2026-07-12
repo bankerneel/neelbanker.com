@@ -1,9 +1,6 @@
 'use client'
 
-import { motion, useReducedMotion } from 'framer-motion'
-import type { ReactNode } from 'react'
-
-const ease = [0.22, 1, 0.36, 1] as const
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 
 interface Props {
   children: ReactNode
@@ -11,35 +8,65 @@ interface Props {
   className?: string
 }
 
+/** Adds `is-visible` the first time the element scrolls into view. */
+function useInView<T extends HTMLElement>() {
+  const ref = useRef<T>(null)
+  const [visible, setVisible] = useState(false)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el || visible) return
+
+    // No IntersectionObserver (rare/old browsers): reveal on next frame.
+    // Reduced motion is handled in CSS, so no special-casing needed here.
+    if (!('IntersectionObserver' in window)) {
+      const id = requestAnimationFrame(() => setVisible(true))
+      return () => cancelAnimationFrame(id)
+    }
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          setVisible(true)
+          io.disconnect()
+        }
+      },
+      { rootMargin: '0px 0px -80px 0px', threshold: 0.01 },
+    )
+    io.observe(el)
+    return () => io.disconnect()
+  }, [visible])
+
+  return { ref, visible }
+}
+
+function cx(...parts: (string | false | undefined)[]) {
+  return parts.filter(Boolean).join(' ')
+}
+
 export function FadeUp({ children, delay = 0, className }: Props) {
-  const reduced = useReducedMotion()
-  if (reduced) return <div className={className}>{children}</div>
+  const { ref, visible } = useInView<HTMLDivElement>()
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 32 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-80px' }}
-      transition={{ duration: 0.65, delay, ease }}
-      className={className}
+    <div
+      ref={ref}
+      className={cx('reveal reveal-up', visible && 'is-visible', className)}
+      style={delay ? { transitionDelay: `${delay}s` } : undefined}
     >
       {children}
-    </motion.div>
+    </div>
   )
 }
 
 export function FadeIn({ children, delay = 0, className }: Props) {
-  const reduced = useReducedMotion()
-  if (reduced) return <div className={className}>{children}</div>
+  const { ref, visible } = useInView<HTMLDivElement>()
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      viewport={{ once: true, margin: '-60px' }}
-      transition={{ duration: 0.6, delay, ease: 'easeOut' }}
-      className={className}
+    <div
+      ref={ref}
+      className={cx('reveal', visible && 'is-visible', className)}
+      style={delay ? { transitionDelay: `${delay}s` } : undefined}
     >
       {children}
-    </motion.div>
+    </div>
   )
 }
 
@@ -49,43 +76,27 @@ export function SlideIn({
   className,
   from = 'left',
 }: Props & { from?: 'left' | 'right' }) {
-  const reduced = useReducedMotion()
-  if (reduced) return <div className={className}>{children}</div>
+  const { ref, visible } = useInView<HTMLDivElement>()
   return (
-    <motion.div
-      initial={{ opacity: 0, x: from === 'left' ? -40 : 40 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      viewport={{ once: true, margin: '-80px' }}
-      transition={{ duration: 0.65, delay, ease }}
-      className={className}
+    <div
+      ref={ref}
+      className={cx('reveal', from === 'left' ? 'reveal-left' : 'reveal-right', visible && 'is-visible', className)}
+      style={delay ? { transitionDelay: `${delay}s` } : undefined}
     >
       {children}
-    </motion.div>
+    </div>
   )
 }
 
 export function StaggerContainer({
   children,
   className,
-  delay = 0,
 }: Props & { delay?: number }) {
-  const reduced = useReducedMotion()
-  if (reduced) return <div className={className}>{children}</div>
+  const { ref, visible } = useInView<HTMLDivElement>()
   return (
-    <motion.div
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: '-80px' }}
-      variants={{
-        hidden: {},
-        visible: {
-          transition: { staggerChildren: 0.09, delayChildren: delay },
-        },
-      }}
-      className={className}
-    >
+    <div ref={ref} className={cx('stagger', visible && 'is-visible', className)}>
       {children}
-    </motion.div>
+    </div>
   )
 }
 
@@ -96,21 +107,5 @@ export function StaggerItem({
   children: ReactNode
   className?: string
 }) {
-  const reduced = useReducedMotion()
-  if (reduced) return <div className={className}>{children}</div>
-  return (
-    <motion.div
-      variants={{
-        hidden: { opacity: 0, y: 24 },
-        visible: {
-          opacity: 1,
-          y: 0,
-          transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] },
-        },
-      }}
-      className={className}
-    >
-      {children}
-    </motion.div>
-  )
+  return <div className={cx('stagger-item', className)}>{children}</div>
 }

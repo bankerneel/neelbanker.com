@@ -1,9 +1,4 @@
-'use client'
-
-import { motion, useReducedMotion } from 'framer-motion'
 import { Brain, Cloud, Layers, Server, Shield, Wrench } from 'lucide-react'
-
-const ease = [0.22, 1, 0.36, 1] as const
 
 const categories = [
   {
@@ -63,17 +58,9 @@ const categories = [
 ]
 
 export function AboutTechStack() {
-  const reduced = useReducedMotion()
-
   return (
     <div className="space-y-6">
-      <motion.div
-        initial={reduced ? false : { opacity: 0, y: 18 }}
-        whileInView={reduced ? {} : { opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-60px' }}
-        transition={{ duration: 0.55, ease }}
-        className="grid gap-px bg-border md:grid-cols-3"
-      >
+      <div className="grid gap-px bg-border md:grid-cols-3">
         {[
           ['6 capability lanes', 'From protocol and custody to cloud and delivery systems.'],
           ['38 named tools', 'Grouped into readable domains instead of one long skills wall.'],
@@ -81,19 +68,15 @@ export function AboutTechStack() {
         ].map(([title, copy]) => (
           <div key={title} className="bg-background px-5 py-5 sm:px-6">
             <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">{title}</p>
-            <p className="text-sm leading-[1.7] text-muted-foreground">{copy}</p>
+            <p className="text-[15px] leading-[1.7] text-muted-foreground">{copy}</p>
           </div>
         ))}
-      </motion.div>
+      </div>
 
       <div className="grid gap-px bg-border xl:grid-cols-2">
-        {categories.map((cat, ci) => (
-          <motion.div
+        {categories.map((cat) => (
+          <div
             key={cat.label}
-            initial={reduced ? false : { opacity: 0, y: 24 }}
-            whileInView={reduced ? {} : { opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.6, delay: ci * 0.06, ease }}
             className="group relative overflow-hidden bg-background transition-colors duration-200 hover:bg-muted/20"
           >
             <div className="absolute inset-x-0 top-0 h-px bg-border" />
@@ -118,17 +101,13 @@ export function AboutTechStack() {
               </div>
 
               <div className="flex flex-wrap gap-2">
-                {cat.items.map((item, ii) => (
-                  <motion.span
+                {cat.items.map((item) => (
+                  <span
                     key={item}
-                    initial={reduced ? false : { opacity: 0, scale: 0.96 }}
-                    whileInView={reduced ? {} : { opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.3, delay: ci * 0.05 + ii * 0.025, ease }}
                     className="inline-flex min-h-11 items-center border border-border/90 px-3 py-2 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground transition-colors duration-200 group-hover:border-primary/40 group-hover:text-foreground hover:border-primary hover:text-foreground"
                   >
                     {item}
-                  </motion.span>
+                  </span>
                 ))}
               </div>
 
@@ -138,7 +117,7 @@ export function AboutTechStack() {
                 </p>
               </div>
             </div>
-          </motion.div>
+          </div>
         ))}
       </div>
     </div>
