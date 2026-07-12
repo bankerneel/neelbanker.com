@@ -61,7 +61,7 @@
 
 - Add more curated case studies if the user wants broader proof-of-work coverage
 - Add more writing from `profile-data/WEBSITE.md` backlog
-- Potentially add a real resume PDF if the user supplies one
+- Resume page shipped as an HTML "document sheet" (`/resume`) with print-to-PDF + `.tex` download. If a compiled PDF or a LaTeX toolchain in CI becomes available, optionally swap to an embedded real PDF for exact fidelity.
 
 ### 7. QA / testing hardening
 

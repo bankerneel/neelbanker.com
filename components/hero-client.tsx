@@ -569,7 +569,7 @@ export function HeroClient() {
     return ((22 - distance) / 22) * 0.14 * pointerOpacity.get()
   })
   const highlightCards = [
-    { label: 'Current Focus', value: 'L2, NCW, AI Delivery' },
+    { label: 'Current Focus', value: 'L2, Custody, AI Delivery' },
     { label: 'Operating Mode', value: 'Architecture + Team Systems' },
     { label: 'Base', value: 'Ahmedabad · Global Projects' },
   ]
@@ -600,6 +600,17 @@ export function HeroClient() {
           backgroundImage: 'radial-gradient(circle, hsl(var(--border)) 1px, transparent 1px)',
           backgroundSize: '32px 32px',
           opacity: 0.45,
+        }}
+      />
+
+      {/* Film-grain texture — static, adds tactile depth without extra motion */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 z-20 opacity-[0.12] mix-blend-overlay"
+        style={{
+          backgroundImage:
+            "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
+          backgroundSize: '180px 180px',
         }}
       />
 
@@ -756,14 +767,14 @@ export function HeroClient() {
             transition={{ delay: 0.1, duration: 0.6, ease: 'easeOut' }}
           >
             <span className="h-px w-8 bg-gradient-to-r from-primary/80 to-transparent" aria-hidden="true" />
-            <p className="min-w-0 bg-gradient-to-r from-foreground via-foreground/92 to-muted-foreground bg-clip-text font-mono text-xs uppercase tracking-[0.2em] text-transparent">
+            <p className="min-w-0 font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
               Distributed Systems & Blockchain Architect · Ahmedabad, India
             </p>
           </motion.div>
 
           <h1
             className="font-extrabold uppercase leading-[0.85] tracking-tighter mb-12"
-            style={{ fontSize: 'clamp(3rem, 9vw, 10rem)' }}
+            style={{ fontSize: 'clamp(2.5rem, 9vw, 10rem)' }}
           >
             <HeroWord delay={0.2}>Building</HeroWord>
             <HeroWord delay={0.35} italic>What&apos;s</HeroWord>
@@ -792,7 +803,13 @@ export function HeroClient() {
             <p className="font-mono text-[10px] text-muted-foreground mt-3 tracking-widest uppercase">
               Free · Weekly · No Spam
             </p>
-            <div className="mt-8">
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link
+                href="/work-with-me"
+                className="inline-flex cursor-pointer items-center bg-primary px-5 py-3 text-sm font-semibold uppercase tracking-[0.14em] text-primary-foreground transition-colors duration-200 hover:bg-foreground hover:text-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              >
+                Book a Call →
+              </Link>
               <Link
                 href="/about"
                 className="inline-flex cursor-pointer items-center border border-border px-5 py-3 text-sm font-semibold uppercase tracking-[0.14em] text-foreground transition-colors duration-200 hover:border-primary hover:bg-primary hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
@@ -832,10 +849,10 @@ export function HeroClient() {
         <div className="border border-border bg-background/70 px-4 py-4 backdrop-blur-sm">
           <div className="mb-4 flex items-center justify-between gap-4">
             <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-              Signal field
+              Tech stack
             </p>
             <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-primary">
-              Stack in motion
+              In production
             </p>
           </div>
 

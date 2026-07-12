@@ -8,6 +8,7 @@ const navLinks = [
   { href: '/projects', label: 'Projects' },
   { href: '/speaking', label: 'Speaking' },
   { href: '/newsletter', label: 'Newsletter' },
+  { href: '/resume', label: 'Resume' },
   { href: '/work-with-me', label: 'Work With Me' },
   { href: 'https://linkedin.com/in/neelbanker', label: 'LinkedIn ↗', external: true },
   { href: 'https://github.com/bankerneel', label: 'GitHub ↗', external: true },
@@ -26,7 +27,7 @@ export function Footer() {
                 Neel Banker
               </p>
               <p className="mb-8 font-mono text-xs uppercase tracking-widest text-muted-foreground italic">
-                Senior Blockchain Architect · Ahmedabad, India
+                Distributed Systems & Blockchain Architect · Ahmedabad, India
               </p>
               <p className="max-w-xl text-sm leading-[1.8] text-muted-foreground">
                 Architecture for blockchain, AI-native systems, and technical organizations that need calm technical direction when complexity is already high.

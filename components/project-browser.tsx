@@ -30,7 +30,7 @@ const PROJECT_CATEGORIES: Record<string, ProjectFilter[]> = {
   'roomquery': ['ai'],
   'ai-social-media-agent': ['ai'],
   'privatgpt-offline': ['ai'],
-  'keytu-ai-mentoring-platform': ['ai', 'leadership'],
+  'ai-mentoring-platform': ['ai', 'leadership'],
   'idosy-ido-platform': ['wallets', 'leadership'],
 }
 

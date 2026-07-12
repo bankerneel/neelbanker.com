@@ -67,7 +67,7 @@
   --secondary: hsl(0 0% 9%);
   --secondary-foreground: hsl(36 15% 91%);
   --muted: hsl(0 0% 7%);
-  --muted-foreground: hsl(0 0% 46%);
+  --muted-foreground: hsl(0 0% 54%);
   --accent: hsl(72 100% 49%);
   --accent-foreground: hsl(0 0% 3.5%);
   --destructive: hsl(0 84% 60%);
@@ -135,5 +135,44 @@
   .text-stroke {
     -webkit-text-stroke: 1.5px hsl(72 100% 49%);
     color: transparent;
+  }
+}
+
+/* ── Print: isolate the resume document sheet ─────────────────────── */
+@media print {
+  @page {
+    size: A4;
+    margin: 14mm;
+  }
+  /* Hide only the site chrome — scope to the top-level nav header so the
+     resume sheet's own <header> (name + contact) still prints. */
+  body > header,
+  footer,
+  .no-print {
+    display: none !important;
+  }
+  html,
+  body {
+    background: #fff !important;
+  }
+  main {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  .resume-doc-wrap {
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+  }
+  .resume-sheet {
+    max-width: none !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    color: #262626 !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
   }
 }

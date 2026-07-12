@@ -1,0 +1,244 @@
+%% Neel Banker — Resume
+%% Distributed Systems & Blockchain Architect
+%% Compile with: pdflatex neel-banker-resume.tex
+
+\documentclass[11pt, a4paper]{article}
+
+% ── Packages ──────────────────────────────────────────────────────────────────
+\usepackage[left=0.70in, right=0.70in, top=0.65in, bottom=0.65in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{multicol}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{parskip}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{booktabs}
+
+% ── Colors ────────────────────────────────────────────────────────────────────
+\definecolor{headingcolor}{HTML}{111111}
+\definecolor{accentcolor}{HTML}{1A4A8A}
+\definecolor{mutedcolor}{HTML}{555555}
+\definecolor{rulecolor}{HTML}{CCCCCC}
+
+% ── Hyperref ──────────────────────────────────────────────────────────────────
+\hypersetup{
+  colorlinks = true,
+  urlcolor   = accentcolor,
+  linkcolor  = accentcolor,
+  pdfauthor  = {Neel Banker},
+  pdftitle   = {Neel Banker — Resume}
+}
+
+% ── Section headings ──────────────────────────────────────────────────────────
+\titleformat{\section}
+  {\large\bfseries\color{headingcolor}\uppercase}
+  {}{0em}{}
+  [\vspace{-2pt}\textcolor{rulecolor}{\rule{\linewidth}{0.5pt}}]
+\titlespacing{\section}{0pt}{10pt}{4pt}
+
+% ── List settings ─────────────────────────────────────────────────────────────
+\setlist[itemize]{
+  leftmargin = 1.2em,
+  noitemsep,
+  topsep     = 2pt,
+  parsep     = 0pt,
+  label      = \textbullet
+}
+
+% ── No page numbers ───────────────────────────────────────────────────────────
+\pagestyle{empty}
+
+% ── Helpers ───────────────────────────────────────────────────────────────────
+% Role block: \role{Title}{Company}{Date range}{Location}
+\newcommand{\role}[4]{%
+  \noindent
+  \textbf{#1} \hfill \textcolor{mutedcolor}{\small #3}\\[-2pt]
+  \textit{\textcolor{accentcolor}{#2}} \hfill \textcolor{mutedcolor}{\small\textit{#4}}
+  \vspace{2pt}
+}
+
+% Inline tag for skill groups
+\newcommand{\skilltag}[1]{\textbf{#1:}\;}
+
+% ══════════════════════════════════════════════════════════════════════════════
+\begin{document}
+
+% ── Header ────────────────────────────────────────────────────────────────────
+\begin{center}
+  {\Huge\bfseries\color{headingcolor} Neel Banker}\\[4pt]
+  {\large\color{mutedcolor} Distributed Systems \& Blockchain Architect \textbar{} AI-Augmented Engineering Leadership}\\[6pt]
+  \small
+  \href{tel:+919033125898}{+91\,90331\,25898}\quad\textbullet\quad
+  \href{mailto:neelhbanker@gmail.com}{neelhbanker@gmail.com}\quad\textbullet\quad
+  Ahmedabad, Gujarat, India\\[2pt]
+  \href{https://www.linkedin.com/in/neelbanker}{linkedin.com/in/neelbanker}\quad\textbullet\quad
+  \href{https://github.com/bankerneel}{github.com/bankerneel}\quad\textbullet\quad
+  \href{https://neelbanker.com}{neelbanker.com}
+\end{center}
+
+\vspace{2pt}
+
+% ── Profile ───────────────────────────────────────────────────────────────────
+\section{Profile}
+
+\noindent
+7\textplus{} years building production blockchain systems: Ethereum L2 ecosystems, Hyperledger Fabric networks, custody platforms, cross-chain integrations, and payments. I grew the SoluLab blockchain team from 10 to 50\textplus{} engineers; at Tech Alchemy, I run architecture across several live platforms simultaneously. Lately putting real time into AI-augmented engineering: multi-model workflows and tooling that let teams ship faster without letting the codebase accumulate debt. Interested in senior architecture leadership and CTO-track roles globally.
+
+% ── Experience ────────────────────────────────────────────────────────────────
+\section{Experience}
+
+\role{Blockchain Architect / Engineering Lead}{Tech Alchemy}{May 2024 – Present (2\textplus{} yrs)}{Hybrid: Pune, India/Remote}
+
+\begin{itemize}
+  \item Runs architecture and delivery across multiple live blockchain platforms simultaneously: Ethereum L2 ecosystems, cross-chain systems, custody infrastructure, and payments.
+  \item Led the OP Stack L2 deployment, bridge architecture, and L1/L2 backend oracle for the Pepe Unchained token ecosystem; delivered a production non-custodial wallet (NCW) built on Fireblocks for a separate enterprise client.
+  \item Drove Solana DApps integration across Node.js backends, AWS infrastructure, and EVM-compatible contracts within a 6-week window.
+  \item Formalized engineering standards around security, compliance, and operational reliability post-acquisition; mentored engineers and took part in senior-level hiring.
+  \item Introduced AI-assisted engineering workflows, including multi-model and vector DB-backed tooling, that sped up delivery without letting standards slip.
+\end{itemize}
+
+\vspace{6pt}
+
+\role{Blockchain Team Lead / Senior Developer \textrightarrow{} Engineering Lead}{SoluLab Inc}{Jul 2019 – May 2024 (4 yrs 11 mos)}{On-site: Ahmedabad, India}
+
+\textit{\small Apr 2021 – May 2024: Blockchain Team Lead / Senior Developer}
+
+\begin{itemize}
+  \item Was the go-to technical advisor and solution architect for startups and mid-market clients across DeFi, enterprise blockchain, and Web3 infrastructure.
+  \item Built the blockchain engineering practice from scratch, growing the team from 10 to 50\textplus{} engineers and putting real engineering standards in place around security, documentation, and code quality.
+  \item Designed and shipped custom blockchain platforms across Hyperledger Fabric, Ethereum, EVM Layer 2, EOSIO, and NFT ecosystems; built long-term client relationships across North America.
+  \item Delivered platforms including \textbf{Sosh Wallet} (Hyperledger Fabric digital wallet, multi-layered tx security), \textbf{DocTrace} (immutable document custody on Fabric for enterprise clients), \textbf{EOS DApps} (finance, supply chain, and gaming on EOSIO), and multiple DeFi/NFT marketplace platforms.
+  \item Won \textbf{Best Team Lead of the Year} in both 2021 and 2022 (consecutive).
+\end{itemize}
+
+\vspace{4pt}
+\textit{\small Jul 2019 – Mar 2021: Blockchain Developer}
+
+\begin{itemize}
+  \item Designed scalable network architectures and set up public/private blockchain environments per client requirements.
+  \item Wrote and audited smart contracts; worked with AWS, Azure, and SCRUM workflows on international client projects.
+\end{itemize}
+
+% ── Education ─────────────────────────────────────────────────────────────────
+\section{Education}
+
+\noindent
+\textbf{Master of Technology (MTech), Information Technology}\hfill\textcolor{mutedcolor}{\small Oct 2021 – Nov 2023}\\
+\textit{\textcolor{accentcolor}{Rai University, Ahmedabad}}\hfill\textcolor{mutedcolor}{\small\textit{(pursued alongside full-time role at SoluLab)}}\\
+\textbf{Gold Medalist}, Ranked 4\textsuperscript{th} in the University\quad\textbullet\quad
+Review Paper: \textit{Blockchain \& Web3 in Carbon Credits}
+
+\vspace{5pt}
+\noindent
+\textbf{Bachelor of Engineering (BE), Information Technology}\hfill\textcolor{mutedcolor}{\small 2016 – 2019}\\
+\textit{\textcolor{accentcolor}{L J Institute of Engineering and Technology (LJIET), Ahmedabad}}
+
+% ── Selected Projects ─────────────────────────────────────────────────────────
+\section{Selected Projects}
+
+\noindent
+\begin{tabularx}{\linewidth}{@{}l X@{}}
+\textbf{Non-Custodial Wallet (Fireblocks NCW)} &
+  Production non-custodial wallet (NCW) platform built on Fireblocks Embedded Wallet SDK; custom WebSocket layer, admin \& user frontends. \textit{Node.js, Fireblocks, TypeScript}\\[4pt]
+
+\textbf{Pepe Unchained (OP Stack L2)} &
+  Ethereum Layer 2 chain with bridge, L1/L2 backend oracle, and staking contracts for a meme token ecosystem. \textit{OP Stack, Solidity, Node.js, MongoDB}\\[4pt]
+
+\textbf{VeriOnce (Credential Verification)} &
+  Hyperledger Fabric v2.4 credential platform: 3-org Raft network with private data collections keeping raw data inside client infrastructure. Designed for enterprise and government issuers; evaluated for MeeSeva state integration (100K+ daily txns). \textit{Fabric v2.4, AWS EKS, Kubernetes, CouchDB, MongoDB, S3, Prometheus}\\[4pt]
+
+\textbf{Fabric-Polygon Interoperability} &
+  Cross-chain commit-reveal for academic credential verification between Hyperledger Fabric (private) and Polygon (public), with off-chain oracle relay bridge. Measured \textasciitilde{}16s E2E latency on Polygon Amoy testnet. Three interaction modes: cross-chain, private-only, public-only. \textit{Go, Solidity, JavaScript, Polygon Amoy}
+  \href{https://gist.github.com/bankerneel/df6fd079c8c8c21c57e8778dbb5d0936}{\small[gist]}\\[4pt]
+
+\textbf{AI Social Media Post Agent} &
+  Autonomous agent that monitors trends, messages founder on Telegram, drafts LinkedIn posts in founder's voice, and publishes on approval. \textit{Python, Claude API, Telegram Bot API, LinkedIn API}\\[4pt]
+
+\textbf{Smart Contract Auditing Suite} &
+  Security review of OpenZeppelin UUPS-upgradeable Token, Staking, and Vesting contracts following the Smart Contract Security Verification Standard (SCSVS); found reentrancy in staking logic, proxy upgrade authorization gaps, and access control misconfigurations. \textit{Solidity, Hardhat, OpenZeppelin}\\[4pt]
+
+\textbf{EIP: Access Control Registry} &
+  Authored an Ethereum Improvement Proposal (EIP) for a centralized on-chain registry managing role-based access control across multiple smart contracts; a personal research contribution to the Ethereum protocol standardization process. \textit{Solidity, Hardhat}\\
+\end{tabularx}
+
+% ── Skills ────────────────────────────────────────────────────────────────────
+\section{Technical Skills}
+
+\noindent
+\skilltag{Blockchain \& Distributed Systems}
+Hyperledger Fabric, Ethereum, Solidity, EVM, OP Stack (L2), Arbitrum, Solana, Bitcoin (BDK, BRC-20, Ordinals), EOSIO, SKALE, Polygon, Hyperledger Besu
+
+\vspace{3pt}
+\noindent
+\skilltag{Custody \& Wallets}
+Fireblocks (NCW, Web3 Provider), Non-Custodial Wallet architecture, AWS CloudHSM, GCP Cloud HSM, WalletConnect
+
+\vspace{3pt}
+\noindent
+\skilltag{AI \& ML}
+Claude API, LangChain, GPT4All, Ollama (Custom Models), Llama.cpp, Weaviate  (vector DB), multi-model workflows, AI-augmented engineering
+
+\vspace{3pt}
+\noindent
+\skilltag{Backend}
+Node.js, NestJS, Python (Django, FastAPI), Go, TypeScript, REST, WebSocket (Noise protocol), Microservices, Nx monorepo
+
+\vspace{3pt}
+\noindent
+\skilltag{Frontend}
+React, Angular, Next.js, Flutter (Dart), Tailwind CSS
+
+\vspace{3pt}
+\noindent
+\skilltag{Infrastructure \& Cloud}
+AWS (EKS, S3, CloudFront, CloudHSM, IAM, DynamoDB), GCP, Docker, Kubernetes, Azure Blockchain Workbench
+
+\vspace{3pt}
+\noindent
+\skilltag{Databases}
+PostgreSQL, MongoDB, CouchDB, DynamoDB
+
+\vspace{3pt}
+\noindent
+\skilltag{Tools \& Process}
+Hardhat, Truffle, Git, GitHub, GitLab, Jira, Confluence, Husky, ESLint
+
+% ── Talks & Speaking ──────────────────────────────────────────────────────────
+\section{Talks \& Speaking}
+
+\begin{itemize}
+  \item \textbf{NFT: A New Gold Rush}, GDG Ahmedabad. NFTs as a new asset class on blockchain for a Google Developer Group audience. \href{https://www.youtube.com/watch?v=KYRgwRG-LF8}{\small[YouTube]}
+  \item \textbf{Blockchain and Decentralisation (Understanding the Technology Behind Crypto Currency)}, Centre of Excellence of ICAI, Jaipur. Blockchain fundamentals and real-world use cases. \href{https://www.youtube.com/watch?v=ONUzNrt9plc}{\small[YouTube]}
+  \item \textbf{Getting Started with Docker}, SoluLab Internal. Dockerising a React.js application for dev, staging, and production using Docker Compose. \href{https://www.youtube.com/watch?v=rvjnvZ6utpM}{\small[YouTube]}
+\end{itemize}
+
+% ── Awards ────────────────────────────────────────────────────────────────────
+\section{Awards \& Recognition}
+
+\begin{itemize}
+  \item \textbf{Best Team Lead of the Year 2022}, SoluLab Inc (consecutive second year)
+  \item \textbf{Best Team Lead of the Year 2021}, SoluLab Inc
+  \item \textbf{Gold Medal, MTech IT}, Ranked 4\textsuperscript{th} in University
+\end{itemize}
+
+% ── Continuous Learning ───────────────────────────────────────────────────────
+\section{Continuous Learning}
+
+\noindent
+Self-directed study in Solidity security, Ethereum internals, and Rust systems programming via structured online courses (Udemy, 2021 – 2022).
+
+% ── Languages ─────────────────────────────────────────────────────────────────
+\section{Languages}
+
+\noindent
+\textbf{Gujarati}: Native (mother tongue)\quad\textbullet\quad
+\textbf{English}: Full professional proficiency\quad\textbullet\quad
+\textbf{Hindi}: Full professional proficiency
+
+\end{document}
