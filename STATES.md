@@ -1,6 +1,6 @@
 # States
 
-Last updated: 2026-04-03
+Last updated: 2026-07-12
 
 ## File Purpose
 
@@ -15,6 +15,12 @@ Core routes now feel substantially more consistent, lighter, and more editorial 
 
 ## Completed
 
+- Polish + bold-moment pass (verified in real browser, local dev):
+  - Fixed mobile hero headline clip — lowered the display clamp floor from `3rem` to `2.5rem` (`clamp(2.5rem, 9vw, 10rem)`) so "BUILDING" fits inside narrow viewports; desktop sizing unchanged.
+  - Raised `--muted-foreground` from `hsl(0 0% 46%)` to `hsl(0 0% 54%)` for readable body/label contrast on the near-black background (was below WCAG AA on normal text).
+  - Added a bolder `featured` variant to `ProjectCard` (larger title, `p-8`, faint oversized monospace index watermark `01/02…`) used only on the homepage featured grid; `/projects` browser unchanged.
+  - Added a static film-grain texture layer to the hero (`mix-blend-overlay`, opacity `0.12`, inline SVG `feTurbulence`) as a subtle premium signature — no added motion, so reduced-motion safe.
+  - Contrast + reveal sweep verified on `/about`, `/projects`, and a writing article after the token change: all readable, no regression, no reveal flash (the earlier blank-on-load was production landing mid-scroll, not a bug).
 - Fixed mobile horizontal scroll at the source by making the hero eyebrow row responsive (`flex max-w-full` + `min-w-0` on the label text) so the long copy can shrink/wrap instead of forcing viewport overflow.
 - Homepage de-cluttered and rebuilt around a cleaner section rhythm.
 - Hero upgraded into a motion-rich interactive surface with:

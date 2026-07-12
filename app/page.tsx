@@ -162,9 +162,9 @@ export default function HomePage() {
             </div>
           </FadeUp>
           <StaggerContainer className="grid gap-px bg-border lg:grid-cols-2">
-            {featuredProjects.map((project) => (
+            {featuredProjects.map((project, i) => (
               <StaggerItem key={project.slug} className="bg-background">
-                <ProjectCard project={project} />
+                <ProjectCard project={project} featured index={i} />
               </StaggerItem>
             ))}
           </StaggerContainer>

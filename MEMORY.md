@@ -38,6 +38,11 @@
 - Article body width stays narrow; only the article header was widened.
 - Footer wordmark “Neel Banker” was intentionally restored to the original heavier styling.
 - Some mobile touch-target and density cleanup has already been done on filters, hero fallback, and Cal embed height, but a true browser/device QA pass is still pending.
+- Hero display headline uses `clamp(2.5rem, 9vw, 10rem)`. The `2.5rem` floor exists specifically so the longest word ("BUILDING") does not clip on narrow phones — do not raise it back to `3rem` without re-checking mobile at ~360–375px.
+- `--muted-foreground` is intentionally `hsl(0 0% 54%)` (not 46%) for readable contrast on the `hsl(0 0% 3.5%)` background. Keep muted body/label text at or above this lightness for WCAG AA.
+- `ProjectCard` has a `featured` variant (bigger title + faint monospace index watermark) reserved for the homepage featured grid; the `/projects` browser uses the plain variant. The faint corner numeral is a deliberate "number typography as brand device" cue — keep it subtle.
+- Hero has a static film-grain layer (`mix-blend-overlay`, opacity `0.12`, inline SVG `feTurbulence`, `z-20`). It is intentionally static (no animation) so it does not add motion cost and is reduced-motion safe. On the near-black base, `overlay` reads where `soft-light` did not — do not switch back to soft-light.
+- Global hover language was intentionally NOT unified: the pillar-card full-color fill is a deliberate accent (AGENTS.md wants it preserved), so a blanket hover refactor was declined rather than risk flattening it.
 
 ## Interaction Preferences Learned
 

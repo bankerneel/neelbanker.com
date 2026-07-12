@@ -603,6 +603,17 @@ export function HeroClient() {
         }}
       />
 
+      {/* Film-grain texture — static, adds tactile depth without extra motion */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 z-20 opacity-[0.12] mix-blend-overlay"
+        style={{
+          backgroundImage:
+            "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
+          backgroundSize: '180px 180px',
+        }}
+      />
+
       {/* Center-weighted vignette so background motion sits behind the copy */}
       <div
         aria-hidden="true"
@@ -763,7 +774,7 @@ export function HeroClient() {
 
           <h1
             className="font-extrabold uppercase leading-[0.85] tracking-tighter mb-12"
-            style={{ fontSize: 'clamp(3rem, 9vw, 10rem)' }}
+            style={{ fontSize: 'clamp(2.5rem, 9vw, 10rem)' }}
           >
             <HeroWord delay={0.2}>Building</HeroWord>
             <HeroWord delay={0.35} italic>What&apos;s</HeroWord>
