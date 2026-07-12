@@ -8,6 +8,7 @@ const navLinks = [
   { href: '/projects', label: 'Projects' },
   { href: '/speaking', label: 'Speaking' },
   { href: '/newsletter', label: 'Newsletter' },
+  { href: '/resume', label: 'Resume' },
   { href: '/work-with-me', label: 'Work With Me' },
   { href: 'https://linkedin.com/in/neelbanker', label: 'LinkedIn ↗', external: true },
   { href: 'https://github.com/bankerneel', label: 'GitHub ↗', external: true },

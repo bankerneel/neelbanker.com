@@ -15,6 +15,12 @@ Core routes now feel substantially more consistent, lighter, and more editorial 
 
 ## Completed
 
+- Added `/resume` page (verified in real browser, local dev):
+  - On-brand editorial page header + a white "document sheet" that renders the full `resume/neel-banker-resume.tex` content in a serif, LaTeX-like layout (ruled section headings, right-aligned dates/locations, two-column Selected Projects).
+  - `Download PDF` button uses browser print-to-PDF via a dedicated `@media print` block that isolates the sheet (hides nav/footer/CTAs, strips chrome, A4 margins).
+  - `LaTeX source` download served from `public/resume/neel-banker-resume.tex`.
+  - Wired into footer nav and `sitemap.ts`; `.tex` source committed under `resume/`.
+  - Chose the hand-built HTML sheet over `latex.js` (its docs confirm it can't emulate `\hfill` or load `titlesec`/`tabularx`/`booktabs`/`enumitem`, so it would render this resume broken) and over an embedded PDF (no LaTeX compiler available locally).
 - Polish + bold-moment pass (verified in real browser, local dev):
   - Fixed mobile hero headline clip — lowered the display clamp floor from `3rem` to `2.5rem` (`clamp(2.5rem, 9vw, 10rem)`) so "BUILDING" fits inside narrow viewports; desktop sizing unchanged.
   - Raised `--muted-foreground` from `hsl(0 0% 46%)` to `hsl(0 0% 54%)` for readable body/label contrast on the near-black background (was below WCAG AA on normal text).
