@@ -138,6 +138,142 @@
   }
 }
 
+/* ── Scroll reveal + hero motion (CSS-only, replaces framer-motion) ── */
+.reveal {
+  opacity: 0;
+  transition:
+    opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+.reveal-up {
+  transform: translateY(32px);
+}
+.reveal-left {
+  transform: translateX(-40px);
+}
+.reveal-right {
+  transform: translateX(40px);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+.stagger-item {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.stagger.is-visible .stagger-item {
+  opacity: 1;
+  transform: none;
+}
+.stagger.is-visible .stagger-item:nth-child(1) { transition-delay: 0s; }
+.stagger.is-visible .stagger-item:nth-child(2) { transition-delay: 0.08s; }
+.stagger.is-visible .stagger-item:nth-child(3) { transition-delay: 0.16s; }
+.stagger.is-visible .stagger-item:nth-child(4) { transition-delay: 0.24s; }
+.stagger.is-visible .stagger-item:nth-child(5) { transition-delay: 0.32s; }
+.stagger.is-visible .stagger-item:nth-child(6) { transition-delay: 0.4s; }
+.stagger.is-visible .stagger-item:nth-child(7) { transition-delay: 0.48s; }
+.stagger.is-visible .stagger-item:nth-child(n + 8) { transition-delay: 0.55s; }
+
+@keyframes hero-word-in {
+  from {
+    opacity: 0;
+    transform: translateY(40px) skewY(2deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) skewY(0);
+  }
+}
+.hero-word {
+  display: block;
+  opacity: 0;
+  animation: hero-word-in 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: var(--word-delay, 0s);
+}
+
+@keyframes hero-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.hero-fade-up {
+  opacity: 0;
+  animation: hero-fade-up 0.6s ease-out forwards;
+  animation-delay: var(--fade-delay, 0s);
+}
+
+@keyframes hero-badge-in {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.hero-badge-in {
+  opacity: 0;
+  animation: hero-badge-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: var(--badge-delay, 0s);
+}
+
+@keyframes hero-float {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(var(--fx, 0), var(--fy, -10px));
+  }
+}
+.hero-float {
+  animation: hero-float var(--fdur, 5s) ease-in-out infinite;
+  animation-delay: var(--fdelay, 0s);
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.animate-fade-in {
+  animation: fade-in 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Reduced motion: show everything immediately, no transforms/animations */
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .stagger-item,
+  .hero-word,
+  .hero-fade-up,
+  .hero-badge-in {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+    transition: none !important;
+  }
+  .hero-float {
+    animation: none !important;
+  }
+}
+
 /* ── Print: isolate the resume document sheet ─────────────────────── */
 @media print {
   @page {

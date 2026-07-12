@@ -15,6 +15,13 @@ Core routes now feel substantially more consistent, lighter, and more editorial 
 
 ## Completed
 
+- Mobile homepage QA pass (375px): hero fits with no horizontal overflow, tech band/meta cards/sections all stack cleanly. Fixed featured `ProjectCard` header so the long chain badge stacks below the title on mobile (was clipping) and reduced featured mobile padding to `p-6 sm:p-8`.
+- Performance + readability pass (verified with prod build + real browser):
+  - Removed `framer-motion` entirely (uninstalled). All entrance/hover motion is now CSS + a small IntersectionObserver in `components/scroll-reveal.tsx`. Homepage First Load JS dropped ~292 KB → ~234 KB.
+  - Converted `project-card` (now a server component), `project-browser`, and `about-tech-stack` off framer-motion to CSS transitions.
+  - Hero calmed and split for speed: `hero-client.tsx` is now a static server component (CSS word/fade animations); the desktop constellation was reduced to 12 curated nodes and moved to `hero-constellation.tsx` (CSS-only float), lazy-loaded desktop-only via `hero-constellation-lazy.tsx` (`next/dynamic` + `matchMedia`). Shared icons/data live in `hero-logos.tsx`. framer-motion no longer loads on mobile or blocks first paint.
+  - Readability: article prose bumped to `prose-lg`; hero lead to 17px; project-card and tech-stack body to 15px.
+  - Kept video background OFF by decision (payload/perf/accessibility) — the calmer constellation + grain is the signature instead.
 - Added `/resume` page (verified in real browser, local dev):
   - On-brand editorial page header + a white "document sheet" that renders the full `resume/neel-banker-resume.tex` content in a serif, LaTeX-like layout (ruled section headings, right-aligned dates/locations, two-column Selected Projects).
   - `Download PDF` button uses browser print-to-PDF via a dedicated `@media print` block that isolates the sheet (hides nav/footer/CTAs, strips chrome, A4 margins).

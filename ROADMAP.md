@@ -27,6 +27,9 @@
 
 ### 2. Motion/performance tuning
 
+> Largely done: framer-motion removed entirely (CSS + IntersectionObserver reveals), hero split + calmed + lazy-loaded desktop-only, homepage First Load JS ~292 KB → ~234 KB. Remaining: profile on real low-end devices if needed.
+
+
 - Profile `components/hero-client.tsx` in browser DevTools
 - Reduce expensive blur/glow layers only if profiling shows real cost
 - Tune animation density by viewport size if needed
