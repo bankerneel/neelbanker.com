@@ -8,6 +8,23 @@
 
 ## Now
 
+### 0. Redesign — build out Dream Bazaar (Direction P)
+
+The site was judged to have become generic (its near-black + lime palette and Syne/mono
+pairing are a widely-copied preset). `/design-lab` explored 17 directions; **P · Dream
+Bazaar** was selected.
+
+Next steps, in order:
+
+- Extend P beyond the homepage: article template, `/projects`, `/work-with-me` — the
+  reading experience is the real test, and P's overlapping layout is the part most likely
+  to get brittle with variable content lengths.
+- Decide whether the light/dark toggle ships (mechanism already built in
+  `_components/theme-shell.tsx` — CSS custom properties, one class swap).
+- Only then migrate the live design system: `app/globals.css` tokens, font stack, page
+  headers, hero. Expect to rewrite the `AGENTS.md` design rules, which describe the
+  current system and would otherwise block the redesign.
+
 ### 1. Browser QA and fix pass
 
 - Verify homepage hero on:

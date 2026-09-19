@@ -1,0 +1,427 @@
+/* =================================================================
+   DESIGN LAB — isolated redesign prototypes.
+   Everything is scoped under .lab-* so it cannot leak into the
+   live design system in app/globals.css.
+   ================================================================= */
+
+/* Hide the production nav + footer while a lab page is mounted */
+body:has([data-design-lab]) > header,
+body:has([data-design-lab]) > footer {
+  display: none !important;
+}
+
+/* globals.css paints <body> near-black; neutralise it so no dark bleeds
+   through around the light prototypes. */
+body:has([data-design-lab]) {
+  background: #ffffff !important;
+}
+
+[data-design-lab] {
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ---------- shared print texture ----------
+   `isolation: isolate` keeps the multiply blend inside this element, otherwise
+   it blends against the near-black <body> from globals.css and paints black.
+   Absolute (not fixed) so it covers the full page, not just the viewport. */
+.lab-grain {
+  position: relative;
+  isolation: isolate;
+}
+.lab-grain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+  opacity: 0.3;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+
+.lab-halftone {
+  background-image: radial-gradient(currentColor 1.1px, transparent 1.2px);
+  background-size: 7px 7px;
+}
+
+.lab-halftone-lg {
+  background-image: radial-gradient(currentColor 2px, transparent 2.1px);
+  background-size: 12px 12px;
+}
+
+/* =================================================================
+   A. RETRO DUOTONE  —  "Oxide": bone paper, warm ink, burnt orange
+   ================================================================= */
+.lab-retro {
+  --paper: #e8dcc8;
+  --ink: #1a1614;
+  --accent: #e2552b;
+  --rule: rgba(26, 22, 20, 0.24);
+  --muted: rgba(26, 22, 20, 0.62);
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-archivo), system-ui, sans-serif;
+}
+
+.lab-retro .display {
+  font-weight: 900;
+  letter-spacing: -0.045em;
+  line-height: 0.84;
+  text-transform: uppercase;
+}
+
+/* offset-print misregistration */
+.misreg {
+  position: relative;
+  display: block;
+}
+.misreg-ghost {
+  position: absolute;
+  inset: 0;
+  color: var(--accent);
+  mix-blend-mode: multiply;
+  transform: translate(5px, 5px);
+  pointer-events: none;
+}
+
+.lab-retro .sticker {
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  background: var(--paper);
+}
+
+/* =================================================================
+   B. MAXIMALIST EDITORIAL  —  serif x grotesk x mono, violent scale
+   ================================================================= */
+.lab-editorial {
+  --paper: #faf9f7;
+  --ink: #14110f;
+  --accent: #b3341f;
+  --rule: rgba(20, 17, 15, 0.16);
+  --muted: rgba(20, 17, 15, 0.56);
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-archivo), system-ui, sans-serif;
+}
+
+.lab-editorial .serif {
+  font-family: var(--font-instrument), Georgia, 'Times New Roman', serif;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
+.lab-editorial .display {
+  line-height: 0.82;
+}
+
+/* drop cap on the first paragraph of a block */
+.lab-dropcap > p:first-of-type::first-letter {
+  float: left;
+  font-family: var(--font-instrument), Georgia, serif;
+  font-size: 4.4em;
+  line-height: 0.78;
+  padding-right: 0.07em;
+  padding-top: 0.08em;
+}
+
+/* hairline rule with a label riding on it */
+.rule-label {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 0.9rem;
+}
+.rule-label::after {
+  content: '';
+  height: 1px;
+  background: var(--rule);
+}
+
+@media (min-width: 1024px) {
+  .lab-justify {
+    text-align: justify;
+    hyphens: auto;
+  }
+}
+
+/* reduced motion: nothing here animates, but keep the guard explicit */
+@media (prefers-reduced-motion: reduce) {
+  [data-design-lab] * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ---- Editorial palette variants (must follow .lab-editorial) ---- */
+
+/* C · Editorial — Dark : bone on near-black, champagne accent */
+.lab-editorial-dark {
+  --paper: #0e0d0c;
+  --ink: #ece6dc;
+  --accent: #e0a458;
+  --rule: rgba(236, 230, 220, 0.16);
+  --muted: rgba(236, 230, 220, 0.58);
+}
+
+/* D · Editorial Duotone : editorial structure, retro oxide palette */
+.lab-editorial-duo {
+  --paper: #e8dcc8;
+  --ink: #1a1614;
+  --accent: #e2552b;
+  --rule: rgba(26, 22, 20, 0.22);
+  --muted: rgba(26, 22, 20, 0.6);
+}
+
+/* =================================================================
+   G. CYBERCORE — terminal HUD, scanlines, glitch
+   ================================================================= */
+.cyber-scan {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.045) 0px,
+    rgba(255, 255, 255, 0.045) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+}
+.cyber-grid {
+  background-image:
+    linear-gradient(to right, rgba(34, 211, 238, 0.1) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(34, 211, 238, 0.1) 1px, transparent 1px);
+  background-size: 46px 46px;
+}
+.cyber-glitch {
+  text-shadow:
+    2px 0 rgba(255, 0, 128, 0.7),
+    -2px 0 rgba(0, 255, 238, 0.7);
+}
+.cyber-frame {
+  position: relative;
+}
+.cyber-frame::before,
+.cyber-frame::after {
+  content: '';
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  border-color: #22d3ee;
+  border-style: solid;
+}
+.cyber-frame::before {
+  top: -1px;
+  left: -1px;
+  border-width: 2px 0 0 2px;
+}
+.cyber-frame::after {
+  bottom: -1px;
+  right: -1px;
+  border-width: 0 2px 2px 0;
+}
+
+/* =================================================================
+   H. SCRAPBOOK — tape, polaroids, rotated cards
+   ================================================================= */
+.tape {
+  position: relative;
+}
+.tape::before {
+  content: '';
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  width: 92px;
+  height: 26px;
+  transform: translateX(-50%) rotate(-3deg);
+  background: rgba(238, 228, 168, 0.75);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+}
+.paper-card {
+  background: #fffdf7;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.06),
+    0 10px 22px -12px rgba(0, 0, 0, 0.28);
+}
+.hand {
+  font-family: var(--font-caveat), cursive;
+}
+
+/* =================================================================
+   I. SURREALISM — impossible scale, long shadows, dream palette
+   ================================================================= */
+.surreal-sky {
+  background:
+    radial-gradient(70% 55% at 18% 12%, #ffd9a0 0%, transparent 60%),
+    radial-gradient(60% 50% at 82% 8%, #ffb3c7 0%, transparent 58%),
+    radial-gradient(85% 70% at 50% 100%, #9fb8ff 0%, transparent 62%),
+    linear-gradient(180deg, #fbe7d2 0%, #e7d9f7 52%, #cfd9ff 100%);
+}
+.long-shadow {
+  box-shadow: 46px 46px 0 rgba(28, 22, 48, 0.16);
+}
+.surreal-arch {
+  border-radius: 999px 999px 18px 18px;
+}
+
+/* =================================================================
+   J/K/L. SCRAPBOOK x SURREALISM primitives
+   ================================================================= */
+
+/* torn paper edge */
+.torn {
+  clip-path: polygon(
+    0% 3%, 4% 0%, 11% 2%, 19% 0%, 27% 3%, 36% 1%, 45% 3%, 54% 0%, 63% 2%,
+    72% 0%, 81% 3%, 90% 1%, 97% 3%, 100% 1%,
+    100% 97%, 95% 100%, 87% 97%, 78% 100%, 69% 98%, 60% 100%, 51% 97%,
+    42% 100%, 33% 98%, 24% 100%, 15% 97%, 7% 100%, 2% 98%, 0% 100%
+  );
+}
+
+/* flat cut-paper: hard offset shadow, no blur */
+.cut-shadow {
+  box-shadow: 14px 14px 0 rgba(40, 30, 25, 0.18);
+}
+.cut-shadow-sm {
+  box-shadow: 8px 8px 0 rgba(40, 30, 25, 0.16);
+}
+
+/* a real desk surface: ruled paper + faint grid */
+.desk-surface {
+  background-color: #efe7d8;
+  background-image:
+    linear-gradient(rgba(60, 50, 40, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(60, 50, 40, 0.035) 1px, transparent 1px);
+  background-size: 28px 28px, 28px 28px;
+}
+
+/* coffee ring */
+.coffee-ring {
+  border: 9px solid rgba(146, 102, 58, 0.16);
+  border-radius: 999px;
+}
+
+/* =================================================================
+   M. MAXIMALISM — pattern on pattern, no whitespace
+   ================================================================= */
+.pat-stripes {
+  background-image: repeating-linear-gradient(
+    45deg,
+    currentColor 0px,
+    currentColor 6px,
+    transparent 6px,
+    transparent 14px
+  );
+}
+.pat-dots {
+  background-image: radial-gradient(currentColor 2.2px, transparent 2.4px);
+  background-size: 14px 14px;
+}
+.pat-zig {
+  background-image:
+    linear-gradient(135deg, currentColor 25%, transparent 25%),
+    linear-gradient(225deg, currentColor 25%, transparent 25%);
+  background-size: 18px 18px;
+}
+/* stroke must be an explicit colour: `currentColor` would resolve to
+   transparent here, since the fill is transparent. */
+.max-outline {
+  -webkit-text-stroke: 2px var(--stroke, #120c1f);
+  color: transparent;
+}
+@keyframes max-slide {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.max-marquee {
+  animation: max-slide 18s linear infinite;
+}
+
+/* =================================================================
+   M/N. MAXIMALISM — one system, two moods (toggle-ready).
+   Every surface reads from these custom properties, so switching
+   .lab-max <-> .lab-max-dark is the whole theme change.
+   ================================================================= */
+.lab-max {
+  --max-ground: #f7f1e6;
+  --max-panel: #fffaf2;
+  --max-ink: #3d3430;          /* text on ground / panel */
+  --max-on-accent: #3d3430;    /* dark text on accent fills */
+  --max-accent-contrast: #fffaf2; /* light text on accent fills */
+  --max-rose: #dda192;
+  --max-sage: #a9bd9c;
+  --max-butter: #f0dda6;
+  --max-sky: #a8c0d4;
+  --max-lilac: #c2adca;
+  --max-terra: #cf9070;
+  --max-shadow: rgba(61, 52, 48, 0.28);
+  background: var(--max-ground);
+  color: var(--max-ink);
+}
+
+/* Same hue families, deepened — so the two moods read as one brand. */
+.lab-max-dark {
+  --max-ground: #1a1613;
+  --max-panel: #262019;
+  --max-ink: #f2e9dc;
+  --max-on-accent: #17120f;
+  --max-accent-contrast: #f7efe2;
+  --max-rose: #b06a5e;
+  --max-sage: #6f8158;
+  --max-butter: #c9a24a;
+  --max-sky: #4a7a8c;
+  --max-lilac: #8a6a8f;
+  --max-terra: #c07048;
+  --max-shadow: rgba(0, 0, 0, 0.55);
+}
+
+/* =================================================================
+   O/P/Q. MAXIMALISM x DREAM COLLAGE — dense, torn, dreaming.
+   Light/dark is a single class swap; every surface reads from vars.
+   ================================================================= */
+.lab-dreammax {
+  --dm-sky:
+    radial-gradient(70% 55% at 18% 12%, #ffd9a0 0%, transparent 60%),
+    radial-gradient(60% 50% at 82% 8%, #ffb3c7 0%, transparent 58%),
+    radial-gradient(85% 70% at 50% 100%, #b9c6ff 0%, transparent 62%),
+    linear-gradient(180deg, #fbe7d2 0%, #ecdcf5 52%, #d7dfff 100%);
+  --dm-panel: #fffaf2;
+  --dm-ink: #3a2f3d;
+  --dm-on-accent: #3a2f3d;
+  --dm-contrast: #fffaf2;
+  --dm-rose: #e0a08f;
+  --dm-butter: #f2dca8;
+  --dm-sky-c: #a9c2dc;
+  --dm-lilac: #c3aad0;
+  --dm-sage: #a8bd9e;
+  --dm-terra: #d2876a;
+  --dm-shadow: rgba(58, 47, 61, 0.22);
+  --dm-longshadow: rgba(58, 47, 61, 0.16);
+  background: var(--dm-sky);
+  color: var(--dm-ink);
+}
+
+.lab-dreammax-dark {
+  --dm-sky:
+    radial-gradient(70% 55% at 18% 12%, #4a2f3f 0%, transparent 60%),
+    radial-gradient(60% 50% at 82% 8%, #3b2a4d 0%, transparent 58%),
+    radial-gradient(85% 70% at 50% 100%, #24304d 0%, transparent 62%),
+    linear-gradient(180deg, #2a1f2b 0%, #241d33 52%, #1b1b2e 100%);
+  --dm-panel: #241d2b;
+  --dm-ink: #f2e9dc;
+  --dm-on-accent: #1a141f;
+  --dm-contrast: #f7efe2;
+  --dm-rose: #b06a5e;
+  --dm-butter: #c9a24a;
+  --dm-sky-c: #4a7a8c;
+  --dm-lilac: #8a6a8f;
+  --dm-sage: #6f8158;
+  --dm-terra: #c07048;
+  --dm-shadow: rgba(0, 0, 0, 0.5);
+  --dm-longshadow: rgba(0, 0, 0, 0.45);
+}
+
+.dm-longshadow {
+  box-shadow: 40px 40px 0 var(--dm-longshadow);
+}
