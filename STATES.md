@@ -15,6 +15,12 @@ Core routes now feel substantially more consistent, lighter, and more editorial 
 
 ## Completed
 
+- Added `/design-lab` — 17 working redesign prototypes (A–Q), all rendering the same real content from `app/design-lab/_content.ts` so directions can be compared directly:
+  - A Retro Duotone · B Maximalist Editorial · C Editorial Dark · D Editorial Duotone · E Bento · F Luxury · G Cybercore · H Scrapbook · I Surrealism · J Dream Collage · K Cut-Paper · L Desk of Dreams · M/N Maximalism light+dark · O Torn Maximalism · **P Dream Bazaar (selected)** · Q Pattern Dreamscape.
+  - **P · Dream Bazaar is the chosen direction** for the eventual redesign (Maximalism × Dream Collage: overlapping scraps, polaroids and swatches on a dream sky, no grid).
+  - O/P/Q ship a real light/dark toggle (`_components/theme-shell.tsx`) driven entirely by CSS custom properties, so a production toggle is a one-class swap.
+  - Routes are intentionally **unlisted but publicly reachable** so they can be shared as reference work: `noindex` via the lab layout metadata, absent from `sitemap.ts`, and deliberately NOT disallowed in `robots.ts` (blocking crawl would prevent the `noindex` from being seen).
+  - Verified the lab does not affect the live site: homepage still preloads 2 font files and ~145 KB HTML; the lab's 4 extra font families are scoped to the `/design-lab` segment only.
 - Mobile homepage QA pass (375px): hero fits with no horizontal overflow, tech band/meta cards/sections all stack cleanly. Fixed featured `ProjectCard` header so the long chain badge stacks below the title on mobile (was clipping) and reduced featured mobile padding to `p-6 sm:p-8`.
 - Performance + readability pass (verified with prod build + real browser):
   - Removed `framer-motion` entirely (uninstalled). All entrance/hover motion is now CSS + a small IntersectionObserver in `components/scroll-reveal.tsx`. Homepage First Load JS dropped ~292 KB → ~234 KB.
