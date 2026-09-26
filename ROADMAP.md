@@ -30,8 +30,8 @@ Bazaar** was selected by Neel and his wife.
 | Foundation: tokens, fonts, theme, `Scrap`, tickets | ✅ Done 2026-09-27 |
 | Nav + Footer | ✅ Done — nav collapses to a menu below `lg` |
 | `/writing/[slug]` | ✅ Done — wall header, torn reading sheet, GFM tables, keep-reading, arch CTA |
-| `/writing` | **Next.** Archive + pillar filters (URL-driven state must keep working); retire `ArticleCard` rows |
-| `/projects` | Category filter browser; long project titles stress overlap |
+| `/writing` | ✅ Done — wall + stat polaroids, pinned latest three, reading lists, ticket filters (URL state kept), `ArticleCard` is now an index card |
+| `/projects` | **Next.** Category filter browser; long project titles stress overlap |
 | `/work-with-me` | Services, contact form (shared Zod schema), Cal.com embed (check it in dark mode) |
 | `/about` | Experience, capability map, recognition; still uses `prose-invert` |
 | `/resources`, `/newsletter` | Gated download + subscribe forms |

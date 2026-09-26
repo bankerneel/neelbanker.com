@@ -1,6 +1,8 @@
 'use client'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { PILLARS } from '@/lib/pillars'
+import { cn } from '@/lib/utils'
+import { focusRing, pick, tilts } from '@/components/bazaar/styles'
 import { ArticleCard } from './article-card'
 import type { ArticleMeta, PillarSlug } from '@/types/content'
 
@@ -42,47 +44,60 @@ export function PillarFilter({
     ? 'All articles'
     : PILLARS.find((pillar) => pillar.slug === active)?.label ?? 'Filtered articles'
 
+  const options = [
+    { slug: 'all' as const, label: 'All', tone: 'tone-panel' },
+    ...PILLARS.map((p) => ({ slug: p.slug, label: p.label, tone: p.toneClass })),
+  ]
+
   return (
     <div>
-      <div className="mb-8 flex flex-col gap-4 border-b border-border pb-6 sm:flex-row sm:items-end sm:justify-between">
+      <div className="mb-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">Archive</p>
-          <p className="text-sm leading-[1.7] text-muted-foreground">
-            <span className="font-semibold text-foreground">{activeLabel}</span> · {filtered.length} of {articles.length} articles
+          <h2 id="archive" className="text-[clamp(2rem,5vw,3.4rem)] font-black uppercase leading-none tracking-tighter">
+            The{' '}
+            <span className="hand text-[1.15em] font-normal lowercase text-dm-accent-ink">whole</span>{' '}
+            archive
+          </h2>
+          <p className="mt-3 text-[13px] font-bold uppercase tracking-[0.14em] text-dm-ink-soft" aria-live="polite">
+            {activeLabel} · {filtered.length} of {articles.length}
           </p>
         </div>
-        <div className="flex flex-wrap gap-2">
-        <button
-          type="button"
-          onClick={() => setActive('all')}
-          className={`cursor-pointer min-h-11 px-3 py-2 font-mono text-xs uppercase tracking-widest transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${active === 'all' ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:text-foreground'}`}
-        >
-          All
-        </button>
-        {PILLARS.map((p) => (
-          <button
-            key={p.slug}
-            type="button"
-            onClick={() => setActive(p.slug)}
-            className={`cursor-pointer min-h-11 px-3 py-2 font-mono text-xs uppercase tracking-widest transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${active === p.slug ? `${p.bgClass} ${p.textClass}` : 'bg-muted text-muted-foreground hover:text-foreground'}`}
-          >
-            {p.label}
-          </button>
-        ))}
+        <div role="group" aria-label="Filter by pillar" className="flex flex-wrap gap-3">
+          {options.map((option, i) => {
+            const isActive = active === option.slug
+            return (
+              <button
+                key={option.slug}
+                type="button"
+                onClick={() => setActive(option.slug)}
+                aria-pressed={isActive}
+                className={cn(
+                  'ticket min-h-11 cursor-pointer px-4 transition-[rotate,background-color,color] duration-200 hover:rotate-0',
+                  isActive ? 'tone-ink rotate-0 shadow-hard' : cn(option.tone, pick(tilts, i)),
+                  focusRing,
+                )}
+              >
+                {option.label}
+              </button>
+            )
+          })}
         </div>
       </div>
-      <div>
-        {filtered.length > 0 ? (
-          filtered.map((a) => <ArticleCard key={a.slug} article={a} />)
-        ) : (
-          <div className="border border-border px-6 py-10">
-            <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">No matches</p>
-            <p className="text-sm leading-[1.8] text-muted-foreground">
-              There are no articles in this pillar yet. Switch filters to explore the rest of the archive.
-            </p>
-          </div>
-        )}
-      </div>
+
+      {filtered.length > 0 ? (
+        <div className="space-y-7">
+          {filtered.map((a, i) => (
+            <ArticleCard key={a.slug} article={a} index={i} />
+          ))}
+        </div>
+      ) : (
+        <div className="tone-panel border-2 border-dashed border-current px-6 py-10">
+          <p className="text-[11px] font-bold uppercase tracking-[0.22em]">No matches</p>
+          <p className="mt-2 text-[15px] leading-[1.7] text-dm-ink-soft">
+            There are no articles in this pillar yet. Switch filters to explore the rest of the archive.
+          </p>
+        </div>
+      )}
     </div>
   )
 }

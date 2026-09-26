@@ -141,6 +141,8 @@ the new palette through the mapped shadcn tokens, but its structure is legacy �
   title at 375px before calling a layout done (longest article title: 88 characters).
 - Pattern swatches (`pat-dots` / `pat-stripes` / `pat-zig`) and arches (`surreal-arch`) are decoration:
   `aria-hidden`, `pointer-events-none`, hidden below `lg`.
+- Shared pieces: `components/bazaar/page-intro.tsx` (breadcrumb tickets → kicker → h1 → wall), `components/bazaar/styles.ts`
+  (`focusRing`, `tones`, `tilts`, `softTilts`, `chipLink`).
 - Page container: the `page-wrap` utility (max 1400px, 20/32/48px gutters). Replaces the old 4-stop
   `max-w-5xl xl:max-w-6xl …` scale.
 - `<main>` has `overflow-x-clip` as a safety net for tilted pieces; still check `scrollWidth` at 375px.
@@ -205,5 +207,5 @@ wrap above-the-fold content in `FadeUp`: it stays invisible until hydration and 
 - Do not use accent fills (`text-dm-terra`, `text-dm-rose`, …) as text colours — they fail contrast; use `text-dm-accent-ink`
 - Do not animate `padding`/`margin` on hover — causes layout reflow; use `transition-colors` or `transform` only
 - Do not use `transition-all` on hover — always specify the property (e.g. `transition-colors duration-200`)
-- Do not use `grid sm:grid-cols-2` for `ArticleCard` lists — ArticleCard is a full-width row component; use a plain `div` (stacked list)
+- Do not use `grid sm:grid-cols-2` for `ArticleCard` lists — ArticleCard is a full-width index card; stack it (`space-y-7`) and pass `index` for its tilt
 - Do not add emoji as functional list-item bullets; use CSS/text markers (`→`, `—`) or styled `before:` content

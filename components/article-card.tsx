@@ -1,30 +1,46 @@
 import Link from 'next/link'
 import { PillarBadge } from './pillar-badge'
 import { parseDate } from '@/lib/utils-date'
+import { cn } from '@/lib/utils'
+import { focusRing, pick, softTilts } from '@/components/bazaar/styles'
 import type { ArticleMeta } from '@/types/content'
 
-export function ArticleCard({ article }: { article: ArticleMeta }) {
+/**
+ * An index card for one article — full width, stacked in a list (never in a
+ * multi-column grid: the title needs the width). `index` sets its gentle tilt.
+ */
+export function ArticleCard({ article, index = 0 }: { article: ArticleMeta; index?: number }) {
   return (
     <Link
       href={`/writing/${article.slug}`}
-      className="group grid cursor-pointer gap-5 border-t border-border py-8 pl-4 pr-2 transition-colors duration-200 hover:bg-muted/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary [touch-action:manipulation] sm:py-10 sm:pl-5 md:grid-cols-[220px_minmax(0,1fr)_auto] md:items-start md:gap-6"
+      className={cn(
+        'group block cursor-pointer transition-[rotate] duration-200 [touch-action:manipulation] hover:rotate-0',
+        pick(softTilts, index),
+        focusRing,
+      )}
     >
-      {/* Metadata column — fixed width on desktop */}
-      <div className="flex min-h-[44px] flex-wrap items-center gap-2.5 pr-4 md:min-h-0 md:items-start md:pt-1">
-        <PillarBadge pillar={article.pillar} />
-        <span className="font-mono text-xs text-muted-foreground whitespace-nowrap">{parseDate(article.date)}</span>
-      </div>
+      <div className="tone-panel grid gap-4 border-2 border-current p-6 shadow-hard sm:p-7 md:grid-cols-[210px_minmax(0,1fr)_auto] md:items-start md:gap-7">
+        <div className="flex flex-wrap items-center gap-2.5 md:flex-col md:items-start md:pt-1">
+          <PillarBadge pillar={article.pillar} className="whitespace-normal leading-tight" />
+          <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-dm-ink-soft">
+            {parseDate(article.date)} · {article.readingTime} min
+          </span>
+        </div>
 
-      {/* Title + excerpt */}
-      <div className="min-w-0 pr-4">
-        <h3 className="font-bold text-xl sm:text-2xl uppercase tracking-tight leading-snug group-hover:text-primary transition-colors duration-200 mb-2">
-          {article.title}
-        </h3>
-        <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">{article.excerpt}</p>
-      </div>
+        <div className="min-w-0">
+          <h3 className="text-[1.2rem] font-black uppercase leading-[1.12] tracking-tight transition-colors duration-200 group-hover:text-dm-accent-ink sm:text-[1.4rem]">
+            {article.title}
+          </h3>
+          <p className="mt-2.5 line-clamp-2 text-[15px] font-medium leading-[1.65] text-dm-ink-soft">{article.excerpt}</p>
+        </div>
 
-      {/* Arrow */}
-      <span className="hidden shrink-0 self-center pr-4 text-muted-foreground transition-transform duration-200 group-hover:translate-x-1 group-hover:text-primary md:block">↗</span>
+        <span
+          aria-hidden="true"
+          className="hidden self-center text-2xl font-black transition-[translate] duration-200 group-hover:translate-x-1 md:block"
+        >
+          →
+        </span>
+      </div>
     </Link>
   )
 }

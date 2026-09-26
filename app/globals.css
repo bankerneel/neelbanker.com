@@ -239,6 +239,10 @@
     font-family: var(--font-caveat), cursive;
     font-weight: 500;
   }
+  /* Caveat's slant eats the word space inside uppercase headlines */
+  :is(h1, h2, h3, p) > .hand {
+    margin-inline: 0.08em;
+  }
 
   /* Outlined word. The stroke must be an explicit colour: currentColor would
      resolve to transparent, since the fill is transparent. */
