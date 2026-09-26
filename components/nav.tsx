@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useSyncExternalStore } from 'react'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { cn } from '@/lib/utils'
 
@@ -16,9 +16,19 @@ const links = [
 const focusRing =
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-dm-panel'
 
+// "Has the page scrolled?" as an external store: no setState in an effect,
+// and the server snapshot (false) matches the unscrolled first paint.
+function subscribeToScroll(onChange: () => void) {
+  window.addEventListener('scroll', onChange, { passive: true })
+  return () => window.removeEventListener('scroll', onChange)
+}
+const isScrolled = () => window.scrollY > 8
+const isScrolledOnServer = () => false
+
 export function Nav() {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
+  const scrolled = useSyncExternalStore(subscribeToScroll, isScrolled, isScrolledOnServer)
   const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`)
 
   // Escape closes the mobile menu.
@@ -32,71 +42,82 @@ export function Nav() {
   }, [open])
 
   return (
-    <header className="relative z-50">
-      <nav aria-label="Main navigation" className="page-wrap flex items-center justify-between gap-4 pb-2 pt-6">
-        <Link
-          href="/"
-          onClick={() => setOpen(false)}
+    <header className="sticky top-0 z-50">
+      <div className="relative">
+        {/* Paper strip behind the bar once the page scrolls, so content never
+            shows through the chips. Fades in; the bar's height never changes. */}
+        <div
+          aria-hidden="true"
           className={cn(
-            'tone-panel -rotate-[1.4deg] shrink-0 cursor-pointer whitespace-nowrap border-[3px] border-current px-3.5 py-1.5 text-lg font-black uppercase leading-none tracking-tighter shadow-hard transition-[rotate] duration-200 hover:rotate-0 sm:text-xl',
-            focusRing,
+            'tone-panel pointer-events-none absolute inset-0 border-b-2 border-current shadow-[0_5px_0_var(--dm-shadow)] transition-opacity duration-200',
+            scrolled ? 'opacity-100' : 'opacity-0',
           )}
-        >
-          Neel Banker
-        </Link>
+        />
+        <nav aria-label="Main navigation" className="page-wrap relative flex items-center justify-between gap-4 py-4">
+          <Link
+            href="/"
+            onClick={() => setOpen(false)}
+            className={cn(
+              'tone-panel -rotate-[1.4deg] shrink-0 cursor-pointer whitespace-nowrap border-[3px] border-current px-3.5 py-1.5 text-lg font-black uppercase leading-none tracking-tighter shadow-hard transition-[rotate] duration-200 hover:rotate-0 sm:text-xl',
+              focusRing,
+            )}
+          >
+            Neel Banker
+          </Link>
 
-        {/* Desktop */}
-        <div className="hidden items-center gap-2.5 lg:flex">
-          {links.map(({ href, label, tone, tilt }) => (
+          {/* Desktop */}
+          <div className="hidden items-center gap-2.5 lg:flex">
+            {links.map(({ href, label, tone, tilt }) => (
+              <Link
+                key={href}
+                href={href}
+                aria-current={isActive(href) ? 'page' : undefined}
+                className={cn(
+                  'ticket cursor-pointer py-2 transition-[rotate,background-color,color] duration-200 hover:rotate-0',
+                  isActive(href) ? 'tone-ink rotate-0' : cn(tone, tilt),
+                  focusRing,
+                )}
+              >
+                {label}
+              </Link>
+            ))}
             <Link
-              key={href}
-              href={href}
-              aria-current={isActive(href) ? 'page' : undefined}
+              href="/work-with-me"
+              aria-current={isActive('/work-with-me') ? 'page' : undefined}
               className={cn(
-                'ticket cursor-pointer py-2 transition-[rotate,background-color,color] duration-200 hover:rotate-0',
-                isActive(href) ? 'tone-ink rotate-0' : cn(tone, tilt),
+                'ticket ml-1.5 cursor-pointer py-2.5 shadow-hard transition-[rotate,background-color,color] duration-200 hover:rotate-0',
+                isActive('/work-with-me') ? 'tone-ink' : 'tone-terra rotate-[2.5deg]',
                 focusRing,
               )}
             >
-              {label}
+              Work with me ✦
             </Link>
-          ))}
-          <Link
-            href="/work-with-me"
-            aria-current={isActive('/work-with-me') ? 'page' : undefined}
-            className={cn(
-              'ticket ml-1.5 cursor-pointer py-2.5 shadow-hard transition-[rotate,background-color,color] duration-200 hover:rotate-0',
-              isActive('/work-with-me') ? 'tone-ink' : 'tone-terra rotate-[2.5deg]',
-              focusRing,
-            )}
-          >
-            Work with me ✦
-          </Link>
-          <ThemeToggle className="ml-2" />
-        </div>
+            <ThemeToggle className="ml-2" />
+          </div>
 
-        {/* Mobile */}
-        <div className="flex items-center gap-3 lg:hidden">
-          <ThemeToggle />
-          <button
-            type="button"
-            onClick={() => setOpen((v) => !v)}
-            aria-expanded={open}
-            aria-controls="mobile-menu"
-            className={cn(
-              'ticket tone-butter min-h-10 cursor-pointer shadow-hard transition-[rotate] duration-200',
-              open ? 'rotate-0' : 'rotate-2',
-              focusRing,
-            )}
-          >
-            {open ? 'Close ✕' : 'Menu'}
-          </button>
-        </div>
-      </nav>
+          {/* Mobile */}
+          <div className="flex items-center gap-3 lg:hidden">
+            <ThemeToggle />
+            <button
+              type="button"
+              onClick={() => setOpen((v) => !v)}
+              aria-expanded={open}
+              aria-controls="mobile-menu"
+              className={cn(
+                'ticket tone-butter min-h-10 cursor-pointer shadow-hard transition-[rotate] duration-200',
+                open ? 'rotate-0' : 'rotate-2',
+                focusRing,
+              )}
+            >
+              {open ? 'Close ✕' : 'Menu'}
+            </button>
+          </div>
+        </nav>
+      </div>
 
       {open && (
         <div id="mobile-menu" className="page-wrap animate-fade-in pt-3 lg:hidden">
-          <div className="tone-panel border-[3px] border-current p-4 shadow-hard-lg">
+          <div className="tone-panel max-h-[calc(100dvh-6rem)] overflow-y-auto border-[3px] border-current p-4 shadow-hard-lg">
             {links.map(({ href, label }) => (
               <Link
                 key={href}

@@ -148,6 +148,9 @@ Migration status: every page is on the new system (completed 2026-09-27 on `dev`
   `max-w-5xl xl:max-w-6xl …` scale.
 - `<main>` has `overflow-x-clip` as a safety net for tilted pieces; still check `scrollWidth` at 375px.
 - Nav switches to the mobile menu below `lg` (1024px): the full chip row needs ~900px and overflowed at 800px.
+- The header is `sticky top-0`; once the page scrolls (`useSyncExternalStore` on scroll, > 8px) a paper strip fades in
+  behind it. Its height never changes (no padding animation). `html` has `scroll-padding-top: 6rem` so anchor targets
+  clear it. The print rule `body > header` still hides it.
 
 ### Page header pattern
 
