@@ -72,4 +72,4 @@
 
 ## Best Next Operational Step
 
-- The Dream Bazaar redesign is complete on `dev`; next is Neel's review of the preview and a `dev` → `main` PR. After that, a real-device QA pass (iOS Safari, low-end Android) and end-to-end form checks against production Resend.
+- The Dream Bazaar redesign is live (PR #10, merged 2026-09-26). Next: a real-device QA pass (iOS Safari, low-end Android) and end-to-end form checks against production Resend.

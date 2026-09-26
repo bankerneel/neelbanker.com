@@ -41,7 +41,7 @@ Bazaar** was selected by Neel and his wife.
 | OG images | ✅ Done — dream sky, name tag, Caveat kicker, Archivo 900 title (steps down for long titles), pillar ticket; shared `lib/og.tsx` |
 | Homepage | ✅ Done — the approved lab wall on real content, ticker-tape marquee, notebook scraps, arch portal around the lead case study, pillar scraps, field notes + free resource, service price tags. Old hero + constellation removed |
 
-**All pages done (2026-09-27).** Remaining: Neel reviews the `dev` preview, then a PR `dev` → `main`.
+**All pages done and live** — PR #10 merged 2026-09-26 19:38 UTC. Follow-ups: real-device QA and production form checks (§1).
 
 Perf after the full redesign (prod build, fresh Edge context per page, 1280px, measured 2026-09-27):
 
