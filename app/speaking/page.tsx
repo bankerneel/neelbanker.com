@@ -1,7 +1,11 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { FadeUp, StaggerContainer, StaggerItem } from '@/components/scroll-reveal'
+import { FadeUp } from '@/components/scroll-reveal'
 import { TALKS } from '@/lib/talks'
+import { PageIntro } from '@/components/bazaar/page-intro'
+import { Scrap } from '@/components/bazaar/scrap'
+import { chipLink, focusRing, pick, tilts } from '@/components/bazaar/styles'
+import { cn } from '@/lib/utils'
 
 export const metadata: Metadata = {
   title: 'Speaking',
@@ -12,14 +16,20 @@ const speakingProfile = [
   {
     label: 'Event formats',
     value: 'Conference talks, workshops, internal engineering sessions, and founder or leadership roundtables.',
+    tone: 'tone-butter',
+    tilt: 'rotate-[2.5deg]',
   },
   {
     label: 'Best topics',
     value: 'Blockchain architecture, wallet and custody systems, AI-augmented engineering, and technical leadership under delivery pressure.',
+    tone: 'tone-sage',
+    tilt: '-rotate-2',
   },
   {
     label: 'Audience fit',
     value: 'Engineering teams, Web3 builders, founder communities, developer groups, and product leaders navigating technical complexity.',
+    tone: 'tone-sky',
+    tilt: 'rotate-[1.5deg]',
   },
 ]
 
@@ -29,189 +39,143 @@ const invitationSignals = [
   'Remote or in-person depending on fit',
 ]
 
+const posterTones = ['tone-rose', 'tone-sky', 'tone-sage']
+
 export default function SpeakingPage() {
   return (
     <>
-      <section className="border-b border-border">
-        <div className="mx-auto max-w-5xl xl:max-w-6xl 2xl:max-w-7xl 3xl:max-w-[1440px] px-6 sm:px-12 py-16 sm:py-20">
-          <FadeUp delay={0.05}>
-            <div className="mb-10 flex flex-wrap items-center gap-3">
-              <Link
-                href="/"
-                className="cursor-pointer font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground transition-colors duration-200 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-              >
-                ← Home
-              </Link>
-              <span className="text-xs text-muted-foreground">/</span>
-              <Link
-                href="/about"
-                className="cursor-pointer font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground transition-colors duration-200 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-              >
-                About
-              </Link>
-            </div>
-          </FadeUp>
-          <FadeUp delay={0.15}>
-            <p className="mb-4 font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">
-              Talks & Sessions
+      <PageIntro
+        crumbs={[
+          { href: '/', label: '← Home' },
+          { href: '/about', label: 'About' },
+        ]}
+        kicker="Talks & sessions ✦"
+        title="Speaking"
+      >
+        <div className="relative z-10 mt-10 flex flex-col gap-10 lg:mt-12 lg:flex-row lg:items-start">
+          <Scrap className="w-full max-w-[540px] -rotate-[1.2deg]" paperClassName="tone-panel px-7 py-9 sm:px-9">
+            <p className="text-[1.06rem] font-medium leading-[1.7]">
+              I speak where technical fundamentals meet practical decision-making: blockchain architecture, digital
+              ownership systems, developer tooling, and engineering judgment under delivery pressure.
             </p>
-          </FadeUp>
-          <FadeUp delay={0.25}>
-            <h1 className="mb-6 font-semibold text-4xl uppercase tracking-tighter leading-[0.9] sm:text-5xl md:text-6xl">
-              Speaking
-            </h1>
-          </FadeUp>
-          <FadeUp delay={0.4}>
-            <p className="max-w-2xl text-base leading-[1.7] text-muted-foreground">
-              I speak where technical fundamentals meet practical decision-making: blockchain architecture, digital ownership systems, developer tooling, and engineering judgment under delivery pressure.
+            <p className="mt-4 text-[15px] leading-[1.7] text-dm-ink-soft">
+              The best sessions make complicated systems easier to understand without flattening the trade-offs.
             </p>
-          </FadeUp>
+            <p className="hand mt-4 text-[1.5rem] leading-none text-dm-accent-ink">technical sessions, operator context</p>
+          </Scrap>
+          <ul className="flex flex-col gap-5 lg:-ml-6 lg:mt-8 lg:w-[340px]">
+            {speakingProfile.map((item, i) => (
+              <li key={item.label} className={cn('border-2 border-current p-4 shadow-hard', item.tone, item.tilt, i > 0 && 'lg:-mt-2')}>
+                <p className="text-[10px] font-bold uppercase tracking-[0.2em]">{item.label}</p>
+                <p className="mt-1.5 text-[15px] font-semibold leading-[1.45]">{item.value}</p>
+              </li>
+            ))}
+          </ul>
         </div>
+      </PageIntro>
+
+      {/* ── Talks ─────────────────────────────────────────────────────── */}
+      <section aria-labelledby="talks" className="page-wrap mt-24">
+        <div className="max-w-3xl">
+          <h2 id="talks" className="text-[clamp(2rem,5vw,3.4rem)] font-black uppercase leading-none tracking-tighter">
+            Recorded <span className="hand text-[1.15em] font-normal lowercase text-dm-accent-ink">talks</span>
+          </h2>
+          <p className="mt-4 text-[15px] leading-[1.75] text-dm-ink-soft">
+            A small archive of public sessions across developer communities, professional audiences, and internal
+            engineering environments.
+          </p>
+        </div>
+        <ol className="mt-12 space-y-14">
+          {TALKS.map((talk, i) => (
+            <li key={talk.title}>
+              <Scrap
+                className={i % 2 ? 'rotate-[0.6deg]' : '-rotate-[0.6deg]'}
+                paperClassName="tone-panel grid gap-7 p-5 sm:p-7 md:grid-cols-[minmax(0,260px)_minmax(0,1fr)] md:gap-9"
+              >
+                {/* the "poster": watch link */}
+                <a
+                  href={talk.youtubeUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={cn(
+                    'group relative flex min-h-[170px] cursor-pointer flex-col justify-between border-2 border-current p-4',
+                    pick(posterTones, i),
+                    focusRing,
+                  )}
+                >
+                  <span className="ticket w-fit">{talk.type}</span>
+                  <span className="flex items-center gap-3">
+                    <span className="flex size-12 items-center justify-center rounded-full border-2 border-current bg-dm-panel text-dm-ink transition-[scale] duration-200 group-hover:scale-110">
+                      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className="ml-0.5 size-5">
+                        <path d="M8 5v14l11-7z" />
+                      </svg>
+                    </span>
+                    <span className="text-[11px] font-bold uppercase tracking-[0.16em]">
+                      Watch talk <span className="sr-only">: {talk.title}</span> ↗
+                    </span>
+                  </span>
+                </a>
+
+                <div className="min-w-0 py-1">
+                  <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-dm-ink-soft">{talk.venue}</p>
+                  <h3 className="mt-2 text-[clamp(1.35rem,2.6vw,1.8rem)] font-black uppercase leading-[1.05] tracking-tight">
+                    {talk.title}
+                  </h3>
+                  <p className="mt-4 max-w-3xl text-[15px] leading-[1.75]">{talk.description}</p>
+                  <ul aria-label="Topics" className="mt-5 flex flex-wrap gap-1.5">
+                    {talk.topics.map((topic) => (
+                      <li key={topic} className="border border-current/40 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.1em]">
+                        {topic}
+                      </li>
+                    ))}
+                  </ul>
+                  {talk.eventUrl && (
+                    <a
+                      href={talk.eventUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={cn(chipLink, 'tone-panel mt-5 -rotate-1')}
+                    >
+                      Event page ↗
+                    </a>
+                  )}
+                </div>
+              </Scrap>
+            </li>
+          ))}
+        </ol>
       </section>
 
-      <div className="mx-auto max-w-5xl xl:max-w-6xl 2xl:max-w-7xl 3xl:max-w-[1440px] px-6 sm:px-12 py-12 sm:py-16">
+      {/* ── Invite ────────────────────────────────────────────────────── */}
+      <section aria-labelledby="invite" className="page-wrap mt-24 sm:mt-28">
         <FadeUp>
-          <div className="mb-16 grid gap-6 xl:grid-cols-[0.78fr_1.22fr] xl:items-end">
-            <div>
-              <p className="mb-4 font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">Speaking profile</p>
-              <h2 className="font-semibold text-2xl uppercase tracking-tight sm:text-3xl">
-                Technical sessions with operator context
-              </h2>
-            </div>
-            <p className="max-w-2xl text-sm leading-[1.8] text-muted-foreground">
-              The best sessions are the ones that make complicated systems easier to understand without flattening the trade-offs. That usually means speaking to practitioners, founders, and technical teams rather than staying at surface-level trend commentary.
+          <div className="surreal-arch dm-longshadow tone-lilac mx-auto max-w-[920px] px-7 pb-12 pt-24 text-center sm:px-14 sm:pt-20">
+            <p className="text-[11px] font-bold uppercase tracking-[0.24em]">Invite to speak ✦</p>
+            <h2 id="invite" className="mx-auto mt-4 max-w-2xl text-[clamp(1.6rem,4vw,2.6rem)] font-black uppercase leading-[1.04] tracking-tight">
+              A session that helps people <span className="hand whitespace-nowrap text-[1.15em] font-normal lowercase">think better</span>
+            </h2>
+            <p className="mx-auto mt-5 max-w-xl text-[15px] font-medium leading-[1.75]">
+              I&apos;m open to conferences, developer communities, and company sessions on blockchain architecture, AI ×
+              Web3, custody infrastructure, and engineering leadership.
             </p>
-          </div>
-        </FadeUp>
-
-        <StaggerContainer className="mb-20 grid gap-px bg-border lg:grid-cols-3">
-          {speakingProfile.map((item) => (
-            <StaggerItem key={item.label} className="bg-background">
-              <div className="h-full px-5 py-5 sm:px-6">
-                <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.22em] text-primary">{item.label}</p>
-                <p className="text-sm leading-[1.8] text-muted-foreground">{item.value}</p>
-              </div>
-            </StaggerItem>
-          ))}
-        </StaggerContainer>
-
-        <div className="mb-20">
-          <FadeUp>
-            <div className="mb-8 grid gap-4 lg:grid-cols-[0.72fr_1.28fr] lg:items-end">
-              <div>
-                <p className="mb-4 font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">Selected talks</p>
-                <h2 className="font-semibold text-2xl uppercase tracking-tight sm:text-3xl">
-                  Sessions, workshops, and recorded talks
-                </h2>
-              </div>
-              <p className="max-w-2xl text-sm leading-[1.8] text-muted-foreground">
-                A small archive of public sessions across developer communities, professional audiences, and internal engineering environments.
-              </p>
-            </div>
-          </FadeUp>
-
-          <StaggerContainer className="grid gap-4">
-            {TALKS.map((talk) => (
-              <StaggerItem key={talk.title}>
-                <article className="group border border-border bg-background px-6 py-6 transition-colors duration-200 hover:border-primary/30 sm:px-7 sm:py-7">
-                  <div className="grid gap-8 xl:grid-cols-[1fr_auto] xl:items-start">
-                    <div>
-                      <div className="mb-4 flex flex-wrap items-center gap-3">
-                        <span className="inline-flex min-h-9 items-center border border-primary/30 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-primary">
-                          {talk.type}
-                        </span>
-                        <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                          {talk.venue}
-                        </span>
-                      </div>
-                      <h3 className="mb-3 max-w-3xl text-xl font-semibold uppercase tracking-tight text-foreground transition-colors duration-200 group-hover:text-primary sm:text-2xl">
-                        {talk.title}
-                      </h3>
-                      <p className="max-w-3xl text-sm leading-[1.8] text-muted-foreground">
-                        {talk.description}
-                      </p>
-                    </div>
-
-                    <div className="flex flex-wrap gap-3 xl:flex-col xl:items-stretch">
-                      <a
-                        href={talk.youtubeUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="cursor-pointer border border-border px-4 py-3 font-mono text-[10px] uppercase tracking-[0.18em] text-foreground transition-colors duration-200 hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                      >
-                        Watch talk →
-                      </a>
-                      {talk.eventUrl && (
-                        <a
-                          href={talk.eventUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="cursor-pointer border border-border px-4 py-3 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground transition-colors duration-200 hover:border-primary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                        >
-                          Event page ↗
-                        </a>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="mt-6 flex flex-wrap gap-2 border-t border-dashed border-border pt-5">
-                    {talk.topics.map((topic) => (
-                      <span
-                        key={topic}
-                        className="inline-flex min-h-11 items-center border border-border px-3 py-2 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground transition-colors duration-200 hover:border-primary/40 hover:text-foreground"
-                      >
-                        {topic}
-                      </span>
-                    ))}
-                  </div>
-                </article>
-              </StaggerItem>
-            ))}
-          </StaggerContainer>
-        </div>
-
-        <FadeUp delay={0.15}>
-          <div className="border-t border-border pt-12">
-            <div className="grid gap-8 xl:grid-cols-[0.82fr_1.18fr] xl:items-end">
-              <div>
-                <p className="mb-4 font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">Invite to speak</p>
-                <h2 className="mb-3 font-semibold text-2xl uppercase tracking-tight sm:text-3xl">
-                  Bring me in for a session that helps people think better
-                </h2>
-                <p className="max-w-lg text-sm leading-[1.8] text-muted-foreground">
-                  I’m open to conferences, developer communities, and company sessions on blockchain architecture, AI × Web3, custody infrastructure, and engineering leadership.
-                </p>
-              </div>
-              <div className="space-y-5">
-                <div className="flex flex-wrap gap-2">
-                  {invitationSignals.map((item) => (
-                    <span
-                      key={item}
-                      className="inline-flex min-h-11 items-center border border-border px-3 py-2 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground transition-colors duration-200 hover:border-primary/40 hover:text-foreground"
-                    >
-                      {item}
-                    </span>
-                  ))}
-                </div>
-                <div className="flex flex-wrap gap-3">
-                  <Link
-                    href="/work-with-me"
-                    className="cursor-pointer bg-primary px-5 py-3 font-mono text-[10px] uppercase tracking-[0.18em] text-primary-foreground transition-colors duration-200 hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                  >
-                    Start the conversation →
-                  </Link>
-                  <Link
-                    href="/about"
-                    className="cursor-pointer border border-border px-5 py-3 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground transition-colors duration-200 hover:border-primary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                  >
-                    View profile
-                  </Link>
-                </div>
-              </div>
+            <ul className="mt-6 flex flex-wrap justify-center gap-2.5">
+              {invitationSignals.map((item) => (
+                <li key={item} className="ticket">
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <div className="mt-8 flex flex-wrap justify-center gap-3">
+              <Link href="/work-with-me" className={cn(chipLink, 'tone-ink min-h-12 px-6 text-xs shadow-hard', pick(tilts, 0))}>
+                Start the conversation →
+              </Link>
+              <Link href="/about" className={cn(chipLink, 'tone-panel min-h-12 px-6 text-xs', pick(tilts, 1))}>
+                View profile
+              </Link>
             </div>
           </div>
         </FadeUp>
-      </div>
+      </section>
     </>
   )
 }
