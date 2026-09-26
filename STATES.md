@@ -1,6 +1,6 @@
 # States
 
-Last updated: 2026-09-27
+Last updated: 2026-09-27 (redesign live)
 
 ## File Purpose
 
@@ -15,7 +15,7 @@ Core routes now feel substantially more consistent, lighter, and more editorial 
 
 ## Completed
 
-- **Dream Bazaar redesign — complete on `dev` (2026-09-27), not in production until the `dev` → `main` PR merges:**
+- **Dream Bazaar redesign — live in production** (PR #10 merged 2026-09-26 19:38 UTC, merge `273162a`; Vercel production deploy succeeded):
   - Foundation: `--dm-*` palette with light + dark values (contrast measured and corrected), `tone-*` surfaces, `.ticket`, `.torn` / `.torn-sheet`, `page-wrap`, `.prose-bazaar`, fixed dream-sky layer; shadcn tokens mapped onto the palette.
   - Fonts: Archivo (variable) + Caveat (static 500) site-wide; Syne + JetBrains Mono now load only inside `/design-lab`.
   - Light/dark follows the OS; the nav toggle overrides and persists (`nb-theme`); set before paint via `next/script`, with a toggle-side fallback for `notFound()` pages.
@@ -88,7 +88,6 @@ Core routes now feel substantially more consistent, lighter, and more editorial 
 
 ## Needs Review
 
-- Neel (and his wife) to review the whole redesign on the `dev` Vercel preview before the `dev` → `main` PR.
 - Real-device QA: iOS Safari (fixed sky layer, `100lvh`, clip-path), a low-end Android (long article sheet), and the Cal embed on phones.
 - End-to-end form/download behaviour against production Resend: newsletter subscribe, contact form, resource download.
 - Category choice for Project Pulse (`fightout-move-to-earn` → infrastructure + leadership) was a judgement call from its excerpt.
