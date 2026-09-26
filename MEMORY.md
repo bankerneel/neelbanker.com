@@ -58,6 +58,7 @@
 - Theme mechanism: inline script in `app/layout.tsx` sets `data-theme` on `<html>` before paint from `localStorage['nb-theme']` or the OS. Key is namespaced because a generic `theme` key collided with another localhost app during testing. `ThemeToggle` reads the attribute via `useSyncExternalStore` and swaps its icon in CSS, so SSR markup never mismatches.
 - Palette contrast was measured and the lab values were corrected for the live site: terra as text is 2.7:1 (so `--dm-accent-ink` #9a4a2c / #e59a74 is the only coloured text); dark-mode sky/lilac/sage/rose were lifted so dark on-accent text clears 4.5:1; light terra nudged to #d68f73 (4.86:1); dark panel lifted #241d2b → #342b3f because it matched the sky and hid the torn edges.
 - The Cal.com embed renders in an iframe and can't read `--dm-*`, so `components/cal-booking-embed.tsx` mirrors the palette hex values (`cal-brand`, `cal-bg`) and remounts the embed (keyed by theme via `lib/use-theme.ts`) when the site theme flips. Update those hexes if the palette changes.
+- **Verifying print without a print dialog:** Playwright is a devDependency but has no bundled browser; launch the system Edge instead (`chromium.launch({ channel: 'msedge' })`), then `page.pdf()` and `page.emulateMedia({ media: 'print' })` + screenshot. No download needed. Used 2026-09-27 to verify `/resume` prints clean in both themes.
 - Articles render MDX with `remark-gfm`. Before 2026-09-27 the cross-chain article's comparison table rendered on production as one paragraph of pipe characters.
 
 ## Interaction Preferences Learned

@@ -1,6 +1,10 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ResumeActions } from '@/components/resume-actions'
+import { PageIntro } from '@/components/bazaar/page-intro'
+import { Scrap } from '@/components/bazaar/scrap'
+import { chipLink } from '@/components/bazaar/styles'
+import { cn } from '@/lib/utils'
 
 export const metadata: Metadata = {
   title: 'Resume',
@@ -121,33 +125,35 @@ const bulletList = 'mt-1 list-disc space-y-1 pl-5 text-[13.5px] leading-relaxed 
 export default function ResumePage() {
   return (
     <>
-      {/* ── Editorial page header (screen only) ─────────────────────── */}
-      <section className="no-print mx-auto max-w-5xl xl:max-w-6xl 2xl:max-w-7xl 3xl:max-w-[1440px] border-b border-border px-6 py-16 sm:px-12 sm:py-20">
-        <p className="mb-4 font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground">
-          <Link
-            href="/work-with-me"
-            className="cursor-pointer transition-colors duration-200 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-          >
-            ← Work With Me
-          </Link>
-        </p>
-        <p className="mb-4 font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">
-          Curriculum Vitae
-        </p>
-        <h1 className="mb-6 font-extrabold text-4xl uppercase leading-[0.9] tracking-tighter sm:text-5xl md:text-6xl">
-          Resume
-        </h1>
-        <p className="mb-8 max-w-2xl text-base leading-[1.7] text-muted-foreground">
-          Seven-plus years across production blockchain systems, custody platforms, and AI-augmented
-          engineering — the full history, in one page. View it below, save it as a PDF, or grab the
-          LaTeX source it is built from.
-        </p>
-        <ResumeActions />
-      </section>
+      {/* ── Page header (screen only — .no-print keeps it off the PDF) ── */}
+      <PageIntro
+        className="no-print"
+        crumbs={[
+          { href: '/work-with-me', label: '← Work with me' },
+          { href: '/about', label: 'About' },
+        ]}
+        kicker="Curriculum vitae ✦"
+        title="Resume"
+      >
+        <div className="relative z-10 mt-10 flex flex-col gap-8 lg:mt-12 lg:flex-row lg:items-start">
+          <Scrap className="w-full max-w-[560px] -rotate-[1.2deg]" paperClassName="tone-panel px-7 py-9 sm:px-9">
+            <p className="text-[1.06rem] font-medium leading-[1.7]">
+              Seven-plus years across production blockchain systems, custody platforms, and AI-augmented
+              engineering — the full history, in one page. View it below, save it as a PDF, or grab the LaTeX
+              source it is built from.
+            </p>
+            <p className="hand mt-4 text-[1.5rem] leading-none text-dm-accent-ink">prints clean on A4</p>
+          </Scrap>
+          <div className="lg:-ml-4 lg:mt-12">
+            <ResumeActions />
+          </div>
+        </div>
+      </PageIntro>
 
       {/* ── Document sheet ──────────────────────────────────────────── */}
-      <div className="resume-doc-wrap flex justify-center bg-background px-4 py-10 sm:px-6 sm:py-14">
-        <article className="resume-sheet w-full max-w-[860px] bg-white p-8 font-serif text-neutral-800 shadow-2xl sm:p-12 md:p-14">
+      <div className="resume-doc-wrap relative mt-16 flex justify-center px-4 pb-10 pt-6 sm:mt-20 sm:px-6 sm:pb-14">
+        <article className="resume-sheet relative w-full max-w-[860px] bg-white p-8 font-serif text-neutral-800 shadow-[12px_12px_0_var(--dm-shadow)] sm:p-12 md:p-14">
+          <span aria-hidden="true" className="tape-strip no-print" />
           {/* Header */}
           <header className="text-center">
             <h2 className="text-3xl font-bold tracking-tight text-neutral-900 sm:text-4xl">
@@ -460,24 +466,18 @@ export default function ResumePage() {
       </div>
 
       {/* ── Bottom CTA (screen only) ────────────────────────────────── */}
-      <section className="no-print mx-auto max-w-5xl xl:max-w-6xl 2xl:max-w-7xl 3xl:max-w-[1440px] border-t border-border px-6 py-14 sm:px-12">
-        <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-          <p className="max-w-xl text-sm leading-[1.8] text-muted-foreground">
-            Hiring for principal architecture, blockchain leadership, or a CTO-track role? The
-            fastest next step is a short call.
+      <section className="no-print page-wrap mt-16">
+        <div className="tone-panel mx-auto flex max-w-[860px] -rotate-[0.6deg] flex-col gap-6 border-2 border-dashed border-current px-7 py-8 sm:flex-row sm:items-center sm:justify-between">
+          <p className="max-w-md text-[15px] leading-[1.7]">
+            Hiring for principal architecture, blockchain leadership, or a CTO-track role?{' '}
+            <span className="hand text-[1.35rem] leading-none text-dm-accent-ink">the fastest next step is a short call.</span>
           </p>
           <div className="flex flex-wrap gap-3">
-            <Link
-              href="/work-with-me"
-              className="inline-flex cursor-pointer items-center bg-primary px-6 py-3 font-mono text-xs font-bold uppercase tracking-widest text-primary-foreground transition-colors duration-200 hover:bg-foreground hover:text-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-            >
-              Work With Me →
+            <Link href="/work-with-me" className={cn(chipLink, 'tone-ink min-h-11 px-5 shadow-hard -rotate-1')}>
+              Work with me →
             </Link>
-            <Link
-              href="/projects"
-              className="inline-flex cursor-pointer items-center border border-border px-6 py-3 font-mono text-xs font-semibold uppercase tracking-widest text-foreground transition-colors duration-200 hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-            >
-              See Projects
+            <Link href="/projects" className={cn(chipLink, 'tone-panel min-h-11 px-5 rotate-1')}>
+              See projects
             </Link>
           </div>
         </div>
