@@ -33,8 +33,8 @@ Bazaar** was selected by Neel and his wife.
 | `/writing` | ✅ Done — wall + stat polaroids, pinned latest three, reading lists, ticket filters (URL state kept), `ArticleCard` is now an index card |
 | `/projects` | ✅ Done — signal notes, overlapping through-line scraps, ticket filters, tilted project cards, case-study chip wall. Fixed: 5 projects had no/misspelled category keys and never showed under a filter |
 | `/work-with-me` | ✅ Done — service scraps, recruiter arch (+ resume link), Cal embed follows the site theme and palette, contact form restyled. Fixed: form labels weren't linked to inputs; errors now `aria-describedby` |
-| `/about` | **Next.** Experience, capability map, recognition; still uses `prose-invert` |
-| `/resources`, `/newsletter` | Gated download + subscribe forms |
+| `/about` | ✅ Done — NB monogram + stat polaroids, bio on a torn sheet with sticky contact notes, experience scraps, recognition cards, capability index cards, talk polaroids |
+| `/resources`, `/newsletter` | **Next.** Gated download + subscribe forms |
 | `/speaking` | Talks list |
 | `/resume` | The print-to-PDF sheet must keep working (`@media print` isolation; sky layer hidden in print) |
 | `not-found` | None exists yet — add one |

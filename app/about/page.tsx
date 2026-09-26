@@ -1,7 +1,11 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { FadeUp, StaggerContainer, StaggerItem } from '@/components/scroll-reveal'
+import { FadeUp } from '@/components/scroll-reveal'
 import { AboutTechStack } from '@/components/about-tech-stack'
+import { PageIntro } from '@/components/bazaar/page-intro'
+import { Scrap } from '@/components/bazaar/scrap'
+import { chipLink, focusRing, pick, softTilts, tilts, tones } from '@/components/bazaar/styles'
+import { cn } from '@/lib/utils'
 
 export const metadata: Metadata = {
   title: 'About',
@@ -64,9 +68,9 @@ const talks = [
 ]
 
 const contactFacts = [
-  { label: 'Email', value: 'neelhbanker@gmail.com' },
-  { label: 'Location', value: 'Ahmedabad, Gujarat, India' },
-  { label: 'Open To', value: 'Global architecture leadership roles and long-term advisory work' },
+  { label: 'Email', value: 'neelhbanker@gmail.com', href: 'mailto:neelhbanker@gmail.com', tone: 'tone-butter' },
+  { label: 'Location', value: 'Ahmedabad, Gujarat, India', tone: 'tone-sage' },
+  { label: 'Open to', value: 'Global architecture leadership roles and long-term advisory work', tone: 'tone-sky' },
 ]
 
 const recognition = [
@@ -89,7 +93,7 @@ const recognition = [
     detail: 'Academic recognition grounded in systems thinking, research discipline, and technical depth.',
   },
   {
-    label: 'Team Building',
+    label: 'Team building',
     title: 'Scaled blockchain engineering org',
     meta: '10 → 50+ engineers at SoluLab',
     detail: 'Expanded the delivery organization while keeping architecture, mentoring, and execution aligned.',
@@ -102,306 +106,316 @@ const recognition = [
   },
 ]
 
+const stats = [
+  { value: '7+', label: 'years in production', tone: 'tone-terra' },
+  { value: '50+', label: 'engineers led', tone: 'tone-sage' },
+  { value: '15+', label: 'live platforms', tone: 'tone-sky' },
+]
+
+const sectionTitle = 'text-[clamp(2rem,5vw,3.4rem)] font-black uppercase leading-none tracking-tighter'
+const handWord = 'hand text-[1.15em] font-normal lowercase text-dm-accent-ink'
+
 export default function AboutPage() {
   return (
     <>
-      {/* ── Page header ──────────────────────────────────── */}
-      <section className="border-b border-border">
-        <div className="mx-auto max-w-5xl xl:max-w-6xl 2xl:max-w-7xl 3xl:max-w-[1440px] px-6 sm:px-12 py-16 sm:py-20">
-          <FadeUp delay={0.05}>
-            <div className="mb-10 flex flex-wrap items-center gap-3">
-              <Link href="/" className="font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground transition-colors hover:text-primary">
-                ← Home
-              </Link>
-              <span className="text-muted-foreground text-xs">/</span>
-              <Link href="/work-with-me" className="font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground transition-colors hover:text-primary">
-                Work With Me
-              </Link>
+      <PageIntro
+        crumbs={[
+          { href: '/', label: '← Home' },
+          { href: '/work-with-me', label: 'Work with me' },
+        ]}
+        kicker="Distributed systems & blockchain architect ✦"
+        title={
+          <>
+            About <span className="max-outline">Neel</span>
+          </>
+        }
+      >
+        <div className="relative z-10 mt-10 flex flex-col gap-10 lg:mt-12 lg:flex-row lg:items-start">
+          <Scrap className="w-full max-w-[540px] -rotate-[1.2deg]" paperClassName="tone-panel px-7 py-9 sm:px-9">
+            <p className="text-[1.06rem] font-medium leading-[1.7]">
+              7+ years designing custody infrastructure, cross-chain systems, and AI-augmented engineering workflows at
+              the intersection of blockchain and product.
+            </p>
+            <p className="mt-4 text-[15px] leading-[1.7] text-dm-ink-soft">
+              I work at the overlap of distributed systems, blockchain infrastructure, AI-assisted engineering, and
+              technical leadership. Most of the time that means helping teams make better decisions while delivery is
+              already in motion.
+            </p>
+            <p className="hand mt-4 text-[1.5rem] leading-none text-dm-accent-ink">— Ahmedabad, India</p>
+          </Scrap>
+
+          <div className="flex items-start pl-1 lg:-ml-8 lg:mt-6">
+            <div className="relative z-30 w-[124px] -rotate-6 bg-dm-panel p-2.5 pb-3 shadow-hard-lg sm:w-[150px] sm:p-3">
+              <div className="tone-lilac flex h-[112px] items-center justify-center sm:h-[136px]">
+                <span className="text-[3rem] font-black leading-none tracking-tighter sm:text-[3.6rem]">NB</span>
+              </div>
+              <p className="hand mt-1.5 text-center text-[1.1rem] leading-tight text-dm-ink">hi, I&apos;m Neel</p>
             </div>
-          </FadeUp>
-          <FadeUp delay={0.15}>
-            <p className="font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground mb-4">
-              Distributed Systems & Blockchain Architect · Ahmedabad, India
-            </p>
-          </FadeUp>
-          <FadeUp delay={0.25}>
-            <h1 className="font-bold text-4xl sm:text-5xl md:text-6xl uppercase tracking-tighter leading-[0.9] mb-6">
-              About Neel
-            </h1>
-          </FadeUp>
-          <FadeUp delay={0.4}>
-            <p className="text-base text-muted-foreground leading-[1.7] max-w-xl">
-              7+ years designing custody infrastructure, cross-chain systems, and AI-augmented engineering workflows at the intersection of blockchain and product.
-            </p>
-          </FadeUp>
-        </div>
-      </section>
-
-      {/* ── Bio ──────────────────────────────────────────── */}
-      <div className="mx-auto max-w-3xl xl:max-w-4xl px-6 sm:px-12 py-12 sm:py-16">
-        <FadeUp>
-          <div className="mb-10">
-            <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.22em] text-primary">Summary</p>
-            <p className="text-sm leading-[1.9] text-muted-foreground">
-              I work at the overlap of distributed systems, blockchain infrastructure, AI-assisted engineering, and technical leadership. Most of the time that means helping teams make better decisions while delivery is already in motion.
-            </p>
-          </div>
-        </FadeUp>
-
-        <FadeUp>
-          <div className="prose prose-invert prose-zinc prose-headings:font-bold prose-headings:tracking-tight prose-p:leading-[1.85] prose-li:leading-[1.8] max-w-none">
-            <p>
-              For the past 7+ years, I&apos;ve been deep in production environments across Web3 infrastructure, custody platforms,
-              cross-chain integrations, and payments. Much of my work involves working with founders and product leaders early on
-              to determine what needs to be built, then shaping it into something that won&apos;t fall apart at scale.
-            </p>
-            <p>
-              More recently, I&apos;ve been spending significant time exploring AI-augmented engineering — not in a hype-driven way,
-              but in a practical &ldquo;how do teams ship faster without creating long-term mess&rdquo; sense. I experiment with multi-model
-              workflows, vector databases, and system design patterns that improve both delivery speed and architectural clarity.
-            </p>
-            <p>
-              I also care a lot about the environment teams work in. Mentoring engineers, tightening delivery frameworks, defining
-              security expectations, and keeping technical direction aligned with business goals are big parts of what I do day-to-day.
-            </p>
-            <p>
-              In earlier roles, I led blockchain engineering teams of 50+ people and worked closely with startup founders and
-              enterprise stakeholders as a technical sounding board when decisions really mattered.
-            </p>
-
-            <h2>Interests</h2>
-            <ul>
-              <li>Distributed platform architecture</li>
-              <li>AI-driven product engineering</li>
-              <li>Payments, custody, and financial infrastructure</li>
-              <li>Scaling engineering organizations</li>
-              <li>Founder and CTO advisory</li>
-            </ul>
-            <p className="text-muted-foreground text-sm">
-              Open to global architecture leadership roles, CTO-track paths, and meaningful long-term collaborations.
-            </p>
-
-            <h2>Beyond Work</h2>
-            <p>
-              I designed, developed, and host the website for <a href="https://hindustanecolife.com" target="_blank" rel="noopener noreferrer">Hindustan Ecolife</a>, a
-              nature and eco product business run by my uncle, who is the company&apos;s director. It keeps me close to the full
-              product stack: not just the backend, but the customer experience end to end.
-            </p>
-
-            <h2>Writing</h2>
-            <p>
-              I write <em>The Architect&apos;s Brief</em> — a weekly newsletter covering blockchain architecture, AI × Web3, and
-              engineering leadership. If you build distributed systems or lead technical teams, it&apos;s for you.
-            </p>
-          </div>
-        </FadeUp>
-
-        <FadeUp delay={0.1}>
-          <div className="mt-10 grid gap-px bg-border">
-            {contactFacts.map((fact) => (
-              <div key={fact.label} className="bg-background px-5 py-4">
-                <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">{fact.label}</p>
-                <p className="text-sm leading-[1.7] text-foreground">{fact.value}</p>
+            {stats.map((s, i) => (
+              <div
+                key={s.label}
+                className={cn(
+                  'relative -ml-4 hidden w-[118px] bg-dm-panel p-2.5 pb-3 shadow-hard sm:block',
+                  ['rotate-[5deg]', '-rotate-3', 'rotate-[4deg]'][i],
+                )}
+                style={{ zIndex: 20 - i, marginTop: `${18 + i * 16}px` }}
+              >
+                <div className={cn('flex h-[82px] items-center justify-center', s.tone)}>
+                  <span className="text-[1.9rem] font-black leading-none">{s.value}</span>
+                </div>
+                <p className="hand mt-1.5 text-center text-[1.02rem] leading-tight text-dm-ink">{s.label}</p>
               </div>
             ))}
           </div>
-        </FadeUp>
-      </div>
+        </div>
 
-      {/* ── Work Experience ──────────────────────────────── */}
-      <div className="border-t border-border">
-        <div className="mx-auto max-w-5xl xl:max-w-6xl 2xl:max-w-7xl 3xl:max-w-[1440px] px-6 sm:px-12 py-12 sm:py-16">
-          <FadeUp>
-            <p className="font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground mb-10">Work Experience</p>
-          </FadeUp>
+        {/* stats as tickets on phones, where three more polaroids won't fit */}
+        <ul className="mt-8 flex flex-wrap gap-2.5 sm:hidden">
+          {stats.map((s, i) => (
+            <li key={s.label} className={cn('ticket', s.tone, pick(tilts, i))}>
+              {s.value} {s.label}
+            </li>
+          ))}
+        </ul>
+      </PageIntro>
 
-          <div className="space-y-14">
-            {experience.map((exp, i) => (
-              <FadeUp key={exp.company} delay={i * 0.1}>
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-10">
-                  {/* Left: meta */}
-                  <div className="md:col-span-1">
-                    <p className="font-mono text-[10px] uppercase tracking-widest text-primary mb-1">{exp.period}</p>
-                    <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{exp.duration}</p>
+      {/* ── The long version ─────────────────────────────────────────── */}
+      <section aria-labelledby="long-version" className="page-wrap mt-24">
+        <h2 id="long-version" className={sectionTitle}>
+          The long <span className={handWord}>version</span>
+        </h2>
+        <div className="mt-10 grid gap-12 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-14">
+          <Scrap tall tape paperClassName="tone-panel px-6 pb-12 pt-14 sm:px-12 sm:pb-16 sm:pt-16">
+            <div className="prose prose-lg prose-bazaar max-w-none">
+              <p>
+                For the past 7+ years, I&apos;ve been deep in production environments across Web3 infrastructure, custody
+                platforms, cross-chain integrations, and payments. Much of my work involves working with founders and
+                product leaders early on to determine what needs to be built, then shaping it into something that
+                won&apos;t fall apart at scale.
+              </p>
+              <p>
+                More recently, I&apos;ve been spending significant time exploring AI-augmented engineering — not in a
+                hype-driven way, but in a practical &ldquo;how do teams ship faster without creating long-term mess&rdquo;
+                sense. I experiment with multi-model workflows, vector databases, and system design patterns that improve
+                both delivery speed and architectural clarity.
+              </p>
+              <p>
+                I also care a lot about the environment teams work in. Mentoring engineers, tightening delivery
+                frameworks, defining security expectations, and keeping technical direction aligned with business goals
+                are big parts of what I do day-to-day.
+              </p>
+              <p>
+                In earlier roles, I led blockchain engineering teams of 50+ people and worked closely with startup
+                founders and enterprise stakeholders as a technical sounding board when decisions really mattered.
+              </p>
+
+              <h2>
+                <span className="marker">Interests</span>
+              </h2>
+              <ul>
+                <li>Distributed platform architecture</li>
+                <li>AI-driven product engineering</li>
+                <li>Payments, custody, and financial infrastructure</li>
+                <li>Scaling engineering organizations</li>
+                <li>Founder and CTO advisory</li>
+              </ul>
+              <p>Open to global architecture leadership roles, CTO-track paths, and meaningful long-term collaborations.</p>
+
+              <h2>
+                <span className="marker">Beyond work</span>
+              </h2>
+              <p>
+                I designed, developed, and host the website for{' '}
+                <a href="https://hindustanecolife.com" target="_blank" rel="noopener noreferrer">
+                  Hindustan Ecolife
+                </a>
+                , a nature and eco product business run by my uncle, who is the company&apos;s director. It keeps me close
+                to the full product stack: not just the backend, but the customer experience end to end.
+              </p>
+
+              <h2>
+                <span className="marker">Writing</span>
+              </h2>
+              <p>
+                I write <em>The Architect&apos;s Brief</em> — a weekly newsletter covering blockchain architecture, AI ×
+                Web3, and engineering leadership. If you build distributed systems or lead technical teams, it&apos;s for
+                you.
+              </p>
+            </div>
+          </Scrap>
+
+          <aside aria-label="Contact details" className="flex flex-col gap-6 lg:sticky lg:top-8 lg:self-start">
+            <dl className="flex flex-col gap-5">
+              {contactFacts.map((fact, i) => (
+                <div
+                  key={fact.label}
+                  className={cn('border-2 border-current px-5 py-4 shadow-hard', fact.tone, i % 2 ? 'rotate-[1.2deg]' : '-rotate-1')}
+                >
+                  <dt className="text-[10px] font-bold uppercase tracking-[0.2em]">{fact.label}</dt>
+                  <dd className="mt-1 break-words text-[15px] font-semibold leading-[1.5]">
+                    {fact.href ? (
+                      <a href={fact.href} className={cn('underline decoration-2 underline-offset-4', focusRing)}>
+                        {fact.value}
+                      </a>
+                    ) : (
+                      fact.value
+                    )}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+            <div className="flex flex-wrap gap-3">
+              <Link href="/resume" className={cn(chipLink, 'tone-ink -rotate-1')}>
+                Resume →
+              </Link>
+              <Link href="/newsletter" className={cn(chipLink, 'tone-panel rotate-1')}>
+                The Brief →
+              </Link>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      {/* ── Experience ───────────────────────────────────────────────── */}
+      <section aria-labelledby="experience" className="page-wrap mt-24 sm:mt-28">
+        <h2 id="experience" className={sectionTitle}>
+          Where I&apos;ve <span className={handWord}>worked</span>
+        </h2>
+        <ol className="mt-10 space-y-12">
+          {experience.map((exp, i) => (
+            <li key={exp.company}>
+              <FadeUp>
+                <Scrap
+                  className={i % 2 ? 'rotate-[0.5deg]' : '-rotate-[0.5deg]'}
+                  paperClassName="tone-panel grid gap-6 px-7 py-10 sm:px-10 md:grid-cols-[220px_minmax(0,1fr)] md:gap-10"
+                >
+                  <div className="flex flex-wrap items-start gap-2.5 md:flex-col">
+                    <span className={cn('ticket', pick(tones, i + 1), '-rotate-2')}>{exp.period}</span>
+                    <span className="hand text-[1.4rem] leading-none text-dm-accent-ink">{exp.duration}</span>
                   </div>
-                  {/* Right: content */}
-                  <div className="md:col-span-3">
-                    <h3 className="font-bold text-xl uppercase tracking-tight mb-1">{exp.company}</h3>
-                    <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground mb-4">{exp.role}</p>
-                    <p className="text-sm text-muted-foreground leading-[1.8] mb-5 max-w-3xl">{exp.detail}</p>
-                    <ul className="space-y-2">
+                  <div>
+                    <h3 className="text-[1.6rem] font-black uppercase leading-none tracking-tight">{exp.company}</h3>
+                    <p className="mt-2 text-[12px] font-bold uppercase tracking-[0.14em] text-dm-ink-soft">{exp.role}</p>
+                    <p className="mt-5 max-w-3xl text-[15px] leading-[1.8]">{exp.detail}</p>
+                    <ul className="mt-5 space-y-2">
                       {exp.contributions.map((c) => (
-                        <li key={c} className="flex items-start gap-2.5 text-sm">
-                          <span className="mt-1 font-mono text-primary text-xs shrink-0">→</span>
-                          <span className="text-muted-foreground">{c}</span>
+                        <li key={c} className="flex items-start gap-2.5 text-[15px] leading-[1.6]">
+                          <span aria-hidden="true" className="text-dm-accent-ink">✦</span>
+                          <span>{c}</span>
                         </li>
                       ))}
                     </ul>
                     {exp.awards && (
-                      <div className="mt-5 flex flex-wrap gap-2">
-                        {exp.awards.map((a) => (
-                          <span key={a} className="border border-primary/30 px-3 py-1 font-mono text-[10px] uppercase tracking-widest text-primary">
-                            {a}
-                          </span>
+                      <ul className="mt-6 flex flex-wrap gap-2.5">
+                        {exp.awards.map((a, ai) => (
+                          <li key={a} className={cn('ticket tone-butter shadow-hard', pick(tilts, ai))}>
+                            ★ {a}
+                          </li>
                         ))}
-                      </div>
+                      </ul>
                     )}
                   </div>
-                </div>
+                </Scrap>
               </FadeUp>
-            ))}
-          </div>
-        </div>
-      </div>
+            </li>
+          ))}
+        </ol>
+      </section>
 
-      {/* ── Education ────────────────────────────────────── */}
-      <div className="border-t border-border">
-        <div className="mx-auto max-w-5xl xl:max-w-6xl 2xl:max-w-7xl 3xl:max-w-[1440px] px-6 sm:px-12 py-12 sm:py-16">
-          <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr]">
-            <FadeUp>
-              <div>
-                <p className="mb-4 font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">Education</p>
-                <h2 className="mb-3 font-bold text-2xl uppercase tracking-tight">Academic grounding</h2>
-                <p className="text-sm leading-[1.8] text-muted-foreground">
-                  Formal training in information technology, backed by research work and a strong bias toward systems thinking.
-                </p>
-              </div>
-            </FadeUp>
-            <FadeUp delay={0.1}>
-              <div className="grid gap-px bg-border">
-                <div className="bg-background p-6">
-                  <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.22em] text-primary">Master of Technology</p>
-                  <p className="mb-2 font-bold text-lg uppercase tracking-tight">Information Technology</p>
-                  <p className="text-sm leading-[1.8] text-muted-foreground">
-                    Gold Medalist, ranked 4th in the university, with review work on <em>Blockchain &amp; Web3 in Carbon Credits</em>.
-                  </p>
-                </div>
-                <div className="bg-background p-6">
-                  <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">Research and skills</p>
-                  <p className="text-sm leading-[1.8] text-muted-foreground">
-                    Patent searching, research skills, and a habit of grounding technical decisions in underlying trade-offs rather than trend-driven claims.
-                  </p>
-                </div>
-              </div>
-            </FadeUp>
-          </div>
+      {/* ── Recognition ──────────────────────────────────────────────── */}
+      <section aria-labelledby="recognition" className="page-wrap mt-24 sm:mt-28">
+        <div className="max-w-3xl">
+          <h2 id="recognition" className={sectionTitle}>
+            Signals of <span className={handWord}>trust</span>
+          </h2>
+          <p className="mt-4 text-[15px] leading-[1.75] text-dm-ink-soft">
+            A few selected proof points that show the range of the work: leadership, academic rigor, and delivery across
+            high-stakes systems.
+          </p>
         </div>
-      </div>
+        <ul className="mt-10 grid gap-8 sm:grid-cols-2 xl:grid-cols-3">
+          {recognition.map((item, i) => (
+            <li
+              key={item.title + item.meta}
+              className={cn('flex flex-col border-2 border-current p-6 shadow-hard', pick(tones, i), pick(softTilts, i))}
+            >
+              <span className="ticket w-fit">{item.label}</span>
+              <h3 className="mt-4 text-[1.2rem] font-black uppercase leading-[1.1] tracking-tight">{item.title}</h3>
+              <p className="mt-1.5 text-[12px] font-bold uppercase tracking-[0.12em]">{item.meta}</p>
+              <p className="mt-3 text-[15px] font-medium leading-[1.65]">{item.detail}</p>
+            </li>
+          ))}
+          <li className="tone-panel flex flex-col justify-center border-2 border-dashed border-current p-6 rotate-[0.6deg]">
+            <p className="hand text-[1.7rem] leading-tight text-dm-accent-ink">Academic grounding</p>
+            <p className="mt-2 text-[15px] leading-[1.65]">
+              <strong>MTech, Information Technology</strong> — review work on{' '}
+              <em>Blockchain &amp; Web3 in Carbon Credits</em>. Patent searching, research skills, and a habit of grounding
+              technical decisions in trade-offs rather than trend-driven claims.
+            </p>
+          </li>
+        </ul>
+      </section>
 
-      {/* ── Speaking ─────────────────────────────────────── */}
-      <div className="border-t border-border">
-        <div className="mx-auto max-w-5xl xl:max-w-6xl 2xl:max-w-7xl 3xl:max-w-[1440px] px-6 sm:px-12 py-12 sm:py-16">
-          <FadeUp>
-            <div className="flex items-end justify-between mb-8">
-              <p className="font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">Speaking</p>
-              <Link href="/speaking" className="font-mono text-xs uppercase text-primary hover:underline underline-offset-8 transition-colors">
-                All talks →
-              </Link>
-            </div>
-          </FadeUp>
-          <StaggerContainer className="grid gap-px bg-border">
-            {talks.map((talk) => (
-              <StaggerItem key={talk.title}>
-                <a
-                  href={talk.youtubeUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group flex cursor-pointer flex-col gap-3 bg-background p-6 transition-colors duration-200 hover:bg-muted/40 md:flex-row md:items-center md:gap-8"
-                >
-                  <div className="shrink-0 w-8 h-8 flex items-center justify-center border border-border group-hover:border-primary group-hover:bg-primary transition-colors duration-200">
-                    <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5 group-hover:text-primary-foreground transition-colors duration-200">
-                      <path d="M8 5v14l11-7z"/>
-                    </svg>
+      {/* ── Capability map ───────────────────────────────────────────── */}
+      <section aria-labelledby="capabilities" className="page-wrap mt-24 sm:mt-28">
+        <div className="max-w-3xl">
+          <h2 id="capabilities" className={sectionTitle}>
+            Capability <span className={handWord}>map</span>
+          </h2>
+          <p className="mt-4 text-[15px] leading-[1.75] text-dm-ink-soft">
+            The work spans protocol architecture, custody systems, backend delivery, cloud operations, and AI-assisted
+            engineering — grouped so it shows breadth without turning into a resume wall.
+          </p>
+        </div>
+        <div className="mt-8">
+          <AboutTechStack />
+        </div>
+      </section>
+
+      {/* ── Speaking ─────────────────────────────────────────────────── */}
+      <section aria-labelledby="talks" className="page-wrap mt-24 sm:mt-28">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <h2 id="talks" className={sectionTitle}>
+            On <span className={handWord}>stage</span>
+          </h2>
+          <Link href="/speaking" className={cn(chipLink, 'tone-panel rotate-1')}>
+            All talks →
+          </Link>
+        </div>
+        <ul className="mt-10 grid gap-8 md:grid-cols-3">
+          {talks.map((talk, i) => (
+            <li key={talk.title}>
+              <a
+                href={talk.youtubeUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={cn(
+                  'group block h-full cursor-pointer transition-[rotate] duration-200 hover:rotate-0',
+                  pick(softTilts, i + 1),
+                  focusRing,
+                )}
+              >
+                <div className="tone-panel flex h-full flex-col border-2 border-current p-3 pb-5 shadow-hard">
+                  <div className={cn('flex h-28 items-center justify-center', pick(tones, i + 2))}>
+                    <span className="flex size-12 items-center justify-center rounded-full border-2 border-current bg-dm-panel text-dm-ink transition-[scale] duration-200 group-hover:scale-110">
+                      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className="ml-0.5 size-5">
+                        <path d="M8 5v14l11-7z" />
+                      </svg>
+                    </span>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-bold text-base uppercase tracking-tight group-hover:text-primary transition-colors duration-200 mb-1">{talk.title}</p>
-                    <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground mb-1">{talk.venue}</p>
-                    <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">{talk.description}</p>
-                  </div>
-                  <span className="hidden md:block text-muted-foreground group-hover:text-primary transition-colors duration-200 shrink-0">↗</span>
-                </a>
-              </StaggerItem>
-            ))}
-          </StaggerContainer>
-        </div>
-      </div>
-
-      {/* ── Full tech stack visual ───────────────────────── */}
-      <div className="border-t border-border">
-        <div className="mx-auto max-w-5xl xl:max-w-6xl 2xl:max-w-7xl 3xl:max-w-[1440px] px-6 sm:px-12 py-12 sm:py-16">
-          <FadeUp>
-            <div className="mb-8 grid gap-4 lg:grid-cols-[0.85fr_1.15fr] lg:items-end">
-              <div>
-                <p className="mb-4 font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">Capability Map</p>
-                <h2 className="font-semibold text-2xl uppercase tracking-tight sm:text-3xl">
-                  Systems, stacks, and delivery muscle
-                </h2>
-              </div>
-              <p className="max-w-2xl text-sm leading-[1.8] text-muted-foreground">
-                The work spans protocol architecture, custody systems, backend delivery, cloud operations, and AI-assisted engineering.
-                This map is meant to show breadth without turning the page into a resume wall.
-              </p>
-            </div>
-          </FadeUp>
-        <AboutTechStack />
-        </div>
-      </div>
-
-      {/* ── Awards & recognition ─────────────────────────── */}
-      <div className="border-t border-border">
-        <div className="mx-auto max-w-5xl xl:max-w-6xl 2xl:max-w-7xl 3xl:max-w-[1440px] px-6 sm:px-12 py-12 sm:py-16">
-          <FadeUp>
-            <div className="mb-8 grid gap-4 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
-              <div>
-                <p className="mb-4 font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">Recognition</p>
-                <h2 className="font-semibold text-2xl uppercase tracking-tight sm:text-3xl">
-                  Signals of trust and delivery range
-                </h2>
-              </div>
-              <div className="space-y-4">
-                <p className="max-w-2xl text-sm leading-[1.8] text-muted-foreground">
-                  A few selected proof points that show the range of the work: leadership, academic rigor, and delivery across high-stakes systems.
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  <span className="inline-flex min-h-11 items-center border border-border px-3 py-2 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                    5 selected recognition points
-                  </span>
-                  <span className="inline-flex min-h-11 items-center border border-border px-3 py-2 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                    Leadership + delivery + research
-                  </span>
-                </div>
-              </div>
-            </div>
-          </FadeUp>
-          <StaggerContainer className="grid gap-4 md:grid-cols-2">
-            {recognition.map((item) => (
-              <StaggerItem key={item.title + item.meta}>
-                <div className="group relative flex h-full flex-col justify-between gap-6 border border-border bg-background px-5 py-5 transition-colors duration-200 hover:border-primary/30 hover:bg-muted/10 sm:px-6 sm:py-6">
-                  <div className="space-y-4">
-                    <div className="flex items-start justify-between gap-4">
-                      <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-primary">{item.label}</p>
-                      <span className="shrink-0 border border-border px-2.5 py-1 font-mono text-[10px] uppercase tracking-widest text-muted-foreground text-right transition-colors duration-200 group-hover:border-primary/40">
-                        {item.meta}
-                      </span>
-                    </div>
-                    <div className="space-y-3">
-                      <h3 className="max-w-sm font-semibold text-base uppercase tracking-tight text-foreground">
-                        {item.title}
-                      </h3>
-                      <p className="max-w-xl text-sm leading-[1.8] text-muted-foreground">{item.detail}</p>
-                    </div>
-                  </div>
-                  <div className="border-t border-dashed border-border pt-4">
-                    <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-                      Selected proof point
+                  <div className="px-2 pt-4">
+                    <p className="text-[1.05rem] font-black uppercase leading-[1.15] tracking-tight transition-colors duration-200 group-hover:text-dm-accent-ink">
+                      {talk.title} <span aria-hidden="true">↗</span>
                     </p>
+                    <p className="mt-1.5 text-[11px] font-bold uppercase tracking-[0.12em] text-dm-ink-soft">{talk.venue}</p>
+                    <p className="mt-2 line-clamp-3 text-sm leading-[1.6] text-dm-ink-soft">{talk.description}</p>
                   </div>
                 </div>
-              </StaggerItem>
-            ))}
-          </StaggerContainer>
-        </div>
-      </div>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
     </>
   )
 }
