@@ -31,8 +31,8 @@ Bazaar** was selected by Neel and his wife.
 | Nav + Footer | ✅ Done — nav collapses to a menu below `lg` |
 | `/writing/[slug]` | ✅ Done — wall header, torn reading sheet, GFM tables, keep-reading, arch CTA |
 | `/writing` | ✅ Done — wall + stat polaroids, pinned latest three, reading lists, ticket filters (URL state kept), `ArticleCard` is now an index card |
-| `/projects` | **Next.** Category filter browser; long project titles stress overlap |
-| `/work-with-me` | Services, contact form (shared Zod schema), Cal.com embed (check it in dark mode) |
+| `/projects` | ✅ Done — signal notes, overlapping through-line scraps, ticket filters, tilted project cards, case-study chip wall. Fixed: 5 projects had no/misspelled category keys and never showed under a filter |
+| `/work-with-me` | **Next.** Services, contact form (shared Zod schema), Cal.com embed (check it in dark mode) |
 | `/about` | Experience, capability map, recognition; still uses `prose-invert` |
 | `/resources`, `/newsletter` | Gated download + subscribe forms |
 | `/speaking` | Talks list |

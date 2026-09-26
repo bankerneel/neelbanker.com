@@ -1,68 +1,58 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
 import { getAllProjectMeta } from '@/lib/mdx'
+import { cn } from '@/lib/utils'
 import { ProjectBrowser } from '@/components/project-browser'
-import { FadeUp } from '@/components/scroll-reveal'
+import { PageIntro } from '@/components/bazaar/page-intro'
+import { Scrap } from '@/components/bazaar/scrap'
 
 export const metadata: Metadata = {
   title: 'Projects',
   description: 'Real blockchain systems I have designed and shipped — with lessons learned.',
 }
 
+const signals = [
+  { label: 'Wallet & custody', value: 'NCW, Fireblocks, BitGo, ERC-4337', tone: 'tone-butter', tilt: 'rotate-[2.5deg]' },
+  { label: 'Chains & infrastructure', value: 'OP Stack, Fabric, custom EVM, bridge systems', tone: 'tone-sage', tilt: '-rotate-2' },
+  { label: 'AI systems', value: 'Agent workflows, local LLMs, ranking and orchestration', tone: 'tone-sky', tilt: 'rotate-[1.5deg]' },
+]
+
 export default function ProjectsPage() {
   const projects = getAllProjectMeta()
-  const signals = [
-    { label: 'Wallet & Custody', value: 'NCW, Fireblocks, BitGo, ERC-4337' },
-    { label: 'Chains & Infrastructure', value: 'OP Stack, Fabric, custom EVM, bridge systems' },
-    { label: 'AI Systems', value: 'Agent workflows, local LLMs, ranking and orchestration' },
-  ]
 
   return (
     <>
-      {/* ── Page header ──────────────────────────────────── */}
-      <section className="border-b border-border">
-        <div className="mx-auto max-w-5xl xl:max-w-6xl 2xl:max-w-7xl 3xl:max-w-[1440px] px-6 sm:px-12 py-16 sm:py-20">
-          <FadeUp delay={0.05}>
-            <div className="mb-10 flex flex-wrap items-center gap-3">
-              <Link href="/" className="font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground transition-colors hover:text-primary">
-                ← Home
-              </Link>
-              <span className="text-muted-foreground text-xs">/</span>
-              <Link href="/work-with-me" className="font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground transition-colors hover:text-primary">
-                Work With Me
-              </Link>
-            </div>
-          </FadeUp>
-          <FadeUp delay={0.15}>
-            <p className="font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground mb-4">
-              Proof of Work
+      <PageIntro
+        crumbs={[
+          { href: '/', label: '← Home' },
+          { href: '/work-with-me', label: 'Work with me' },
+        ]}
+        kicker="Proof of work ✦"
+        title="Projects"
+      >
+        <div className="relative z-10 mt-10 flex flex-col gap-10 lg:mt-12 lg:flex-row lg:items-start">
+          <Scrap className="w-full max-w-[520px] -rotate-[1.2deg]" paperClassName="tone-panel px-7 py-9 sm:px-9">
+            <p className="text-[1.06rem] font-medium leading-[1.7]">
+              Systems designed and shipped. Every entry includes the problem, architecture decisions, and what I&apos;d
+              do differently.
             </p>
-          </FadeUp>
-          <FadeUp delay={0.25}>
-            <h1 className="font-bold text-4xl sm:text-5xl md:text-6xl uppercase tracking-tighter leading-[0.9] mb-6">
-              Projects
-            </h1>
-          </FadeUp>
-          <FadeUp delay={0.4}>
-            <p className="text-base text-muted-foreground leading-[1.7] max-w-xl">
-              Systems designed and shipped. Every entry includes the problem, architecture decisions, and what I&apos;d do differently.
-            </p>
-          </FadeUp>
-        </div>
-      </section>
+            <p className="hand mt-4 text-[1.5rem] leading-none text-dm-accent-ink">codenames where NDAs apply</p>
+          </Scrap>
 
-      {/* ── Project cards ────────────────────────────────── */}
-      <div className="mx-auto max-w-5xl xl:max-w-6xl 2xl:max-w-7xl 3xl:max-w-[1440px] px-6 sm:px-12 py-12 sm:py-16">
-        <FadeUp>
-          <div className="mb-10 grid gap-px bg-border lg:grid-cols-3">
-            {signals.map((signal) => (
-              <div key={signal.label} className="bg-background p-6">
-                <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">{signal.label}</p>
-                <p className="text-sm leading-[1.7] text-foreground">{signal.value}</p>
-              </div>
+          <ul className="flex flex-col gap-5 lg:-ml-6 lg:mt-8 lg:w-[340px]">
+            {signals.map((signal, i) => (
+              <li
+                key={signal.label}
+                className={cn('border-2 border-current p-4 shadow-hard', signal.tone, signal.tilt, i > 0 && 'lg:-mt-2')}
+              >
+                <p className="text-[10px] font-bold uppercase tracking-[0.2em]">{signal.label}</p>
+                <p className="mt-1.5 text-[15px] font-semibold leading-[1.45]">{signal.value}</p>
+              </li>
             ))}
-          </div>
-        </FadeUp>
+          </ul>
+        </div>
+      </PageIntro>
+
+      <div className="page-wrap mt-24">
         <ProjectBrowser projects={projects} />
       </div>
     </>

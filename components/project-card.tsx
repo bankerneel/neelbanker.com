@@ -1,5 +1,16 @@
+import { cn } from '@/lib/utils'
+import { pick, softTilts, tones } from '@/components/bazaar/styles'
 import type { ProjectMeta } from '@/types/content'
 
+function monthYear(iso: string) {
+  return new Date(iso).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
+}
+
+/**
+ * A project as a pinned index card. Projects are list-only (no detail pages),
+ * so the card is not a link. `featured` (homepage grid) adds a handwritten
+ * "no. 01" and more room; `index` sets the gentle tilt and chain-chip colour.
+ */
 export function ProjectCard({
   project,
   featured = false,
@@ -9,42 +20,44 @@ export function ProjectCard({
   featured?: boolean
   index?: number
 }) {
+  const i = index ?? 0
   return (
-    <div
-      className={`group relative flex h-full cursor-default flex-col justify-between overflow-hidden border border-border bg-background transition-[transform,border-color] duration-200 hover:-translate-y-[3px] hover:border-primary ${featured ? 'p-6 sm:p-8' : 'p-6'}`}
-    >
-      <div className="absolute inset-x-0 top-0 h-px origin-left scale-x-0 bg-primary transition-transform duration-300 group-hover:scale-x-100" />
-      {featured && typeof index === 'number' && (
-        <span
-          aria-hidden="true"
-          className="pointer-events-none absolute -bottom-6 -right-2 select-none font-mono text-[6.5rem] font-bold leading-none tracking-tighter text-foreground/[0.045] transition-colors duration-300 group-hover:text-primary/10"
-        >
-          {String(index + 1).padStart(2, '0')}
-        </span>
+    <article
+      className={cn(
+        'tone-panel relative flex h-full flex-col border-2 border-current shadow-hard transition-[rotate] duration-200 hover:rotate-0',
+        typeof index === 'number' && pick(softTilts, index),
+        featured ? 'p-7 sm:p-8' : 'p-6',
       )}
-      <div className="relative z-10 mb-4 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
-        <div className="min-w-0">
-          <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-            {project.date}
-          </p>
-          <h3 className={`font-bold uppercase tracking-tight leading-snug transition-colors duration-200 group-hover:text-primary ${featured ? 'text-lg sm:text-xl' : 'text-base'}`}>
-            {project.title}
-          </h3>
-        </div>
-        {project.chain && (
-          <span className="w-fit max-w-full shrink-0 border border-border px-2 py-0.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-            {project.chain}
+    >
+      <div className="flex items-start justify-between gap-3">
+        <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-dm-ink-soft">{monthYear(project.date)}</p>
+        {featured && typeof index === 'number' && (
+          <span aria-hidden="true" className="hand -mt-1 text-[1.6rem] leading-none text-dm-accent-ink">
+            no. {String(index + 1).padStart(2, '0')}
           </span>
         )}
       </div>
-      <p className={`relative z-10 mb-5 text-muted-foreground leading-relaxed ${featured ? 'text-[15px]' : 'text-[15px]'}`}>{project.excerpt}</p>
-      <div className="relative z-10 flex flex-wrap gap-1.5">
+      <h3
+        className={cn(
+          'mt-3 font-black uppercase leading-[1.1] tracking-tight',
+          featured ? 'text-[1.25rem] sm:text-[1.4rem]' : 'text-[1.12rem] sm:text-[1.2rem]',
+        )}
+      >
+        {project.title}
+      </h3>
+      {project.chain && (
+        <span className={cn('ticket mt-4 w-fit max-w-full whitespace-normal leading-tight', pick(tones, i))}>
+          {project.chain}
+        </span>
+      )}
+      <p className="mt-4 text-[15px] leading-[1.65] text-dm-ink-soft">{project.excerpt}</p>
+      <ul aria-label="Stack" className="mt-auto flex flex-wrap gap-1.5 pt-5">
         {project.stack.map((s) => (
-          <span key={s} className="bg-muted px-2 py-0.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+          <li key={s} className="border border-current/40 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.1em]">
             {s}
-          </span>
+          </li>
         ))}
-      </div>
-    </div>
+      </ul>
+    </article>
   )
 }
