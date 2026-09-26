@@ -21,6 +21,16 @@ export function ThemeToggle({ className }: { className?: string }) {
   // Keep following the OS until the visitor makes an explicit choice.
   useEffect(() => {
     const query = matchMedia('(prefers-color-scheme: dark)')
+
+    // Safety net: a page that calls notFound() is rendered without the
+    // head script having run (checked in dev and prod), so apply the theme
+    // here if nothing set it. Normal pages never reach this branch.
+    if (!document.documentElement.dataset.theme) {
+      const stored = storedTheme()
+      document.documentElement.dataset.theme =
+        stored === 'light' || stored === 'dark' ? stored : query.matches ? 'dark' : 'light'
+    }
+
     const onSystemChange = (event: MediaQueryListEvent) => {
       const stored = storedTheme()
       if (stored === 'light' || stored === 'dark') return

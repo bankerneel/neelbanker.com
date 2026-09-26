@@ -37,8 +37,8 @@ Bazaar** was selected by Neel and his wife.
 | `/resources`, `/newsletter` | ✅ Done — form cards (unrotated), subscribe form in a lilac arch, pillar scraps. Fixed: unlabelled newsletter input, unlinked resource label, and a fallback link when the post-fetch `window.open` is popup-blocked |
 | `/speaking` | ✅ Done — profile notes, talk scraps with coloured "poster" watch links, invite arch |
 | `/resume` | ✅ Done — screen chrome only (wall header, action tickets, taped sheet); the white document sheet is unchanged. Print verified with Playwright + system Edge in light and dark: nav, footer, `.no-print`, sky layer hidden; sheet header prints |
-| `not-found` | **Next.** None exists yet — add one |
-| OG images | Root + article images still dark + lime (`next/og`) |
+| `not-found` | ✅ Done — 404 with outlined 0, scrap + destination tickets; missing articles now titled "Page not found" |
+| OG images | **Next.** Root + article images still dark + lime (`next/og`) |
 | Homepage | Last. Keep the lazy, desktop-only constellation architecture or beat its numbers |
 
 Perf baseline (prod build, cold load, measured 2026-09-27):

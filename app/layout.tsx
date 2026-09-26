@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Script from 'next/script'
 import { Archivo, Caveat } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
@@ -22,6 +23,8 @@ const caveat = Caveat({
 
 // Runs before first paint so the page never flashes the wrong theme.
 // A stored choice (from the nav toggle) wins; otherwise follow the OS.
+// beforeInteractive = Next injects it into <head> itself, outside React's
+// render (a raw <script> in the layout trips React 19's script-tag warning).
 const themeScript = `(function(){try{var t=localStorage.getItem('nb-theme');if(t!=='light'&&t!=='dark'){t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}document.documentElement.dataset.theme=t}catch(e){}})()`
 
 export const metadata: Metadata = {
@@ -44,10 +47,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${archivo.variable} ${caveat.variable}`} suppressHydrationWarning>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
-      </head>
       <body className="min-h-screen font-sans text-dm-ink antialiased" suppressHydrationWarning>
+        <Script id="theme-init" strategy="beforeInteractive">
+          {themeScript}
+        </Script>
         <Nav />
         <main className="overflow-x-clip">{children}</main>
         <Footer />

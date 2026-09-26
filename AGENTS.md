@@ -94,8 +94,10 @@ the new palette through the mapped shadcn tokens, but its structure is legacy �
 
 - Default follows the visitor's OS (`prefers-color-scheme`). The nav toggle (`components/theme-toggle.tsx`)
   overrides it and persists the choice in `localStorage['nb-theme']`.
-- The inline script in `app/layout.tsx` sets `data-theme` on `<html>` **before first paint** — keep it the first
-  thing in `<head>`. `dark:` utilities key off `[data-theme="dark"]`, not a `.dark` class.
+- A `next/script` (`strategy="beforeInteractive"`, id `theme-init`) in `app/layout.tsx` sets `data-theme` on `<html>`
+  **before first paint**. Pages that call `notFound()` are rendered without it having run (dev and prod), so
+  `ThemeToggle` re-applies the theme on mount when `data-theme` is unset — keep that fallback. `dark:` utilities
+  key off `[data-theme="dark"]`, not a `.dark` class.
 - Every colour is a `--dm-*` custom property with a light value on `:root` and a dark value on
   `:root[data-theme="dark"]`. A new colour needs both, or it breaks one theme.
 

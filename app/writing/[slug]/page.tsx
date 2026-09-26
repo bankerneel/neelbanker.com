@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params
   const articles = getAllArticleMeta()
   const article = articles.find((a) => a.slug === slug)
-  if (!article) return {}
+  if (!article) return { title: 'Page not found' }
   return { title: article.title, description: article.excerpt }
 }
 
