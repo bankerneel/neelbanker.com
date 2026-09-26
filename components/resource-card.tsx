@@ -1,12 +1,16 @@
 'use client'
 
-import { useState } from 'react'
+import { useId, useState } from 'react'
+import { cn } from '@/lib/utils'
+import { focusRing } from '@/components/bazaar/styles'
 import type { ResourceMeta } from '@/types/content'
 
-export function ResourceCard({ resource }: { resource: ResourceMeta }) {
+export function ResourceCard({ resource, tone = 'tone-butter' }: { resource: ResourceMeta; tone?: string }) {
+  const uid = useId()
   const [email, setEmail] = useState('')
   const [optIn, setOptIn] = useState(false)
   const [state, setState] = useState<'idle' | 'loading' | 'done' | 'error'>('idle')
+  const [fileUrl, setFileUrl] = useState<string | null>(null)
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -19,75 +23,89 @@ export function ResourceCard({ resource }: { resource: ResourceMeta }) {
     setState(res.ok ? 'done' : 'error')
     if (res.ok) {
       const { url } = await res.json()
+      setFileUrl(url)
+      // Opening after an await can be blocked as a popup — the link below is the fallback.
       window.open(url, '_blank')
     }
   }
 
   return (
-    <div className="group h-full border border-border bg-background px-6 py-6 transition-colors duration-200 hover:border-primary/30 sm:px-7 sm:py-7">
-      <div className="mb-6 flex items-start justify-between gap-4">
-        <div>
-          <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.22em] text-primary">Free download</p>
-          <h3 className="max-w-lg text-lg font-semibold uppercase tracking-tight text-foreground">{resource.title}</h3>
-        </div>
-        <span className="shrink-0 border border-border px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground transition-colors duration-200 group-hover:border-primary/40">
-          PDF
-        </span>
+    <article className="tone-panel flex h-full flex-col border-2 border-current shadow-hard-lg">
+      <div className={cn('flex items-center justify-between gap-4 border-b-2 border-dm-ink px-6 py-3', tone)}>
+        <span className="text-[11px] font-bold uppercase tracking-[0.16em]">Free download</span>
+        <span className="hand text-[1.3rem] leading-none">PDF</span>
       </div>
 
-      <p className="mb-6 max-w-xl text-sm leading-[1.8] text-muted-foreground">{resource.description}</p>
+      <div className="flex flex-1 flex-col px-6 py-6 sm:px-7">
+        <h3 className="text-[1.3rem] font-black uppercase leading-[1.1] tracking-tight">{resource.title}</h3>
+        <p className="mt-3 text-[15px] leading-[1.7] text-dm-ink-soft">{resource.description}</p>
 
-      {state === 'done' ? (
-        <div className="border border-primary/20 bg-primary/5 px-5 py-5">
-          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-primary">Download started</p>
-          <p className="mt-2 text-sm leading-[1.8] text-muted-foreground">
-            The file should be opening now. A copy has also been sent to your inbox for later.
-          </p>
-        </div>
-      ) : (
-        <form onSubmit={handleSubmit} className="space-y-4 border-t border-dashed border-border pt-5">
-          <div>
-            <label className="mb-1.5 block font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-              Work email
-            </label>
-            <input
-              type="email"
-              required
-              placeholder="your@email.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              suppressHydrationWarning
-              className="w-full border border-border bg-muted/30 px-3 py-3 text-sm text-foreground placeholder:text-muted-foreground transition-colors duration-200 [color-scheme:dark] hover:border-primary/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-            />
-          </div>
-
-          <label className="flex cursor-pointer items-start gap-3 border border-border px-4 py-3 transition-colors duration-200 hover:border-primary/30">
-            <input
-              type="checkbox"
-              checked={optIn}
-              onChange={(e) => setOptIn(e.target.checked)}
-              className="mt-0.5 cursor-pointer accent-[hsl(72_100%_49%)]"
-            />
-            <span className="text-sm leading-[1.7] text-muted-foreground">
-              Send me <span className="text-foreground">The Architect&apos;s Brief</span> as well. Weekly insights on blockchain, AI, and engineering leadership.
-            </span>
-          </label>
-
-          <button
-            type="submit"
-            disabled={state === 'loading'}
-            className="cursor-pointer bg-primary px-5 py-3 font-mono text-[10px] uppercase tracking-[0.18em] text-primary-foreground transition-colors duration-200 hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {state === 'loading' ? 'Sending…' : 'Download guide →'}
-          </button>
-
-          {state === 'error' && (
-            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-red-400">
-              Something went wrong. Please try again.
+        {state === 'done' ? (
+          <div role="status" className="tone-sage mt-6 border-2 border-current px-5 py-5">
+            <p className="text-[11px] font-bold uppercase tracking-[0.16em]">Download started</p>
+            <p className="mt-2 text-[15px] leading-[1.6]">
+              A copy has also been sent to your inbox.{' '}
+              {fileUrl && (
+                <a href={fileUrl} target="_blank" rel="noopener noreferrer" className={cn('font-bold underline decoration-2 underline-offset-4', focusRing)}>
+                  Open the file ↗
+                </a>
+              )}
             </p>
-          )}
-        </form>
-      )}
-    </div>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="mt-auto space-y-4 border-t-2 border-dashed border-current/30 pt-5">
+            <div>
+              <label htmlFor={`${uid}-email`} className="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.16em]">
+                Work email
+              </label>
+              <input
+                id={`${uid}-email`}
+                type="email"
+                required
+                autoComplete="email"
+                placeholder="your@email.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                suppressHydrationWarning
+                className={cn(
+                  'w-full border-2 border-current/45 bg-dm-panel px-3 py-3 text-[15px] text-dm-ink placeholder:text-dm-ink-soft transition-colors duration-200 hover:border-current',
+                  focusRing,
+                )}
+              />
+            </div>
+
+            <label className="flex cursor-pointer items-start gap-3 border-2 border-dashed border-current/30 px-4 py-3 transition-colors duration-200 hover:border-current/60">
+              <input
+                type="checkbox"
+                checked={optIn}
+                onChange={(e) => setOptIn(e.target.checked)}
+                className="mt-1 size-4 cursor-pointer accent-[var(--dm-accent-ink)]"
+              />
+              <span className="text-sm leading-[1.6] text-dm-ink-soft">
+                Send me <span className="font-bold text-dm-ink">The Architect&apos;s Brief</span> as well. Weekly insights
+                on blockchain, AI, and engineering leadership.
+              </span>
+            </label>
+
+            <button
+              type="submit"
+              disabled={state === 'loading'}
+              className={cn(
+                'ticket tone-ink min-h-11 cursor-pointer px-6 shadow-hard transition-[rotate,background-color] duration-200 hover:-rotate-1 disabled:cursor-not-allowed disabled:opacity-60',
+                focusRing,
+              )}
+            >
+              {state === 'loading' ? 'Sending…' : 'Download guide →'}
+            </button>
+
+            {state === 'error' && (
+              <p role="alert" className="text-sm font-semibold text-destructive">
+                Something went wrong. Please try again.
+              </p>
+            )}
+          </form>
+        )}
+      </div>
+    </article>
   )
 }

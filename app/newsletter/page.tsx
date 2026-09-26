@@ -1,7 +1,10 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
 import { NewsletterForm } from '@/components/newsletter-form'
-import { FadeUp, StaggerContainer, StaggerItem } from '@/components/scroll-reveal'
+import { FadeUp } from '@/components/scroll-reveal'
+import { PageIntro } from '@/components/bazaar/page-intro'
+import { Scrap } from '@/components/bazaar/scrap'
+import { pick, tilts } from '@/components/bazaar/styles'
+import { cn } from '@/lib/utils'
 
 export const metadata: Metadata = {
   title: "The Architect's Brief",
@@ -11,139 +14,112 @@ export const metadata: Metadata = {
 const highlights = [
   {
     label: 'Blockchain Architecture',
+    tone: 'tone-sage',
     detail: 'ERC-4337, custody infrastructure, DeFi patterns, and real deployment decisions.',
   },
   {
     label: 'AI × Web3',
+    tone: 'tone-sky',
     detail: 'On-chain agents, LLM tooling, and practical workflow notes from production-facing builds.',
   },
   {
     label: 'Engineering Leadership',
+    tone: 'tone-rose',
     detail: 'Scaling teams, architecture decisions, and what senior technical judgment looks like in practice.',
   },
 ]
 
-const signals = [
-  'One strong idea each week',
-  'No filler or growth-hack cadence',
-  'Built for builders and technical leaders',
-]
+const signals = ['One strong idea each week', 'No filler or growth-hack cadence', 'Built for builders and technical leaders']
+
+const sectionTitle = 'text-[clamp(2rem,5vw,3.4rem)] font-black uppercase leading-none tracking-tighter'
+const handWord = 'hand text-[1.15em] font-normal lowercase text-dm-accent-ink'
 
 export default function NewsletterPage() {
   return (
     <>
-      <section className="border-b border-border">
-        <div className="mx-auto max-w-5xl xl:max-w-6xl 2xl:max-w-7xl 3xl:max-w-[1440px] px-6 sm:px-12 py-16 sm:py-20">
-          <FadeUp delay={0.05}>
-            <div className="mb-10 flex flex-wrap items-center gap-3">
-              <Link
-                href="/"
-                className="cursor-pointer font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground transition-colors duration-200 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-              >
-                ← Home
-              </Link>
-              <span className="text-xs text-muted-foreground">/</span>
-              <Link
-                href="/writing"
-                className="cursor-pointer font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground transition-colors duration-200 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-              >
-                Writing
-              </Link>
-            </div>
-          </FadeUp>
-          <FadeUp delay={0.15}>
-            <p className="mb-4 font-mono text-xs uppercase tracking-[0.22em] text-primary">
-              Free · Weekly
+      <PageIntro
+        crumbs={[
+          { href: '/', label: '← Home' },
+          { href: '/writing', label: 'Writing' },
+        ]}
+        kicker="Free · weekly ✦"
+        title={
+          <>
+            The Architect&apos;s <span className="max-outline">Brief</span>
+          </>
+        }
+      >
+        <div className="relative z-10 mt-10 flex flex-col gap-10 lg:mt-12 lg:flex-row lg:items-start">
+          <Scrap className="w-full max-w-[540px] -rotate-[1.2deg]" paperClassName="tone-panel px-7 py-9 sm:px-9">
+            <p className="text-[1.06rem] font-medium leading-[1.7]">
+              One architectural insight per week. Rotating across blockchain, AI × Web3, and engineering leadership. No
+              fluff, no filler, and no trend-chasing for its own sake.
             </p>
-          </FadeUp>
-          <FadeUp delay={0.25}>
-            <h1 className="mb-6 font-semibold text-4xl uppercase tracking-tighter leading-[0.9] sm:text-5xl md:text-6xl">
-              The Architect&apos;s Brief
-            </h1>
-          </FadeUp>
-          <FadeUp delay={0.4}>
-            <p className="max-w-2xl text-base leading-[1.7] text-muted-foreground">
-              One architectural insight per week. Rotating across blockchain, AI × Web3, and engineering leadership. No fluff, no filler, and no trend-chasing for its own sake.
-            </p>
-          </FadeUp>
+            <p className="hand mt-4 text-[1.5rem] leading-none text-dm-accent-ink">short, opinionated, grounded in delivery</p>
+          </Scrap>
+          <ul className="flex flex-wrap gap-3 lg:-ml-4 lg:mt-12 lg:max-w-[320px] lg:flex-col lg:items-start">
+            {signals.map((item, i) => (
+              <li key={item} className={cn('ticket shadow-hard', ['tone-butter', 'tone-lilac', 'tone-sage'][i], pick(tilts, i))}>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </PageIntro>
+
+      {/* ── Subscribe portal ──────────────────────────────────────────── */}
+      <section aria-labelledby="join" className="page-wrap mt-24">
+        <div className="surreal-arch dm-longshadow tone-lilac mx-auto max-w-[880px] px-6 pb-12 pt-24 text-center sm:px-14 sm:pt-20">
+          <p className="text-[11px] font-bold uppercase tracking-[0.24em]">Subscribe ✦</p>
+          <h2 id="join" className="mt-4 text-[clamp(1.9rem,4.6vw,3rem)] font-black uppercase leading-[1.02] tracking-tight">
+            Join the <span className="hand whitespace-nowrap text-[1.15em] font-normal lowercase">list</span>
+          </h2>
+          <p className="mx-auto mt-4 max-w-md text-[15px] font-medium leading-[1.7]">
+            Weekly delivery. Clear unsubscribe. No spam. The note lands in your inbox when there is something worth
+            sending.
+          </p>
+          <div className="mx-auto mt-8 max-w-lg text-left">
+            <NewsletterForm compact />
+          </div>
+          <p className="mt-5 text-[11px] font-bold uppercase tracking-[0.18em]">Unsubscribe anytime. No spam, ever.</p>
         </div>
       </section>
 
-      <div className="mx-auto max-w-5xl xl:max-w-6xl 2xl:max-w-7xl 3xl:max-w-[1440px] px-6 sm:px-12 py-12 sm:py-16">
-        <div className="grid gap-14 xl:grid-cols-[0.82fr_1.18fr]">
-          <div className="space-y-10">
-            <FadeUp>
-              <div>
-                <p className="mb-4 font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">Editorial promise</p>
-                <h2 className="font-semibold text-2xl uppercase tracking-tight sm:text-3xl">
-                  Short, opinionated, and grounded in actual delivery
-                </h2>
-              </div>
-            </FadeUp>
-
-            <FadeUp delay={0.05}>
-              <div className="space-y-4">
-                <p className="text-sm leading-[1.8] text-muted-foreground">
-                  Expect one strong idea at a time: architecture trade-offs, AI workflow patterns, or leadership notes grounded in shipped systems rather than generic hot takes.
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {signals.map((item) => (
-                    <span
-                      key={item}
-                      className="inline-flex min-h-11 items-center border border-border px-3 py-2 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground transition-colors duration-200 hover:border-primary/40 hover:text-foreground"
-                    >
-                      {item}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </FadeUp>
-
-            <FadeUp delay={0.1}>
-              <div className="border border-border bg-background px-6 py-6 sm:px-7 sm:py-7">
-                <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.22em] text-primary">Good fit if</p>
-                <p className="text-sm leading-[1.8] text-muted-foreground">
-                  You build or lead technical systems, care about architecture quality, and prefer signal over content volume. If you only want news summaries, this is probably not for you.
-                </p>
-              </div>
-            </FadeUp>
+      {/* ── What you get ──────────────────────────────────────────────── */}
+      <section aria-labelledby="what-you-get" className="page-wrap mt-24 sm:mt-28">
+        <FadeUp>
+          <h2 id="what-you-get" className={sectionTitle}>
+            What you <span className={handWord}>get</span>
+          </h2>
+          <div className="mt-10 flex flex-col gap-10 lg:flex-row lg:items-start">
+            {highlights.map((h, i) => (
+              <Scrap
+                key={h.label}
+                className={cn(
+                  'relative w-full lg:flex-1',
+                  ['-rotate-[1.4deg]', 'rotate-[1.2deg] lg:-ml-6 lg:mt-10', '-rotate-[0.8deg] lg:-ml-6 lg:mt-3'][i],
+                )}
+                paperClassName={cn(h.tone, 'px-7 py-9')}
+              >
+                <span className="ticket">Pillar {i + 1}</span>
+                <h3 className="mt-5 text-[1.3rem] font-black uppercase leading-[1.1] tracking-tight">{h.label}</h3>
+                <p className="mt-3 text-[15px] font-medium leading-[1.7]">{h.detail}</p>
+              </Scrap>
+            ))}
           </div>
+        </FadeUp>
+      </section>
 
-          <div className="space-y-10">
-            <FadeUp>
-              <div className="border border-border bg-background px-6 py-6 sm:px-7 sm:py-7">
-                <p className="mb-4 font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">Subscribe</p>
-                <h2 className="mb-3 font-semibold text-2xl uppercase tracking-tight sm:text-3xl">
-                  Join the list
-                </h2>
-                <p className="mb-6 max-w-xl text-sm leading-[1.8] text-muted-foreground">
-                  Weekly delivery. Clear unsubscribe. No spam. The note lands in your inbox when there is something worth sending.
-                </p>
-                <NewsletterForm />
-                <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-                  Unsubscribe anytime. No spam, ever.
-                </p>
-              </div>
-            </FadeUp>
-
-            <FadeUp delay={0.08}>
-              <div>
-                <p className="mb-4 font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">What you get</p>
-                <StaggerContainer className="grid gap-px bg-border">
-                  {highlights.map(({ label, detail }) => (
-                    <StaggerItem key={label} className="bg-background">
-                      <div className="px-5 py-5 sm:px-6">
-                        <p className="mb-3 font-semibold text-sm uppercase tracking-tight text-foreground">{label}</p>
-                        <p className="text-sm leading-[1.8] text-muted-foreground">{detail}</p>
-                      </div>
-                    </StaggerItem>
-                  ))}
-                </StaggerContainer>
-              </div>
-            </FadeUp>
-          </div>
+      {/* ── Fit ───────────────────────────────────────────────────────── */}
+      <section aria-labelledby="fit" className="page-wrap mt-24 sm:mt-28">
+        <div className="tone-panel mx-auto max-w-3xl -rotate-[0.6deg] border-2 border-dashed border-current px-7 py-9 sm:px-10">
+          <h2 id="fit" className="hand text-[2rem] leading-none text-dm-accent-ink">Good fit if…</h2>
+          <p className="mt-4 text-[1.05rem] leading-[1.75]">
+            You build or lead technical systems, care about architecture quality, and prefer signal over content volume.
+            If you only want news summaries, this is probably not for you.
+          </p>
         </div>
-      </div>
+      </section>
     </>
   )
 }
