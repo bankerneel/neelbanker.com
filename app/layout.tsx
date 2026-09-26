@@ -1,22 +1,31 @@
 import type { Metadata } from 'next'
-import { Syne, JetBrains_Mono } from 'next/font/google'
+import Script from 'next/script'
+import { Archivo, Caveat } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Nav } from '@/components/nav'
 import { Footer } from '@/components/footer'
 import './globals.css'
 
-const syne = Syne({
-  variable: '--font-syne',
+// Archivo is variable: one file (35 KB) covers every weight.
+const archivo = Archivo({
+  variable: '--font-archivo',
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800'],
 })
 
-const jetbrainsMono = JetBrains_Mono({
-  variable: '--font-jetbrains',
+// Caveat is only used for short handwritten accents, so load one static
+// weight — the variable file is 75 KB.
+const caveat = Caveat({
+  variable: '--font-caveat',
   subsets: ['latin'],
-  weight: ['400', '500'],
+  weight: ['500'],
 })
+
+// Runs before first paint so the page never flashes the wrong theme.
+// A stored choice (from the nav toggle) wins; otherwise follow the OS.
+// beforeInteractive = Next injects it into <head> itself, outside React's
+// render (a raw <script> in the layout trips React 19's script-tag warning).
+const themeScript = `(function(){try{var t=localStorage.getItem('nb-theme');if(t!=='light'&&t!=='dark'){t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}document.documentElement.dataset.theme=t}catch(e){}})()`
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://neelbanker.com'),
@@ -37,10 +46,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${syne.variable} ${jetbrainsMono.variable} dark`} suppressHydrationWarning>
-      <body className="min-h-screen bg-background font-sans text-foreground antialiased" suppressHydrationWarning>
+    <html lang="en" className={`${archivo.variable} ${caveat.variable}`} suppressHydrationWarning>
+      <body className="min-h-screen font-sans text-dm-ink antialiased" suppressHydrationWarning>
+        <Script id="theme-init" strategy="beforeInteractive">
+          {themeScript}
+        </Script>
         <Nav />
-        <main>{children}</main>
+        <main className="overflow-x-clip">{children}</main>
         <Footer />
         <Analytics />
         <SpeedInsights />

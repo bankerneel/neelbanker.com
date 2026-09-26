@@ -1,6 +1,6 @@
 # States
 
-Last updated: 2026-07-12
+Last updated: 2026-09-27
 
 ## File Purpose
 
@@ -15,6 +15,15 @@ Core routes now feel substantially more consistent, lighter, and more editorial 
 
 ## Completed
 
+- **Dream Bazaar redesign — complete on `dev` (2026-09-27), not in production until the `dev` → `main` PR merges:**
+  - Foundation: `--dm-*` palette with light + dark values (contrast measured and corrected), `tone-*` surfaces, `.ticket`, `.torn` / `.torn-sheet`, `page-wrap`, `.prose-bazaar`, fixed dream-sky layer; shadcn tokens mapped onto the palette.
+  - Fonts: Archivo (variable) + Caveat (static 500) site-wide; Syne + JetBrains Mono now load only inside `/design-lab`.
+  - Light/dark follows the OS; the nav toggle overrides and persists (`nb-theme`); set before paint via `next/script`, with a toggle-side fallback for `notFound()` pages.
+  - Shared building blocks: `components/bazaar/` (`Scrap`, `PageIntro`, `styles.ts`), `ThemeToggle`, `lib/use-theme.ts`, `components/mdx-components.tsx`, `lib/og.tsx`.
+  - Every page rebuilt: homepage (the approved lab wall on real content), `/writing`, `/writing/[slug]`, `/projects`, `/work-with-me`, `/about`, `/resources`, `/newsletter`, `/speaking`, `/resume` (chrome only — the print sheet is unchanged), a new 404, nav, footer, and both OG images.
+  - Bugs fixed on the way: markdown tables never rendered (added `remark-gfm`); five projects never appeared under a category filter; contact-form labels not linked to inputs; newsletter input unlabelled; resource download popup could be blocked with no fallback; Cal embed hard-coded dark; nav overflowed at 800px; missing articles titled with the site default.
+  - Verified in the browser at 320/375/800/1024/1280px and a 2046px ultrawide, light and dark; `/resume` print verified with Playwright + system Edge; lint, typecheck and prod build pass. Perf table in ROADMAP §0 (JS at parity ~234 KB, homepage HTML 145 → 110 KB, CLS 0 everywhere).
+  - Removed: the old dark hero, lazy constellation, `hero-logos`, and their CSS.
 - Added `/design-lab` — 17 working redesign prototypes (A–Q), all rendering the same real content from `app/design-lab/_content.ts` so directions can be compared directly:
   - A Retro Duotone · B Maximalist Editorial · C Editorial Dark · D Editorial Duotone · E Bento · F Luxury · G Cybercore · H Scrapbook · I Surrealism · J Dream Collage · K Cut-Paper · L Desk of Dreams · M/N Maximalism light+dark · O Torn Maximalism · **P Dream Bazaar (selected)** · Q Pattern Dreamscape.
   - **P · Dream Bazaar is the chosen direction** for the eventual redesign (Maximalism × Dream Collage: overlapping scraps, polaroids and swatches on a dream sky, no grid).
@@ -73,26 +82,16 @@ Core routes now feel substantially more consistent, lighter, and more editorial 
 - NDA-sensitive project references anonymized in public-facing content.
 - About page wording corrected to state that Hindustan Ecolife is run by Neel's uncle and that Neel built/hosts the website.
 
-## Current Hero State
+## Current Homepage State
 
-- Desktop hero is intentionally interactive and layered.
-- `HeroWord` / `span.block` heading treatment is intentionally preserved.
-- Latest hero pass added more logos, wider spacing, stronger self-hover emphasis, improved eyebrow contrast, improved supporting copy, and a designed mobile fallback.
-- The very last “neon ring” badge experiment was reverted because it degraded the look.
+- Hero is the Dream Bazaar wall (`components/home-hero.tsx`): "Building / *what's* / Next.", copy scrap, stat polaroids, subscribe strip, ticker-tape marquee. Static server component, no entrance animation.
 
 ## Needs Review
 
-- Real browser QA across:
-  - mobile hero readability
-  - small laptop header/hero balance
-  - footer spacing and nav density
-  - hover density on very wide screens
-  - hero interaction feel on low-power devices
-  - remaining route-by-route mobile QA in real browser, not just code-level pass
-- End-to-end form/download behavior in browser:
-  - newsletter subscribe
-  - contact form
-  - resource download flow
+- Neel (and his wife) to review the whole redesign on the `dev` Vercel preview before the `dev` → `main` PR.
+- Real-device QA: iOS Safari (fixed sky layer, `100lvh`, clip-path), a low-end Android (long article sheet), and the Cal embed on phones.
+- End-to-end form/download behaviour against production Resend: newsletter subscribe, contact form, resource download.
+- Category choice for Project Pulse (`fightout-move-to-earn` → infrastructure + leadership) was a judgement call from its excerpt.
 
 ## Not Started / Still Open
 

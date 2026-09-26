@@ -2,23 +2,29 @@
 
 import { useState } from 'react'
 import { ProjectCard } from '@/components/project-card'
+import { Scrap } from '@/components/bazaar/scrap'
+import { chipLink, focusRing, pick, tilts, tones } from '@/components/bazaar/styles'
+import { cn } from '@/lib/utils'
 import type { ProjectMeta } from '@/types/content'
 
 type ProjectFilter = 'all' | 'wallets' | 'infrastructure' | 'ai' | 'leadership'
 
-const FILTERS: Array<{ key: ProjectFilter; label: string; description: string }> = [
-  { key: 'all', label: 'All Work', description: 'Full project archive across delivery contexts.' },
-  { key: 'wallets', label: 'Wallets', description: 'Custody, NCW, ERC-4337, and transaction infrastructure.' },
-  { key: 'infrastructure', label: 'Infrastructure', description: 'Chains, Fabric networks, bridges, and system backbones.' },
-  { key: 'ai', label: 'AI Systems', description: 'Agents, local LLM workflows, and AI-assisted product systems.' },
-  { key: 'leadership', label: 'Leadership-Heavy', description: 'Programs where delivery orchestration mattered as much as code.' },
+const FILTERS: Array<{ key: ProjectFilter; label: string; description: string; tone: string }> = [
+  { key: 'all', label: 'All work', description: 'Full project archive across delivery contexts.', tone: 'tone-panel' },
+  { key: 'wallets', label: 'Wallets', description: 'Custody, NCW, ERC-4337, and transaction infrastructure.', tone: 'tone-butter' },
+  { key: 'infrastructure', label: 'Infrastructure', description: 'Chains, Fabric networks, bridges, and system backbones.', tone: 'tone-sage' },
+  { key: 'ai', label: 'AI systems', description: 'Agents, local LLM workflows, and AI-assisted product systems.', tone: 'tone-sky' },
+  { key: 'leadership', label: 'Leadership-heavy', description: 'Programs where delivery orchestration mattered as much as code.', tone: 'tone-rose' },
 ]
 
+// Keyed by content/projects/<slug>.mdx — keep in sync when adding a project,
+// or it only ever shows under "All work".
 const PROJECT_CATEGORIES: Record<string, ProjectFilter[]> = {
   'cryptsync-ncw': ['wallets', 'infrastructure', 'leadership'],
   'truetiger-non-custodial-wallet': ['wallets', 'leadership'],
   'fireblocks-bitgo-custody': ['wallets', 'leadership'],
   'best-wallet-ecosystem': ['wallets', 'leadership'],
+  'w3p-presale-dapps-platform': ['wallets'],
   'fabric-polygon-interop': ['infrastructure'],
   'verionce': ['infrastructure', 'leadership'],
   'doctrace-fabric-documents': ['infrastructure', 'leadership'],
@@ -26,26 +32,32 @@ const PROJECT_CATEGORIES: Record<string, ProjectFilter[]> = {
   'ncog-earth-chain': ['infrastructure'],
   'memevault': ['infrastructure'],
   'smart-contract-audit-suite': ['infrastructure', 'leadership'],
+  'fightout-move-to-earn': ['infrastructure', 'leadership'],
   'roomquery': ['ai'],
   'ai-social-media-agent': ['ai'],
   'privatgpt-offline': ['ai'],
-  'ai-mentoring-platform': ['ai', 'leadership'],
+  'keytu-ai-mentoring-platform': ['ai', 'leadership'],
+  'hashira-product-system': ['leadership'],
+  'splint-marketplace-platform': ['leadership'],
   'idosy-ido-platform': ['wallets', 'leadership'],
 }
 
 const FEATURED_SPOTLIGHTS = [
   {
-    label: 'Wallet Systems',
+    label: 'Wallet systems',
+    tone: 'tone-butter',
     title: 'Project Atlas, Project Tiger, Project Orbit, Fireblocks vs BitGo',
     body: 'A through-line across non-custodial wallets, custody choices, key-management UX, and production transaction orchestration.',
   },
   {
     label: 'Infrastructure',
+    tone: 'tone-sage',
     title: 'Project Ember, VeriOnce, Fabric–Polygon, NCOG Earth Chain',
     body: 'L2 operations, Fabric architectures, cross-chain verification, and the trade-offs behind custom or specialised blockchain infrastructure.',
   },
   {
-    label: 'AI Delivery',
+    label: 'AI delivery',
+    tone: 'tone-sky',
     title: 'RoomQuery, Project Beacon, PrivateGPT, AI Social Media Agent',
     body: 'Applied AI systems focused on ranking, retrieval, orchestration, and practical workflow leverage instead of generic demo-layer novelty.',
   },
@@ -68,6 +80,9 @@ function includesFilter(project: ProjectMeta, filter: ProjectFilter) {
   return PROJECT_CATEGORIES[project.slug]?.includes(filter) ?? false
 }
 
+const sectionTitle = 'text-[clamp(2rem,5vw,3.4rem)] font-black uppercase leading-none tracking-tighter'
+const handWord = 'hand text-[1.15em] font-normal lowercase text-dm-accent-ink'
+
 export function ProjectBrowser({ projects }: { projects: ProjectMeta[] }) {
   const [activeFilter, setActiveFilter] = useState<ProjectFilter>('all')
   const visibleProjects = projects.filter((project) => includesFilter(project, activeFilter))
@@ -75,100 +90,99 @@ export function ProjectBrowser({ projects }: { projects: ProjectMeta[] }) {
 
   return (
     <div>
-      <div className="mb-10 border border-border bg-background p-6 sm:p-8">
-        <div className="mb-6 flex flex-wrap gap-2">
-          {FILTERS.map((filter) => (
-            <button
-              key={filter.key}
-              type="button"
-              onClick={() => setActiveFilter(filter.key)}
-              className={`relative min-h-11 cursor-pointer overflow-hidden px-3 py-2 font-mono text-xs uppercase tracking-widest transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${activeFilter === filter.key ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:text-foreground'}`}
+      {/* ── Through-lines ─────────────────────────────────────────── */}
+      <section aria-labelledby="through-lines">
+        <h2 id="through-lines" className={sectionTitle}>
+          The <span className={handWord}>through</span>-lines
+        </h2>
+        <div className="mt-10 flex flex-col gap-10 lg:flex-row lg:items-start">
+          {FEATURED_SPOTLIGHTS.map((spotlight, i) => (
+            <Scrap
+              key={spotlight.label}
+              className={cn(
+                'relative w-full lg:flex-1',
+                ['-rotate-[1.4deg]', 'rotate-[1.2deg] lg:-ml-6 lg:mt-10', '-rotate-[0.8deg] lg:-ml-6 lg:mt-3'][i],
+              )}
+              paperClassName={cn(spotlight.tone, 'px-7 py-9')}
             >
-              <span className="relative z-10">{filter.label}</span>
-            </button>
+              <span className="ticket">{spotlight.label}</span>
+              <h3 className="mt-5 text-[1.15rem] font-black uppercase leading-[1.12] tracking-tight">{spotlight.title}</h3>
+              <p className="mt-3 text-sm font-medium leading-[1.7]">{spotlight.body}</p>
+            </Scrap>
           ))}
         </div>
+      </section>
 
-        <div className="mb-8 max-w-2xl">
-          <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.22em] text-primary">Browse by category</p>
-          <h2 className="mb-4 font-bold text-2xl sm:text-3xl uppercase tracking-tight">{activeMeta.label}</h2>
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <p className="max-w-xl text-sm leading-[1.8] text-muted-foreground">
-              {activeMeta.description}
+      {/* ── Filterable archive ────────────────────────────────────── */}
+      <section aria-labelledby="all-projects" className="mt-24 sm:mt-28">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <div className="max-w-xl">
+            <h2 id="all-projects" className={sectionTitle}>
+              {activeMeta.label}
+            </h2>
+            <p className="mt-3 text-[15px] leading-[1.7] text-dm-ink-soft">{activeMeta.description}</p>
+            <p className="mt-2 text-[13px] font-bold uppercase tracking-[0.14em]" aria-live="polite">
+              {visibleProjects.length} {visibleProjects.length === 1 ? 'project' : 'projects'} in view
             </p>
-            <div className="inline-flex w-full items-center gap-3 border border-border bg-muted/40 px-4 py-3 sm:w-fit">
-              <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">In view</span>
-              <span className="font-bold text-lg leading-none text-foreground tabular-nums">{visibleProjects.length}</span>
-              <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-                {visibleProjects.length === 1 ? 'project' : 'projects'}
-              </span>
-            </div>
+          </div>
+          <div role="group" aria-label="Filter by category" className="flex flex-wrap gap-3">
+            {FILTERS.map((filter, i) => {
+              const isActive = activeFilter === filter.key
+              return (
+                <button
+                  key={filter.key}
+                  type="button"
+                  onClick={() => setActiveFilter(filter.key)}
+                  aria-pressed={isActive}
+                  className={cn(
+                    'ticket min-h-11 cursor-pointer px-4 transition-[rotate,background-color,color] duration-200 hover:rotate-0',
+                    isActive ? 'tone-ink rotate-0 shadow-hard' : cn(filter.tone, pick(tilts, i)),
+                    focusRing,
+                  )}
+                >
+                  {filter.label}
+                </button>
+              )
+            })}
           </div>
         </div>
-      </div>
 
-      <div className="mb-10 grid gap-px bg-border lg:grid-cols-3">
-        {FEATURED_SPOTLIGHTS.map((spotlight) => (
-          <div key={spotlight.label} className="bg-background p-6">
-            <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.22em] text-primary">{spotlight.label}</p>
-            <h2 className="mb-4 font-bold text-lg uppercase tracking-tight">{spotlight.title}</h2>
-            <p className="text-sm leading-[1.8] text-muted-foreground">{spotlight.body}</p>
-          </div>
-        ))}
-      </div>
-
-      <div
-        key={activeFilter}
-        className="animate-fade-in grid gap-px bg-border sm:grid-cols-2"
-      >
-        {visibleProjects.map((project) => (
-          <div key={project.slug} className="bg-background">
-            <ProjectCard project={project} />
-          </div>
-        ))}
-      </div>
-
-      <div className="mt-16 border-t border-border pt-12">
-        <div className="mb-8 max-w-2xl">
-          <p className="mb-4 font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">Selected SoluLab case studies</p>
-          <h2 className="mb-4 font-bold text-2xl sm:text-3xl uppercase tracking-tighter">Client delivery, grouped as proof rather than a raw archive</h2>
-          <p className="text-sm leading-[1.8] text-muted-foreground">
-            Not every client system belongs in a public deep-dive. These external case studies give a representative view of the kinds of platforms delivered across NFT marketplaces, gaming, supply-chain, token systems, and broader blockchain product builds.
-          </p>
-        </div>
-        <div className="grid gap-px bg-border sm:grid-cols-2 xl:grid-cols-3">
-          {SOLULAB_CASE_STUDIES.map((study) => (
-            <a
-              key={study.label}
-              href={study.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group relative flex min-h-[132px] cursor-pointer flex-col justify-between overflow-hidden bg-background p-6 transition-colors duration-200 hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-            >
-              <div
-                aria-hidden="true"
-                className="absolute inset-x-0 top-0 h-px origin-left scale-x-0 bg-primary transition-transform duration-300 group-hover:scale-x-100"
-              />
-              <div className="relative z-10">
-                <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-                  External case study
-                </p>
-                <p className="max-w-[18ch] font-bold text-base uppercase tracking-tight leading-snug transition-colors duration-200 group-hover:text-primary">
-                  {study.label}
-                </p>
-              </div>
-              <div className="relative z-10 flex items-center justify-between gap-4">
-                <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-                  SoluLab archive
-                </span>
-                <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground transition-transform duration-200 group-hover:translate-x-1">
-                  View ↗
-                </span>
-              </div>
-            </a>
+        <ul key={activeFilter} className="animate-fade-in mt-10 grid gap-8 sm:grid-cols-2 xl:grid-cols-3">
+          {visibleProjects.map((project, i) => (
+            <li key={project.slug}>
+              <ProjectCard project={project} index={i} />
+            </li>
           ))}
-        </div>
-      </div>
+        </ul>
+      </section>
+
+      {/* ── External case studies ─────────────────────────────────── */}
+      <section aria-labelledby="client-delivery" className="mt-24 sm:mt-28">
+        <Scrap className="-rotate-[0.6deg]" paperClassName="tone-panel px-7 py-10 sm:px-12 sm:py-14">
+          <h2 id="client-delivery" className="text-[clamp(1.7rem,4vw,2.6rem)] font-black uppercase leading-[1.02] tracking-tight">
+            Client delivery, <span className={handWord}>as proof</span>
+          </h2>
+          <p className="mt-4 max-w-2xl text-[15px] leading-[1.75] text-dm-ink-soft">
+            Not every client system belongs in a public deep-dive. These SoluLab case studies give a representative view
+            of the platforms delivered across NFT marketplaces, gaming, supply-chain, token systems, and broader
+            blockchain product builds.
+          </p>
+          <ul className="mt-8 flex flex-wrap gap-3">
+            {SOLULAB_CASE_STUDIES.map((study, i) => (
+              <li key={study.label}>
+                <a
+                  href={study.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={cn(chipLink, pick(tones, i), pick(tilts, i))}
+                >
+                  {study.label} ↗
+                </a>
+              </li>
+            ))}
+          </ul>
+        </Scrap>
+      </section>
     </div>
   )
 }

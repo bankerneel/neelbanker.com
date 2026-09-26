@@ -12,18 +12,57 @@
 
 The site was judged to have become generic (its near-black + lime palette and Syne/mono
 pairing are a widely-copied preset). `/design-lab` explored 17 directions; **P · Dream
-Bazaar** was selected.
+Bazaar** was selected by Neel and his wife.
 
-Next steps, in order:
+**Decisions (2026-09-27):**
 
-- Extend P beyond the homepage: article template, `/projects`, `/work-with-me` — the
-  reading experience is the real test, and P's overlapping layout is the part most likely
-  to get brittle with variable content lengths.
-- Decide whether the light/dark toggle ships (mechanism already built in
-  `_components/theme-shell.tsx` — CSS custom properties, one class swap).
-- Only then migrate the live design system: `app/globals.css` tokens, font stack, page
-  headers, hero. Expect to rewrite the `AGENTS.md` design rules, which describe the
-  current system and would otherwise block the redesign.
+- **Scope: the full site**, homepage included (done last). The design rules in `AGENTS.md`
+  were rewritten first and now govern every page.
+- **Built live on `dev`**, directly in the real routes — no lab copies. Review happens on Vercel
+  preview deployments (a draft PR is fine for the link). **Don't merge `dev` → `main` until
+  every page below is done**, so production never shows a half-migrated site. Unrelated hotfixes during the
+  redesign must branch from `main`, not `dev`.
+- **Light/dark ships.** Default follows the OS; the nav toggle overrides and is remembered.
+- **Fonts site-wide: Archivo + Caveat** (replaced Syne + JetBrains Mono).
+
+| Page | Status / notes |
+|---|---|
+| Foundation: tokens, fonts, theme, `Scrap`, tickets | ✅ Done 2026-09-27 |
+| Nav + Footer | ✅ Done — nav collapses to a menu below `lg` |
+| `/writing/[slug]` | ✅ Done — wall header, torn reading sheet, GFM tables, keep-reading, arch CTA |
+| `/writing` | ✅ Done — wall + stat polaroids, pinned latest three, reading lists, ticket filters (URL state kept), `ArticleCard` is now an index card |
+| `/projects` | ✅ Done — signal notes, overlapping through-line scraps, ticket filters, tilted project cards, case-study chip wall. Fixed: 5 projects had no/misspelled category keys and never showed under a filter |
+| `/work-with-me` | ✅ Done — service scraps, recruiter arch (+ resume link), Cal embed follows the site theme and palette, contact form restyled. Fixed: form labels weren't linked to inputs; errors now `aria-describedby` |
+| `/about` | ✅ Done — NB monogram + stat polaroids, bio on a torn sheet with sticky contact notes, experience scraps, recognition cards, capability index cards, talk polaroids |
+| `/resources`, `/newsletter` | ✅ Done — form cards (unrotated), subscribe form in a lilac arch, pillar scraps. Fixed: unlabelled newsletter input, unlinked resource label, and a fallback link when the post-fetch `window.open` is popup-blocked |
+| `/speaking` | ✅ Done — profile notes, talk scraps with coloured "poster" watch links, invite arch |
+| `/resume` | ✅ Done — screen chrome only (wall header, action tickets, taped sheet); the white document sheet is unchanged. Print verified with Playwright + system Edge in light and dark: nav, footer, `.no-print`, sky layer hidden; sheet header prints |
+| `not-found` | ✅ Done — 404 with outlined 0, scrap + destination tickets; missing articles now titled "Page not found" |
+| OG images | ✅ Done — dream sky, name tag, Caveat kicker, Archivo 900 title (steps down for long titles), pillar ticket; shared `lib/og.tsx` |
+| Homepage | ✅ Done — the approved lab wall on real content, ticker-tape marquee, notebook scraps, arch portal around the lead case study, pillar scraps, field notes + free resource, service price tags. Old hero + constellation removed |
+
+**All pages done (2026-09-27).** Remaining: Neel reviews the `dev` preview, then a PR `dev` → `main`.
+
+Perf after the full redesign (prod build, fresh Edge context per page, 1280px, measured 2026-09-27):
+
+| Page | JS (gz) | Fonts | HTML | LCP (local) | CLS |
+|---|---|---|---|---|---|
+| `/` | 234 KB | 2 · 84 KB | 110 KB | 380 ms | 0 |
+| `/writing` | 237 KB | 2 · 84 KB | 85 KB | 224 ms | 0 |
+| article | 234 KB | 2 · 84 KB | 66 KB | 144 ms | 0 |
+| other pages | 234 KB | 2 · 84 KB | 67–116 KB | 108–148 ms | 0 |
+
+Baseline at the start of the redesign:
+
+| | Before (Syne + JetBrains) | After foundation |
+|---|---|---|
+| Homepage JS | ~234 KB | 237 KB (+3 KB: theme toggle) |
+| Article JS | — | 234 KB |
+| Font files | 2 · 65.9 KB | 2 · 85.9 KB (Archivo 34.9 + Caveat 500 static 51.0) |
+| Homepage HTML | ~145 KB | 140 KB |
+
+Caveat's variable file was 74.6 KB; one static weight saves 24 KB. If fonts must shrink
+further, the lever is `preload: false` on Caveat (accents only, not the LCP element).
 
 ### 1. Browser QA and fix pass
 

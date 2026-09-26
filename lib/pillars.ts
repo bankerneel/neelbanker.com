@@ -1,32 +1,41 @@
 import type { Pillar } from '@/types/content'
 
+// Dream Bazaar accents: blockchain = sage, ai = sky, leadership = rose.
+// Use toneClass for filled chips/cards — it pairs the fill with a text colour
+// that passes contrast in both themes.
 export const PILLARS: Pillar[] = [
   {
     slug: 'blockchain',
     label: 'Blockchain Architecture',
+    short: 'Blockchain',
     emoji: '⛓️',
-    colour: 'lime',
-    bgClass: 'bg-lime-400/10',
-    textClass: 'text-lime-300',
-    borderClass: 'border-lime-400/30',
+    colour: 'sage',
+    toneClass: 'tone-sage',
+    bgClass: 'bg-dm-sage',
+    textClass: 'text-dm-ink',
+    borderClass: 'border-dm-sage',
   },
   {
     slug: 'ai',
     label: 'AI × Web3',
+    short: 'AI × Web3',
     emoji: '🤖',
-    colour: 'cyan',
-    bgClass: 'bg-cyan-400/10',
-    textClass: 'text-cyan-300',
-    borderClass: 'border-cyan-400/30',
+    colour: 'sky',
+    toneClass: 'tone-sky',
+    bgClass: 'bg-dm-sky',
+    textClass: 'text-dm-ink',
+    borderClass: 'border-dm-sky',
   },
   {
     slug: 'leadership',
     label: 'Engineering Leadership',
+    short: 'Leadership',
     emoji: '🏗️',
-    colour: 'orange',
-    bgClass: 'bg-orange-400/10',
-    textClass: 'text-orange-300',
-    borderClass: 'border-orange-400/30',
+    colour: 'rose',
+    toneClass: 'tone-rose',
+    bgClass: 'bg-dm-rose',
+    textClass: 'text-dm-ink',
+    borderClass: 'border-dm-rose',
   },
 ]
 
@@ -35,5 +44,5 @@ export function getPillarBySlug(slug: string): Pillar | undefined {
 }
 
 export function getPillarColour(slug: string): string {
-  return getPillarBySlug(slug)?.colour ?? 'zinc'
+  return getPillarBySlug(slug)?.colour ?? 'sage'
 }

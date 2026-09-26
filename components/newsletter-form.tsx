@@ -1,8 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useId, useState } from 'react'
+import { cn } from '@/lib/utils'
+import { focusRing } from '@/components/bazaar/styles'
 
 export function NewsletterForm({ compact = false }: { compact?: boolean }) {
+  const inputId = useId()
   const [email, setEmail] = useState('')
   const [state, setState] = useState<'idle' | 'loading' | 'done' | 'error'>('idle')
 
@@ -19,11 +22,9 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
 
   if (state === 'done') {
     return (
-      <div className="border border-primary/20 bg-primary/5 px-5 py-5">
-        <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-primary">You&apos;re in</p>
-        <p className="mt-2 text-sm leading-[1.8] text-muted-foreground">
-          Check your inbox for the confirmation email.
-        </p>
+      <div role="status" className="tone-sage border-2 border-current px-5 py-5 shadow-hard">
+        <p className="text-lg font-black uppercase tracking-tight">You&apos;re in ✓</p>
+        <p className="hand mt-1 text-[1.4rem] leading-tight">check your inbox for the confirmation email</p>
       </div>
     )
   }
@@ -32,30 +33,36 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
     <div className="space-y-3">
       <form
         onSubmit={handleSubmit}
-        className={`border border-border bg-background transition-colors duration-200 focus-within:border-primary ${
-          compact ? 'flex flex-col sm:flex-row' : 'flex flex-col'
-        }`}
+        className={cn('tone-panel flex border-2 border-current shadow-hard', compact ? 'flex-col sm:flex-row' : 'flex-col')}
       >
+        <label htmlFor={inputId} className="sr-only">
+          Email address
+        </label>
         <input
+          id={inputId}
           type="email"
           required
+          autoComplete="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="your@email.com"
-          className="min-h-12 flex-1 bg-transparent px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground [color-scheme:dark] transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          className={cn('min-h-12 flex-1 bg-transparent px-4 py-3 text-[15px] text-dm-ink placeholder:text-dm-ink-soft', focusRing)}
           suppressHydrationWarning
         />
         <button
           type="submit"
           disabled={state === 'loading'}
-          className="cursor-pointer bg-primary px-5 py-3 font-mono text-[10px] uppercase tracking-[0.18em] text-primary-foreground transition-colors duration-200 hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50"
+          className={cn(
+            'tone-ink min-h-12 cursor-pointer px-6 text-xs font-bold uppercase tracking-[0.12em] transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-60',
+            focusRing,
+          )}
           suppressHydrationWarning
         >
           {state === 'loading' ? 'Sending…' : 'Subscribe →'}
         </button>
       </form>
       {state === 'error' && (
-        <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-red-400">
+        <p role="alert" className="text-sm font-semibold text-destructive">
           Something went wrong. Try again.
         </p>
       )}

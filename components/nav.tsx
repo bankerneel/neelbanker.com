@@ -1,97 +1,148 @@
 'use client'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect, useState, useSyncExternalStore } from 'react'
+import { ThemeToggle } from '@/components/theme-toggle'
 import { cn } from '@/lib/utils'
 
 const links = [
-  { href: '/about', label: 'About' },
-  { href: '/writing', label: 'Writing' },
-  { href: '/resources', label: 'Resources' },
-  { href: '/projects', label: 'Projects' },
-  { href: '/newsletter', label: 'Newsletter' },
+  { href: '/about', label: 'About', tone: 'tone-sage', tilt: '-rotate-2' },
+  { href: '/writing', label: 'Writing', tone: 'tone-butter', tilt: 'rotate-[1.5deg]' },
+  { href: '/projects', label: 'Projects', tone: 'tone-sky', tilt: '-rotate-1' },
+  { href: '/resources', label: 'Resources', tone: 'tone-rose', tilt: 'rotate-2' },
+  { href: '/newsletter', label: 'Newsletter', tone: 'tone-lilac', tilt: '-rotate-[1.5deg]' },
 ]
+
+const focusRing =
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-dm-panel'
+
+// "Has the page scrolled?" as an external store: no setState in an effect,
+// and the server snapshot (false) matches the unscrolled first paint.
+function subscribeToScroll(onChange: () => void) {
+  window.addEventListener('scroll', onChange, { passive: true })
+  return () => window.removeEventListener('scroll', onChange)
+}
+const isScrolled = () => window.scrollY > 8
+const isScrolledOnServer = () => false
 
 export function Nav() {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
+  const scrolled = useSyncExternalStore(subscribeToScroll, isScrolled, isScrolledOnServer)
+  const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`)
+
+  // Escape closes the mobile menu.
+  useEffect(() => {
+    if (!open) return
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setOpen(false)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [open])
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
-      <nav
-        aria-label="Main navigation"
-        className="mx-auto flex max-w-5xl xl:max-w-6xl 2xl:max-w-7xl 3xl:max-w-[1440px] items-center justify-between px-6 sm:px-12 py-4"
-      >
-        {/* Logo */}
-        <Link
-          href="/"
-          onClick={() => setOpen(false)}
-          className="cursor-pointer flex items-center gap-2 font-extrabold tracking-tighter text-xl uppercase text-foreground transition-colors duration-200 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-        >
-          Neel Banker
-          <span className="w-1.5 h-1.5 bg-primary rounded-full shrink-0" aria-hidden="true" />
-        </Link>
-
-        {/* Desktop links */}
-        <div className="hidden md:flex items-center gap-8">
-          {links.map(({ href, label }) => (
-            <Link
-              key={href}
-              href={href}
-              className={cn(
-                'cursor-pointer font-mono text-xs uppercase tracking-widest transition-colors duration-200 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
-                pathname.startsWith(href) ? 'text-foreground font-semibold' : 'text-muted-foreground'
-              )}
-            >
-              {label}
-            </Link>
-          ))}
+    <header className="sticky top-0 z-50">
+      <div className="relative">
+        {/* Paper strip behind the bar once the page scrolls, so content never
+            shows through the chips. Fades in; the bar's height never changes. */}
+        <div
+          aria-hidden="true"
+          className={cn(
+            'tone-panel pointer-events-none absolute inset-0 border-b-2 border-current shadow-[0_5px_0_var(--dm-shadow)] transition-opacity duration-200',
+            scrolled ? 'opacity-100' : 'opacity-0',
+          )}
+        />
+        <nav aria-label="Main navigation" className="page-wrap relative flex items-center justify-between gap-4 py-4">
           <Link
-            href="/work-with-me"
-            className="cursor-pointer border border-primary px-4 py-1.5 font-mono text-xs uppercase tracking-widest text-primary transition-colors duration-200 hover:bg-primary hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-          >
-            Work With Me
-          </Link>
-        </div>
-
-        {/* Hamburger — mobile only */}
-        <button
-          className="md:hidden flex cursor-pointer flex-col justify-center gap-[5px] p-2 -mr-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-          onClick={() => setOpen((v) => !v)}
-          aria-label={open ? 'Close menu' : 'Open menu'}
-          aria-expanded={open}
-        >
-          <span className={cn('block w-5 h-[1.5px] bg-foreground origin-center transition-transform duration-200', open && 'rotate-45 translate-y-[6.5px]')} />
-          <span className={cn('block w-5 h-[1.5px] bg-foreground transition-opacity duration-200', open && 'opacity-0')} />
-          <span className={cn('block w-5 h-[1.5px] bg-foreground origin-center transition-transform duration-200', open && '-rotate-45 -translate-y-[6.5px]')} />
-        </button>
-      </nav>
-
-      {/* Mobile drawer */}
-      <div className={cn('md:hidden overflow-hidden transition-[max-height] duration-300 ease-in-out', open ? 'max-h-96' : 'max-h-0')}>
-        <div className="border-t border-border bg-background px-6 pb-6 pt-4">
-          {links.map(({ href, label }) => (
-            <Link
-              key={href}
-              href={href}
-              onClick={() => setOpen(false)}
-              className={cn(
-                'flex cursor-pointer items-center border-b border-border py-3.5 font-mono text-xs uppercase tracking-widest transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary last:border-0',
-                pathname.startsWith(href) ? 'text-foreground font-semibold' : 'text-muted-foreground hover:text-foreground'
-              )}
-            >
-              {label}
-            </Link>
-          ))}
-          <Link
-            href="/work-with-me"
+            href="/"
             onClick={() => setOpen(false)}
-            className="mt-4 flex cursor-pointer items-center justify-center border border-primary/50 px-4 py-3 font-mono text-xs uppercase tracking-widest text-primary transition-colors duration-200 hover:border-primary hover:bg-primary hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className={cn(
+              'tone-panel -rotate-[1.4deg] shrink-0 cursor-pointer whitespace-nowrap border-[3px] border-current px-3.5 py-1.5 text-lg font-black uppercase leading-none tracking-tighter shadow-hard transition-[rotate] duration-200 hover:rotate-0 sm:text-xl',
+              focusRing,
+            )}
           >
-            Work With Me
+            Neel Banker
           </Link>
-        </div>
+
+          {/* Desktop */}
+          <div className="hidden items-center gap-2.5 lg:flex">
+            {links.map(({ href, label, tone, tilt }) => (
+              <Link
+                key={href}
+                href={href}
+                aria-current={isActive(href) ? 'page' : undefined}
+                className={cn(
+                  'ticket cursor-pointer py-2 transition-[rotate,background-color,color] duration-200 hover:rotate-0',
+                  isActive(href) ? 'tone-ink rotate-0' : cn(tone, tilt),
+                  focusRing,
+                )}
+              >
+                {label}
+              </Link>
+            ))}
+            <Link
+              href="/work-with-me"
+              aria-current={isActive('/work-with-me') ? 'page' : undefined}
+              className={cn(
+                'ticket ml-1.5 cursor-pointer py-2.5 shadow-hard transition-[rotate,background-color,color] duration-200 hover:rotate-0',
+                isActive('/work-with-me') ? 'tone-ink' : 'tone-terra rotate-[2.5deg]',
+                focusRing,
+              )}
+            >
+              Work with me ✦
+            </Link>
+            <ThemeToggle className="ml-2" />
+          </div>
+
+          {/* Mobile */}
+          <div className="flex items-center gap-3 lg:hidden">
+            <ThemeToggle />
+            <button
+              type="button"
+              onClick={() => setOpen((v) => !v)}
+              aria-expanded={open}
+              aria-controls="mobile-menu"
+              className={cn(
+                'ticket tone-butter min-h-10 cursor-pointer shadow-hard transition-[rotate] duration-200',
+                open ? 'rotate-0' : 'rotate-2',
+                focusRing,
+              )}
+            >
+              {open ? 'Close ✕' : 'Menu'}
+            </button>
+          </div>
+        </nav>
       </div>
+
+      {open && (
+        <div id="mobile-menu" className="page-wrap animate-fade-in pt-3 lg:hidden">
+          <div className="tone-panel max-h-[calc(100dvh-6rem)] overflow-y-auto border-[3px] border-current p-4 shadow-hard-lg">
+            {links.map(({ href, label }) => (
+              <Link
+                key={href}
+                href={href}
+                onClick={() => setOpen(false)}
+                aria-current={isActive(href) ? 'page' : undefined}
+                className={cn(
+                  'flex min-h-12 cursor-pointer items-center justify-between border-b-2 border-dashed border-current/25 text-sm font-black uppercase tracking-tight transition-colors duration-200 last:border-0 hover:text-dm-accent-ink',
+                  focusRing,
+                )}
+              >
+                {label}
+                {isActive(href) && <span className="hand text-xl font-normal normal-case text-dm-accent-ink">you are here</span>}
+              </Link>
+            ))}
+            <Link
+              href="/work-with-me"
+              onClick={() => setOpen(false)}
+              className={cn('ticket tone-terra mt-4 flex min-h-12 w-full cursor-pointer justify-center text-xs', focusRing)}
+            >
+              Work with me ✦
+            </Link>
+          </div>
+        </div>
+      )}
     </header>
   )
 }
