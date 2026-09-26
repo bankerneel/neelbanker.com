@@ -14,8 +14,10 @@ describe('pillars', () => {
     expect(getPillarBySlug('unknown')).toBeUndefined()
   })
 
-  it('returns tailwind colour class for valid pillar', () => {
-    const colour = getPillarColour('ai')
-    expect(colour).toContain('emerald')
+  it('maps each pillar to its Dream Bazaar accent', () => {
+    expect(getPillarColour('blockchain')).toBe('sage')
+    expect(getPillarColour('ai')).toBe('sky')
+    expect(getPillarColour('leadership')).toBe('rose')
+    expect(getPillarBySlug('ai')?.toneClass).toBe('tone-sky')
   })
 })
