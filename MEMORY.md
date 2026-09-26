@@ -8,9 +8,11 @@
 ## Product / Brand
 
 - Personal brand site for Neel Banker.
-- Dark editorial visual language is intentional.
-- Syne and JetBrains Mono are part of the site voice and should stay coherent across new UI.
-- The site is now aiming for “clean editorial with motion depth”, not “dense Web3 landing page”.
+- **2026-09: the whole site is being redesigned in Dream Bazaar (Direction P)** — muted pastel collage on a
+  dream-sky gradient, light + dark. The old dark + lime editorial look and Syne/JetBrains Mono are retired;
+  pages migrate one by one (ROADMAP §0). Rules live in AGENTS.md "Design".
+- Neel's wife co-decides design direction. Muted, harmonious colour is a hard preference: a neon
+  maximalism prototype was rejected as garish ("dhinchak") and the same layout in muted tones was approved.
 
 ## Technical
 
@@ -49,9 +51,13 @@
 - Hero architecture (perf-critical, don't collapse back): `hero-client.tsx` is a STATIC server component (no client JS) rendering the fold with CSS animations; `hero-constellation.tsx` is the CSS-only desktop background (12 curated nodes from `hero-logos.tsx`); `hero-constellation-lazy.tsx` gates it behind `matchMedia('(min-width:1024px)')` + `next/dynamic ssr:false` so it never loads on mobile and never blocks first paint. Keep the hero fold framer-motion-free and keep the constellation lazy/desktop-only.
 - `/design-lab` holds 17 redesign prototypes (A–Q) and is kept **on purpose** as shareable reference work — Neel sends the link to people who ask him to build their site. Do not delete it, do not link it from site nav, and do not add it to `sitemap.ts`. It is `noindex` via the lab layout metadata; deliberately NOT disallowed in `robots.ts`, because blocking crawl would stop crawlers from ever seeing the `noindex`.
 - **P · Dream Bazaar is the selected redesign direction** (Maximalism × Dream Collage — overlapping scraps, polaroids, pattern swatches on a dream sky, no grid). Marked `selected: true` in `app/design-lab/_content.ts`; the index page renders a badge from that flag.
-- Design-lab conventions: all prototypes share content from `_content.ts`; palettes live in CSS custom properties in `app/design-lab/lab.css` so light/dark is one class swap; `_components/theme-shell.tsx` owns toggle state for O/P/Q. Prototype fonts (Archivo, Instrument Serif, Playfair, Caveat) are loaded in the lab layout only, which keeps them out of the main site bundle — verified.
-- CSS gotcha learned in the lab: `clip-path` (the `.torn` edges) clips borders AND `box-shadow`. Torn panels must use `filter: drop-shadow(...)`, which follows the clipped silhouette. Related: a `mix-blend-mode` layer needs `isolation: isolate` on its parent or it blends against the near-black `<body>` from `globals.css`.
-- Homepage First Load JS is ~234 KB (down from ~292 KB) after removing framer-motion; the framework (React 19 + Next) is the irreducible bulk. Fonts are a single Syne variable file + JetBrains (~65 KB) — trimming declared weights does NOT reduce files.
+- Design-lab conventions: all prototypes share content from `_content.ts`; palettes live in CSS custom properties in `app/design-lab/lab.css` so light/dark is one class swap; `_components/theme-shell.tsx` owns toggle state for O/P/Q. The lab is a **frozen reference**: since Archivo + Caveat moved to the root layout, the lab layout loads only the fonts the live site no longer has (Syne, JetBrains Mono, Instrument Serif, Playfair) so prototypes that inherited Syne/JetBrains still render as built. `--font-mono` falls back through `var(--font-jetbrains, ui-monospace)` for this reason. Don't restyle `lab.css` to match the live system.
+- CSS gotcha learned in the lab: `clip-path` (the `.torn` edges) clips borders AND `box-shadow`. The live site draws torn shadows as a **separate clipped layer behind the paper** (`components/bazaar/scrap.tsx`) instead of `filter: drop-shadow` — no filter layer on a 6000px-tall article sheet, and it works with any content height. Percentage clip-path jags scale with height, so tall content uses `.torn-sheet` (fixed 14px tear). Related: a `mix-blend-mode` layer needs `isolation: isolate` on its parent.
+- Homepage First Load JS is ~234 KB (down from ~292 KB) after removing framer-motion; the framework (React 19 + Next) is the irreducible bulk. Measure cold loads (first page after server start) — second-page numbers undercount shared cached chunks.
+- Fonts (2026-09-27): Archivo variable 34.9 KB + Caveat **one static weight (500)** 51.0 KB = 85.9 KB, vs 65.9 KB for the old Syne + JetBrains pair. Caveat's variable file is 74.6 KB — don't switch back to it for a few handwritten words.
+- Theme mechanism: inline script in `app/layout.tsx` sets `data-theme` on `<html>` before paint from `localStorage['nb-theme']` or the OS. Key is namespaced because a generic `theme` key collided with another localhost app during testing. `ThemeToggle` reads the attribute via `useSyncExternalStore` and swaps its icon in CSS, so SSR markup never mismatches.
+- Palette contrast was measured and the lab values were corrected for the live site: terra as text is 2.7:1 (so `--dm-accent-ink` #9a4a2c / #e59a74 is the only coloured text); dark-mode sky/lilac/sage/rose were lifted so dark on-accent text clears 4.5:1; light terra nudged to #d68f73 (4.86:1); dark panel lifted #241d2b → #342b3f because it matched the sky and hid the torn edges.
+- Articles render MDX with `remark-gfm`. Before 2026-09-27 the cross-chain article's comparison table rendered on production as one paragraph of pipe characters.
 
 ## Interaction Preferences Learned
 

@@ -1,13 +1,22 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { Archivo, Caveat, Instrument_Serif, Playfair_Display } from 'next/font/google'
+import { Instrument_Serif, JetBrains_Mono, Playfair_Display, Syne } from 'next/font/google'
 import { DIRECTIONS } from '@/app/design-lab/_content'
 import './lab.css'
 
-const archivo = Archivo({
-  variable: '--font-archivo',
+// Archivo (--font-archivo) and Caveat (--font-caveat) come from the root
+// layout, which loads them site-wide for the live Dream Bazaar design.
+// Syne + JetBrains Mono were the live fonts when these prototypes were built;
+// they are loaded here, lab-only, so the frozen references render unchanged.
+const syne = Syne({
+  variable: '--font-syne',
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '900'],
+})
+
+const jetbrainsMono = JetBrains_Mono({
+  variable: '--font-jetbrains',
+  subsets: ['latin'],
+  weight: ['400', '500'],
 })
 
 const instrument = Instrument_Serif({
@@ -24,12 +33,6 @@ const playfair = Playfair_Display({
   style: ['normal', 'italic'],
 })
 
-const caveat = Caveat({
-  variable: '--font-caveat',
-  subsets: ['latin'],
-  weight: ['400', '600'],
-})
-
 export const metadata: Metadata = {
   title: 'Design Lab',
   description: 'Internal redesign prototypes — not part of the live site.',
@@ -40,7 +43,7 @@ export default function DesignLabLayout({ children }: { children: React.ReactNod
   return (
     <div
       data-design-lab
-      className={`${archivo.variable} ${instrument.variable} ${playfair.variable} ${caveat.variable}`}
+      className={`${syne.variable} ${jetbrainsMono.variable} ${instrument.variable} ${playfair.variable} font-[family-name:var(--font-syne)]`}
     >
       {children}
       <LabSwitcher />

@@ -1,6 +1,6 @@
 # States
 
-Last updated: 2026-07-12
+Last updated: 2026-09-27
 
 ## File Purpose
 
@@ -15,6 +15,15 @@ Core routes now feel substantially more consistent, lighter, and more editorial 
 
 ## Completed
 
+- **Dream Bazaar redesign — phase 1 (on `dev`, not in production yet):**
+  - Foundation: `--dm-*` palette with light + dark values (contrast measured), `tone-*` surface classes, `.ticket`, `.torn` / `.torn-sheet`, `page-wrap`, `.prose-bazaar`, fixed dream-sky layer; shadcn tokens mapped onto the palette so un-migrated pages stay coherent.
+  - Fonts: Archivo (variable) + Caveat (static 500) site-wide; Syne + JetBrains Mono now load only inside `/design-lab`.
+  - Light/dark: follows the OS, nav toggle overrides + persists; set before paint (no flash).
+  - New `components/nav.tsx` (ticket chips, mobile menu below `lg`), `components/footer.tsx`, `components/bazaar/scrap.tsx`, `components/theme-toggle.tsx`, `components/mdx-components.tsx`; `PillarBadge` is a ticket chip.
+  - `/writing/[slug]` rebuilt: collage header (kicker, outlined title, standfirst scrap, reading-time polaroid, tickets), straight torn reading sheet with tape, GFM tables in a scroll box, keep-reading cards, arch newsletter CTA.
+  - Fixed on the way: markdown tables never rendered (added `remark-gfm`); nav chip row overflowed at 800px (switch moved to `lg`).
+  - Verified in the browser at 375px, 800px, 1024px, 1280px and a 2046px ultrawide, light and dark; no horizontal overflow; lint, typecheck and prod build pass. Perf numbers in ROADMAP §0.
+  - AGENTS.md design rules rewritten for Dream Bazaar (accessibility rules kept); CLAUDE.md updated.
 - Added `/design-lab` — 17 working redesign prototypes (A–Q), all rendering the same real content from `app/design-lab/_content.ts` so directions can be compared directly:
   - A Retro Duotone · B Maximalist Editorial · C Editorial Dark · D Editorial Duotone · E Bento · F Luxury · G Cybercore · H Scrapbook · I Surrealism · J Dream Collage · K Cut-Paper · L Desk of Dreams · M/N Maximalism light+dark · O Torn Maximalism · **P Dream Bazaar (selected)** · Q Pattern Dreamscape.
   - **P · Dream Bazaar is the chosen direction** for the eventual redesign (Maximalism × Dream Collage: overlapping scraps, polaroids and swatches on a dream sky, no grid).

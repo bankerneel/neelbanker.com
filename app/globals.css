@@ -3,7 +3,9 @@
 @import "shadcn/tailwind.css";
 @plugin "@tailwindcss/typography";
 
-@custom-variant dark (&:is(.dark *));
+/* Dark mode is driven by data-theme on <html> (set before paint by the inline
+   script in app/layout.tsx), so `dark:` utilities follow the visitor's choice. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
 /* ── Custom breakpoints ──────────────────────────── */
 @theme {
@@ -11,11 +13,33 @@
 }
 
 @theme inline {
+  /* Dream Bazaar palette — every colour reads from a --dm-* custom property,
+     so light/dark is a single attribute swap on <html>. */
+  --color-dm-panel: var(--dm-panel);
+  --color-dm-ink: var(--dm-ink);
+  --color-dm-ink-soft: var(--dm-ink-soft);
+  --color-dm-on-accent: var(--dm-on-accent);
+  --color-dm-accent-ink: var(--dm-accent-ink);
+  --color-dm-rose: var(--dm-rose);
+  --color-dm-butter: var(--dm-butter);
+  --color-dm-sky: var(--dm-sky);
+  --color-dm-lilac: var(--dm-lilac);
+  --color-dm-sage: var(--dm-sage);
+  --color-dm-terra: var(--dm-terra);
+  --color-dm-shadow: var(--dm-shadow);
+
+  --shadow-hard: 5px 5px 0 var(--dm-shadow);
+  --shadow-hard-lg: 9px 9px 0 var(--dm-shadow);
+
+  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-hand: var(--font-caveat), cursive;
+  /* --font-jetbrains is only defined inside /design-lab (frozen prototypes) */
+  --font-mono: var(--font-jetbrains, ui-monospace), SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+
+  /* shadcn/ui tokens, mapped onto the palette so ui/ primitives inherit it */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-syne);
-  --font-mono: var(--font-jetbrains);
-  --font-heading: var(--font-syne);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -54,58 +78,361 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* ── Dream Bazaar tokens ─────────────────────────────
+   Contrast rules (measured, WCAG 2.x):
+   - ink on panel 12.2:1, on the dream sky ≥ 7.5:1
+   - on-accent on every accent fill ≥ 4.8:1 in both modes
+   - accent-ink is the ONLY coloured text colour (5.96:1 on panel).
+     The accent fills (terra, rose…) fail as text — never use them for type. */
 :root {
-  /* Proof of Work — editorial dark design system */
-  --background: hsl(0 0% 3.5%);
-  --foreground: hsl(36 15% 91%);
-  --card: hsl(0 0% 6%);
-  --card-foreground: hsl(36 15% 91%);
-  --popover: hsl(0 0% 3.5%);
-  --popover-foreground: hsl(36 15% 91%);
-  --primary: hsl(72 100% 49%);
-  --primary-foreground: hsl(0 0% 3.5%);
-  --secondary: hsl(0 0% 9%);
-  --secondary-foreground: hsl(36 15% 91%);
-  --muted: hsl(0 0% 7%);
-  --muted-foreground: hsl(0 0% 54%);
-  --accent: hsl(72 100% 49%);
-  --accent-foreground: hsl(0 0% 3.5%);
-  --destructive: hsl(0 84% 60%);
-  --destructive-foreground: hsl(0 0% 100%);
-  --border: hsl(0 0% 12%);
-  --input: hsl(0 0% 12%);
-  --ring: hsl(72 100% 49%);
-  --radius: 0.125rem;
-  --chart-1: hsl(72 100% 49%);
-  --chart-2: hsl(190 100% 52%);
-  --chart-3: hsl(25 100% 60%);
-  --chart-4: hsl(0 0% 46%);
-  --chart-5: hsl(0 0% 9%);
-  --sidebar: hsl(0 0% 6%);
-  --sidebar-foreground: hsl(36 15% 91%);
-  --sidebar-primary: hsl(72 100% 49%);
-  --sidebar-primary-foreground: hsl(0 0% 3.5%);
-  --sidebar-accent: hsl(0 0% 9%);
-  --sidebar-accent-foreground: hsl(36 15% 91%);
-  --sidebar-border: hsl(0 0% 12%);
-  --sidebar-ring: hsl(72 100% 49%);
+  --dm-dream:
+    radial-gradient(70% 55% at 18% 12%, #ffd9a0 0%, transparent 60%),
+    radial-gradient(60% 50% at 82% 8%, #ffb3c7 0%, transparent 58%),
+    radial-gradient(85% 70% at 50% 100%, #b9c6ff 0%, transparent 62%),
+    linear-gradient(180deg, #fbe7d2 0%, #ecdcf5 52%, #d7dfff 100%);
+  --dm-ground: #f1e2ec;
+  --dm-panel: #fffaf2;
+  --dm-ink: #3a2f3d;
+  --dm-ink-soft: #5f4f62;
+  --dm-on-accent: #3a2f3d;
+  --dm-accent-ink: #9a4a2c;
+  --dm-rose: #e0a08f;
+  --dm-butter: #f2dca8;
+  --dm-sky: #a9c2dc;
+  --dm-lilac: #c3aad0;
+  --dm-sage: #a8bd9e;
+  --dm-terra: #d68f73;
+  --dm-shadow: rgba(58, 47, 61, 0.22);
+  --dm-longshadow: rgba(58, 47, 61, 0.16);
+  --dm-marker: #f2dca8;
+  --dm-code: #3a2f3d;
+  --dm-code-fg: #fbefe0;
+  --dm-danger: #a3261d;
+  color-scheme: light;
 
-  /* Pillar accent colours */
-  --pillar-blockchain: hsl(72 100% 49%);
-  --pillar-ai: hsl(190 100% 52%);
-  --pillar-leadership: hsl(25 100% 60%);
+  --background: var(--dm-panel);
+  --foreground: var(--dm-ink);
+  --card: var(--dm-panel);
+  --card-foreground: var(--dm-ink);
+  --popover: var(--dm-panel);
+  --popover-foreground: var(--dm-ink);
+  --primary: var(--dm-accent-ink);
+  --primary-foreground: var(--dm-panel);
+  --secondary: var(--dm-butter);
+  --secondary-foreground: var(--dm-on-accent);
+  --muted: color-mix(in oklab, var(--dm-ink) 7%, var(--dm-panel));
+  --muted-foreground: var(--dm-ink-soft);
+  --accent: var(--dm-butter);
+  --accent-foreground: var(--dm-on-accent);
+  --destructive: var(--dm-danger);
+  --destructive-foreground: var(--dm-panel);
+  --border: color-mix(in oklab, var(--dm-ink) 22%, transparent);
+  --input: color-mix(in oklab, var(--dm-ink) 40%, transparent);
+  --ring: var(--dm-accent-ink);
+  --radius: 0.125rem;
+  --chart-1: var(--dm-sage);
+  --chart-2: var(--dm-sky);
+  --chart-3: var(--dm-rose);
+  --chart-4: var(--dm-lilac);
+  --chart-5: var(--dm-butter);
+  --sidebar: var(--dm-panel);
+  --sidebar-foreground: var(--dm-ink);
+  --sidebar-primary: var(--dm-accent-ink);
+  --sidebar-primary-foreground: var(--dm-panel);
+  --sidebar-accent: var(--dm-butter);
+  --sidebar-accent-foreground: var(--dm-on-accent);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--dm-accent-ink);
+
+  /* Pillars: blockchain = sage, ai = sky, leadership = rose */
+  --pillar-blockchain: var(--dm-sage);
+  --pillar-ai: var(--dm-sky);
+  --pillar-leadership: var(--dm-rose);
+}
+
+/* Same hue families, deepened. Accents are lifted just enough that dark
+   on-accent text clears 4.5:1 on every fill. */
+:root[data-theme="dark"] {
+  --dm-dream:
+    radial-gradient(70% 55% at 18% 12%, #4a2f3f 0%, transparent 60%),
+    radial-gradient(60% 50% at 82% 8%, #3b2a4d 0%, transparent 58%),
+    radial-gradient(85% 70% at 50% 100%, #24304d 0%, transparent 62%),
+    linear-gradient(180deg, #2a1f2b 0%, #241d33 52%, #1b1b2e 100%);
+  --dm-ground: #221c2c;
+  --dm-panel: #342b3f; /* lifted from the lab's #241d2b, which matched the sky and hid the torn edges */
+  --dm-ink: #f2e9dc;
+  --dm-ink-soft: #c9bcc4;
+  --dm-on-accent: #1a141f;
+  --dm-accent-ink: #e59a74;
+  --dm-rose: #bd786b;
+  --dm-butter: #c9a24a;
+  --dm-sky: #5a8a9c;
+  --dm-lilac: #9a7a9f;
+  --dm-sage: #7d9064;
+  --dm-terra: #c07048;
+  --dm-shadow: rgba(0, 0, 0, 0.5);
+  --dm-longshadow: rgba(0, 0, 0, 0.45);
+  --dm-marker: rgba(192, 112, 72, 0.42);
+  --dm-code: #16111b;
+  --dm-code-fg: #f2e9dc;
+  --dm-danger: #f09a8f;
+  color-scheme: dark;
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
-  body {
-    @apply bg-background text-foreground;
-  }
   html {
     @apply font-sans;
+    background-color: var(--dm-ground);
   }
+  body {
+    color: var(--dm-ink);
+    background: transparent;
+  }
+  /* The dream sky sits on its own fixed layer: it stays put while the page
+     scrolls, and never stretches across a long article. */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100lvh;
+    z-index: -1;
+    pointer-events: none;
+    background: var(--dm-dream);
+  }
+}
+
+/* ── Dream Bazaar primitives ─────────────────────────
+   Filled surfaces use a tone-* class, which pairs the fill with the text
+   colour that passes contrast on it. Borders use currentColor, so they
+   always match the text of the surface they sit on. */
+@layer components {
+  .tone-panel { background-color: var(--dm-panel); color: var(--dm-ink); }
+  .tone-ink { background-color: var(--dm-ink); color: var(--dm-panel); }
+  .tone-rose { background-color: var(--dm-rose); color: var(--dm-on-accent); }
+  .tone-butter { background-color: var(--dm-butter); color: var(--dm-on-accent); }
+  .tone-sky { background-color: var(--dm-sky); color: var(--dm-on-accent); }
+  .tone-lilac { background-color: var(--dm-lilac); color: var(--dm-on-accent); }
+  .tone-sage { background-color: var(--dm-sage); color: var(--dm-on-accent); }
+  .tone-terra { background-color: var(--dm-terra); color: var(--dm-on-accent); }
+
+  /* ticket-stub chip — tilt it with rotate-* utilities */
+  .ticket {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    border: 2px solid currentColor;
+    padding: 0.45rem 0.75rem;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .hand {
+    font-family: var(--font-caveat), cursive;
+    font-weight: 500;
+  }
+
+  /* Outlined word. The stroke must be an explicit colour: currentColor would
+     resolve to transparent, since the fill is transparent. */
+  .max-outline {
+    -webkit-text-stroke: 2px var(--stroke, var(--dm-ink));
+    color: transparent;
+  }
+
+  /* Torn paper edge for small scraps (edges scale with height). */
+  .torn {
+    clip-path: polygon(
+      0% 3%, 4% 0%, 11% 2%, 19% 0%, 27% 3%, 36% 1%, 45% 3%, 54% 0%, 63% 2%,
+      72% 0%, 81% 3%, 90% 1%, 97% 3%, 100% 1%,
+      100% 97%, 95% 100%, 87% 97%, 78% 100%, 69% 98%, 60% 100%, 51% 97%,
+      42% 100%, 33% 98%, 24% 100%, 15% 97%, 7% 100%, 2% 98%, 0% 100%
+    );
+  }
+  /* Torn edge for tall sheets: fixed 14px tear, so a long article is not
+     clipped by a percentage-sized jag. */
+  .torn-sheet {
+    clip-path: polygon(
+      0% 10px, 4% 0px, 11% 7px, 19% 1px, 27% 11px, 36% 3px, 45% 10px, 54% 0px,
+      63% 7px, 72% 1px, 81% 11px, 90% 4px, 97% 10px, 100% 3px,
+      100% calc(100% - 10px), 95% 100%, 87% calc(100% - 9px), 78% 100%,
+      69% calc(100% - 6px), 60% 100%, 51% calc(100% - 11px), 42% 100%,
+      33% calc(100% - 6px), 24% 100%, 15% calc(100% - 10px), 7% 100%,
+      2% calc(100% - 5px), 0% 100%
+    );
+  }
+
+  .tape-strip {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    z-index: 2;
+    width: 112px;
+    height: 30px;
+    translate: -50% 0;
+    rotate: -3deg;
+    background: color-mix(in oklab, var(--dm-butter) 78%, transparent);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+  }
+
+  .surreal-arch {
+    border-radius: 999px 999px 18px 18px;
+  }
+  .dm-longshadow {
+    box-shadow: 40px 40px 0 var(--dm-longshadow);
+  }
+
+  .pat-stripes {
+    background-image: repeating-linear-gradient(
+      45deg,
+      currentColor 0px,
+      currentColor 6px,
+      transparent 6px,
+      transparent 14px
+    );
+  }
+  .pat-dots {
+    background-image: radial-gradient(currentColor 2.2px, transparent 2.4px);
+    background-size: 14px 14px;
+  }
+  .pat-zig {
+    background-image:
+      linear-gradient(135deg, currentColor 25%, transparent 25%),
+      linear-gradient(225deg, currentColor 25%, transparent 25%);
+    background-size: 18px 18px;
+  }
+
+  /* highlighter swipe behind a heading's text */
+  .marker {
+    background-image: linear-gradient(
+      transparent 58%,
+      var(--dm-marker) 58%,
+      var(--dm-marker) 92%,
+      transparent 92%
+    );
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    padding-inline: 0.12em;
+  }
+}
+
+@utility page-wrap {
+  width: 100%;
+  max-width: 1400px;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+  @media (width >= 40rem) {
+    padding-inline: 2rem;
+  }
+  @media (width >= 64rem) {
+    padding-inline: 3rem;
+  }
+}
+
+/* ── Long-form reading (MDX) ─────────────────────────
+   Unlayered on purpose: it must beat @tailwindcss/typography's defaults.
+   It only targets descendants, so utilities on the .prose element still win. */
+.prose-bazaar {
+  --tw-prose-body: var(--dm-ink);
+  --tw-prose-headings: var(--dm-ink);
+  --tw-prose-lead: var(--dm-ink-soft);
+  --tw-prose-links: var(--dm-ink);
+  --tw-prose-bold: var(--dm-ink);
+  --tw-prose-counters: var(--dm-accent-ink);
+  --tw-prose-bullets: var(--dm-accent-ink);
+  --tw-prose-hr: color-mix(in oklab, var(--dm-ink) 22%, transparent);
+  --tw-prose-quotes: var(--dm-ink);
+  --tw-prose-quote-borders: var(--dm-terra);
+  --tw-prose-captions: var(--dm-ink-soft);
+  --tw-prose-code: var(--dm-ink);
+  --tw-prose-pre-code: var(--dm-code-fg);
+  --tw-prose-pre-bg: var(--dm-code);
+  --tw-prose-th-borders: color-mix(in oklab, var(--dm-ink) 40%, transparent);
+  --tw-prose-td-borders: color-mix(in oklab, var(--dm-ink) 16%, transparent);
+  line-height: 1.8;
+}
+.prose-bazaar h2 {
+  margin-top: 2.4em;
+  font-size: clamp(1.45rem, 1.1rem + 1.2vw, 1.85rem);
+  font-weight: 900;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+.prose-bazaar h3 {
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+.prose-bazaar > p:first-of-type::first-letter {
+  float: left;
+  padding: 0.07em 0.1em 0 0;
+  font-size: 3.7em;
+  font-weight: 900;
+  line-height: 0.8;
+  color: var(--dm-accent-ink);
+}
+.prose-bazaar a {
+  font-weight: 600;
+  text-decoration-line: underline;
+  text-decoration-color: var(--dm-terra);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.22em;
+  transition: color 0.2s;
+}
+.prose-bazaar a:hover {
+  color: var(--dm-accent-ink);
+}
+.prose-bazaar :not(pre) > code {
+  border-radius: 3px;
+  background: color-mix(in oklab, var(--dm-ink) 9%, transparent);
+  padding: 0.12em 0.35em;
+  font-size: 0.86em;
+  font-weight: 600;
+}
+.prose-bazaar code::before,
+.prose-bazaar code::after {
+  content: none;
+}
+.prose-bazaar pre {
+  border-radius: 0;
+  box-shadow: 6px 6px 0 var(--dm-shadow);
+  font-size: 0.84rem;
+  line-height: 1.7;
+}
+.prose-bazaar .table-scroll {
+  margin-block: 2em;
+  overflow-x: auto;
+}
+.prose-bazaar .table-scroll table {
+  margin-block: 0;
+  min-width: 32rem;
+}
+.prose-bazaar th {
+  background: var(--dm-butter);
+  color: var(--dm-on-accent);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.prose-bazaar thead th {
+  padding: 0.7em 0.8em;
+}
+.prose-bazaar blockquote {
+  border-left-width: 4px;
+  background: color-mix(in oklab, var(--dm-butter) 30%, transparent);
+  padding: 0.6em 1.1em;
+  font-style: normal;
+  quotes: none;
+}
+.prose-bazaar hr {
+  border-top: 2px dashed var(--tw-prose-hr);
 }
 
 @keyframes marquee {
@@ -133,7 +460,7 @@
     animation: marquee 40s linear infinite;
   }
   .text-stroke {
-    -webkit-text-stroke: 1.5px hsl(72 100% 49%);
+    -webkit-text-stroke: 1.5px var(--primary);
     color: transparent;
   }
 }
@@ -285,6 +612,10 @@
   body > header,
   footer,
   .no-print {
+    display: none !important;
+  }
+  /* the fixed dream-sky layer would otherwise print behind every page */
+  body::before {
     display: none !important;
   }
   html,

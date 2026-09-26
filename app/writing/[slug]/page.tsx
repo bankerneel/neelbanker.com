@@ -1,12 +1,17 @@
 import type { Metadata } from 'next'
-import type { Article } from '@/types/content'
+import type { Article, ArticleMeta } from '@/types/content'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { MDXRemote } from 'next-mdx-remote/rsc'
+import remarkGfm from 'remark-gfm'
 import { getAllArticleMeta, getArticleBySlug } from '@/lib/mdx'
+import { getPillarBySlug } from '@/lib/pillars'
 import { parseDate } from '@/lib/utils-date'
+import { cn } from '@/lib/utils'
 import { PillarBadge } from '@/components/pillar-badge'
 import { FadeUp } from '@/components/scroll-reveal'
+import { Scrap } from '@/components/bazaar/scrap'
+import { articleMdxComponents } from '@/components/mdx-components'
 
 export async function generateStaticParams() {
   return getAllArticleMeta().map((a) => ({ slug: a.slug }))
@@ -20,6 +25,22 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return { title: article.title, description: article.excerpt }
 }
 
+/** The title's last word gets the outlined treatment — two words if the last is tiny ("You", "Them"). */
+function splitTitle(title: string) {
+  const words = title.split(' ')
+  const take = words.length > 2 && words[words.length - 1].length <= 4 ? 2 : 1
+  return { lead: words.slice(0, -take).join(' '), tail: words.slice(-take).join(' ') }
+}
+
+function readingNote(minutes: number) {
+  if (minutes <= 5) return 'a quick one'
+  if (minutes <= 10) return 'about one chai long'
+  return 'settle in for this one'
+}
+
+const focusRing =
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-dm-panel'
+
 export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   let article: Article | null = null
@@ -29,92 +50,176 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
   const currentIndex = allArticles.findIndex((entry) => entry.slug === article.slug)
   const nextArticle = currentIndex > 0 ? allArticles[currentIndex - 1] : null
   const previousArticle = currentIndex >= 0 && currentIndex < allArticles.length - 1 ? allArticles[currentIndex + 1] : null
+  const neighbours = [
+    nextArticle && { label: 'Newer ↑', tone: 'tone-butter', meta: nextArticle },
+    previousArticle && { label: 'Earlier ↓', tone: 'tone-rose', meta: previousArticle },
+  ].filter(Boolean) as { label: string; tone: string; meta: ArticleMeta }[]
+
+  const pillar = getPillarBySlug(article.pillar)
+  const { lead, tail } = splitTitle(article.title)
+  const month = new Date(article.date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
 
   return (
-    <article className="py-14 sm:py-18">
-      <div className="mx-auto max-w-5xl xl:max-w-6xl 2xl:max-w-7xl 3xl:max-w-[1440px] px-6 sm:px-12">
-        <FadeUp>
-          <div className="mb-8 flex flex-wrap items-center gap-3">
-            <Link href="/writing" className="font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground transition-colors hover:text-primary">
-              ← All Articles
-            </Link>
-            <span className="text-muted-foreground text-xs">/</span>
-            <Link href="/" className="font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground transition-colors hover:text-primary">
-              Home
-            </Link>
-          </div>
-        </FadeUp>
+    <article>
+      {/* ── The wall: title, standfirst scrap, polaroid, tickets ─────── */}
+      <header className="page-wrap relative pt-10 sm:pt-14">
+        {/* dream furniture — decorative only */}
+        <div
+          aria-hidden="true"
+          className="surreal-arch dm-longshadow pointer-events-none absolute right-[5%] top-4 hidden h-72 w-44 bg-dm-lilac lg:block"
+        />
+        <div
+          aria-hidden="true"
+          className="dm-longshadow pointer-events-none absolute right-[3%] top-[24rem] hidden size-24 rounded-full bg-dm-butter lg:block"
+        />
 
-        <FadeUp delay={0.05}>
-          <div className="mb-5 flex flex-wrap items-center gap-3">
-            <PillarBadge pillar={article.pillar} />
-            <span className="font-mono text-xs text-muted-foreground">{parseDate(article.date)}</span>
-            <span className="text-muted-foreground text-xs">·</span>
-            <span className="font-mono text-xs text-muted-foreground">{article.readingTime} min read</span>
-          </div>
-        </FadeUp>
+        <nav aria-label="Breadcrumb" className="relative z-20 flex flex-wrap items-center gap-3">
+          <Link
+            href="/writing"
+            className={cn('ticket tone-panel min-h-10 -rotate-2 cursor-pointer transition-[rotate] duration-200 hover:rotate-0', focusRing)}
+          >
+            ← All writing
+          </Link>
+          <Link
+            href="/"
+            className={cn('ticket tone-panel min-h-10 rotate-[1.5deg] cursor-pointer transition-[rotate] duration-200 hover:rotate-0', focusRing)}
+          >
+            Home
+          </Link>
+        </nav>
 
-        <FadeUp delay={0.1}>
-          <div className="mb-12 border-b border-border pb-8">
-            <h1 className="max-w-[18ch] text-3xl font-bold leading-[1] tracking-tight sm:text-4xl md:text-5xl lg:text-6xl">
-              {article.title}
-            </h1>
+        <p className="hand relative z-20 mt-10 -rotate-2 text-[1.75rem] leading-none text-dm-accent-ink sm:text-[2.1rem]">
+          from the notebook ✦
+        </p>
+        <h1 className="relative z-20 mt-3 max-w-[22ch] text-balance text-[clamp(1.95rem,5.2vw,4.6rem)] font-black uppercase leading-[0.92] tracking-[-0.035em]">
+          {lead}{' '}
+          <span className="max-outline">{tail}</span>
+        </h1>
+
+        <div className="relative z-10 mt-10 flex flex-col gap-10 lg:mt-12 lg:flex-row lg:items-start">
+          <Scrap className="w-full max-w-[560px] -rotate-[1.2deg]" paperClassName="tone-panel px-7 py-9 sm:px-9">
+            <p className="text-[1.06rem] font-medium leading-[1.7]">{article.excerpt}</p>
+            <p className="hand mt-4 text-[1.5rem] leading-none text-dm-accent-ink">— Neel, {month}</p>
+          </Scrap>
+
+          <div className="flex items-start gap-6 lg:-ml-10 lg:mt-12">
+            <div className="relative z-20 w-[148px] shrink-0 rotate-[4deg] bg-dm-panel p-3 pb-4 shadow-hard-lg">
+              <div className={cn('flex h-[104px] flex-col items-center justify-center', pillar?.toneClass ?? 'tone-sage')}>
+                <span className="text-[2.7rem] font-black leading-none">{article.readingTime}</span>
+                <span className="mt-1 text-[10px] font-bold uppercase tracking-[0.2em]">min read</span>
+              </div>
+              <p className="hand mt-2 text-center text-[1.15rem] leading-tight text-dm-ink">{readingNote(article.readingTime)}</p>
+            </div>
+            <div className="flex min-w-0 flex-col items-start gap-3 pt-3">
+              <PillarBadge pillar={article.pillar} className="-rotate-2 whitespace-normal leading-tight" />
+              <span className="ticket tone-panel rotate-2">{parseDate(article.date)}</span>
+            </div>
           </div>
-        </FadeUp>
+
+          <div
+            aria-hidden="true"
+            className={cn(
+              'hidden h-[170px] w-[128px] shrink-0 -rotate-[5deg] border-[3px] border-current shadow-hard lg:-ml-2 lg:mt-24 xl:block',
+              pillar?.toneClass ?? 'tone-sage',
+            )}
+          >
+            <div className="pat-dots h-full w-full opacity-30" />
+          </div>
+        </div>
+      </header>
+
+      {/* ── The reading sheet — straight, so long text stays easy to read ── */}
+      <div className="page-wrap mt-16 sm:mt-24">
+        <Scrap tall tape className="mx-auto max-w-[800px]" paperClassName="tone-panel px-6 pb-14 pt-14 sm:px-14 sm:pb-20 sm:pt-20">
+          <div className="prose prose-lg prose-bazaar max-w-none">
+            <MDXRemote
+              source={article.content}
+              components={articleMdxComponents}
+              options={{ mdxOptions: { remarkPlugins: [remarkGfm] } }}
+            />
+          </div>
+        </Scrap>
       </div>
 
-      <div className="mx-auto max-w-2xl px-6 sm:px-12">
-        <FadeUp delay={0.15}>
-          <div className="prose prose-lg prose-invert prose-zinc prose-headings:font-bold prose-headings:tracking-tight prose-p:leading-[1.85] prose-p:text-foreground/92 prose-li:leading-[1.8] prose-strong:text-foreground prose-a:text-primary prose-a:no-underline hover:prose-a:text-foreground prose-pre:border prose-pre:border-border prose-pre:bg-muted/30 prose-code:text-foreground max-w-none">
-            <MDXRemote source={article.content} />
-          </div>
-        </FadeUp>
-
-        <FadeUp delay={0.2}>
-          <div className="mt-16 border-t border-border pt-10">
-            <div className="mb-10 grid gap-px bg-border sm:grid-cols-2">
-              {nextArticle && (
+      {/* ── Keep reading — neighbours pinned at angles ─────────────────── */}
+      {neighbours.length > 0 && (
+        <section aria-labelledby="keep-reading" className="page-wrap mt-24 sm:mt-28">
+          <FadeUp>
+            <h2 id="keep-reading" className="text-[clamp(2rem,5vw,3.4rem)] font-black uppercase leading-none tracking-tighter">
+              Keep{' '}
+              <span className="hand text-[1.15em] font-normal lowercase text-dm-accent-ink">reading</span>
+            </h2>
+            <div className="mt-10 flex flex-col gap-10 lg:flex-row lg:justify-center">
+              {neighbours.map(({ label, tone, meta }, i) => (
                 <Link
-                  href={`/writing/${nextArticle.slug}`}
-                  className="group bg-background p-5 transition-colors duration-200 hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  key={meta.slug}
+                  href={`/writing/${meta.slug}`}
+                  className={cn(
+                    'group block w-full max-w-[500px] cursor-pointer transition-[rotate] duration-200 hover:rotate-0',
+                    i === 0 ? '-rotate-[1.6deg]' : 'rotate-[1.4deg] lg:-ml-8 lg:mt-12',
+                    focusRing,
+                  )}
                 >
-                  <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">Newer article</p>
-                  <p className="font-semibold leading-[1.6] transition-colors duration-200 group-hover:text-primary">{nextArticle.title}</p>
+                  <Scrap paperClassName={cn(tone, 'px-7 py-9 sm:px-8')}>
+                    <span className="ticket">{label}</span>
+                    <h3 className="mt-4 text-[1.2rem] font-black uppercase leading-[1.1] tracking-tight sm:text-[1.3rem]">
+                      {meta.title}
+                    </h3>
+                    <p className="mt-3 text-sm font-medium leading-[1.65]">{meta.excerpt}</p>
+                    <p className="mt-5 text-[11px] font-bold uppercase tracking-[0.16em]">
+                      {getPillarBySlug(meta.pillar)?.short} · {meta.readingTime} min{' '}
+                      <span aria-hidden="true" className="inline-block transition-[translate] duration-200 group-hover:translate-x-1">
+                        →
+                      </span>
+                    </p>
+                  </Scrap>
                 </Link>
-              )}
-              {previousArticle && (
-                <Link
-                  href={`/writing/${previousArticle.slug}`}
-                  className="group bg-background p-5 transition-colors duration-200 hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                >
-                  <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">Earlier article</p>
-                  <p className="font-semibold leading-[1.6] transition-colors duration-200 group-hover:text-primary">{previousArticle.title}</p>
-                </Link>
-              )}
+              ))}
             </div>
+          </FadeUp>
+        </section>
+      )}
 
-            <p className="mb-3 font-mono text-xs uppercase tracking-[0.22em] text-primary">Free · Weekly</p>
-            <p className="mb-2 text-xl font-bold uppercase tracking-tighter sm:text-2xl">Enjoyed This?</p>
-            <p className="mb-6 max-w-md text-sm leading-relaxed text-muted-foreground">
-              Get The Architect&apos;s Brief — weekly insights on blockchain architecture, AI × Web3, and engineering leadership.
+      {/* ── Newsletter portal ─────────────────────────────────────────── */}
+      <section aria-labelledby="subscribe" className="page-wrap mt-24 sm:mt-28">
+        <FadeUp>
+          <div className="surreal-arch dm-longshadow tone-lilac mx-auto max-w-[880px] px-7 pb-12 pt-24 text-center sm:px-14 sm:pt-20">
+            <p className="text-[11px] font-bold uppercase tracking-[0.24em]">Free · Weekly ✦</p>
+            <h2 id="subscribe" className="mt-4 text-[clamp(1.8rem,4.6vw,3rem)] font-black uppercase leading-[1.02] tracking-tight">
+              Enjoyed{' '}
+              <span className="hand whitespace-nowrap text-[1.15em] font-normal lowercase">this one?</span>
+            </h2>
+            <p className="mx-auto mt-4 max-w-md text-[15px] font-medium leading-[1.7]">
+              Get The Architect&apos;s Brief — weekly insights on blockchain architecture, AI × Web3, and engineering
+              leadership.
             </p>
             <Link
               href="/newsletter"
-              className="inline-flex items-center bg-primary px-5 py-2.5 font-mono text-xs font-bold uppercase tracking-widest text-primary-foreground transition-colors hover:bg-foreground hover:text-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              className={cn(
+                'ticket tone-ink mt-8 min-h-12 cursor-pointer px-6 text-xs shadow-hard transition-[rotate,background-color,color] duration-200 hover:-rotate-2',
+                focusRing,
+              )}
             >
-              Subscribe Free →
+              Subscribe free →
             </Link>
-            <div className="mt-8 flex flex-wrap items-center gap-6 border-t border-border pt-6">
-              <Link href="/writing" className="font-mono text-xs uppercase tracking-widest text-muted-foreground transition-colors hover:text-primary">
-                ← Back to all articles
-              </Link>
-              <Link href="/work-with-me" className="font-mono text-xs uppercase tracking-widest text-muted-foreground transition-colors hover:text-primary">
-                Work with Neel →
-              </Link>
-            </div>
           </div>
         </FadeUp>
-      </div>
+
+        <div className="mt-14 flex flex-wrap justify-center gap-3">
+          <Link
+            href="/writing"
+            className={cn('ticket tone-panel min-h-10 -rotate-1 cursor-pointer transition-[rotate] duration-200 hover:rotate-0', focusRing)}
+          >
+            ← All writing
+          </Link>
+          <Link
+            href="/work-with-me"
+            className={cn('ticket tone-terra min-h-10 rotate-1 cursor-pointer transition-[rotate] duration-200 hover:rotate-0', focusRing)}
+          >
+            Work with Neel →
+          </Link>
+        </div>
+      </section>
     </article>
   )
 }
