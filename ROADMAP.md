@@ -32,8 +32,8 @@ Bazaar** was selected by Neel and his wife.
 | `/writing/[slug]` | ✅ Done — wall header, torn reading sheet, GFM tables, keep-reading, arch CTA |
 | `/writing` | ✅ Done — wall + stat polaroids, pinned latest three, reading lists, ticket filters (URL state kept), `ArticleCard` is now an index card |
 | `/projects` | ✅ Done — signal notes, overlapping through-line scraps, ticket filters, tilted project cards, case-study chip wall. Fixed: 5 projects had no/misspelled category keys and never showed under a filter |
-| `/work-with-me` | **Next.** Services, contact form (shared Zod schema), Cal.com embed (check it in dark mode) |
-| `/about` | Experience, capability map, recognition; still uses `prose-invert` |
+| `/work-with-me` | ✅ Done — service scraps, recruiter arch (+ resume link), Cal embed follows the site theme and palette, contact form restyled. Fixed: form labels weren't linked to inputs; errors now `aria-describedby` |
+| `/about` | **Next.** Experience, capability map, recognition; still uses `prose-invert` |
 | `/resources`, `/newsletter` | Gated download + subscribe forms |
 | `/speaking` | Talks list |
 | `/resume` | The print-to-PDF sheet must keep working (`@media print` isolation; sky layer hidden in print) |

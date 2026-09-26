@@ -1,20 +1,11 @@
 'use client'
 
-import { useEffect, useSyncExternalStore } from 'react'
+import { useEffect } from 'react'
+import { useTheme } from '@/lib/use-theme'
 import { cn } from '@/lib/utils'
 
-// The inline script in app/layout.tsx sets data-theme on <html> before paint.
-// This component only reads that attribute and flips it — it never owns the
-// theme, so server and client markup always match.
-
-function subscribe(onChange: () => void) {
-  const observer = new MutationObserver(onChange)
-  observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
-  return () => observer.disconnect()
-}
-
-const isDarkNow = () => document.documentElement.dataset.theme === 'dark'
-const isDarkOnServer = () => false
+// The inline script in app/layout.tsx owns the initial theme; this button only
+// flips the data-theme attribute and remembers the choice.
 
 function storedTheme() {
   try {
@@ -25,7 +16,7 @@ function storedTheme() {
 }
 
 export function ThemeToggle({ className }: { className?: string }) {
-  const dark = useSyncExternalStore(subscribe, isDarkNow, isDarkOnServer)
+  const dark = useTheme() === 'dark'
 
   // Keep following the OS until the visitor makes an explicit choice.
   useEffect(() => {
@@ -40,7 +31,7 @@ export function ThemeToggle({ className }: { className?: string }) {
   }, [])
 
   function toggle() {
-    const next = isDarkNow() ? 'light' : 'dark'
+    const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'
     document.documentElement.dataset.theme = next
     try {
       localStorage.setItem('nb-theme', next)
