@@ -185,8 +185,10 @@ wrap above-the-fold content in `FadeUp`: it stays invisible until hydration and 
 - The homepage still uses the old hero (`components/hero-client.tsx`, lazy desktop constellation). Keep its
   perf architecture (see `MEMORY.md`) when redesigning it.
 - Favicon source is `public/favicon.svg`; do not reintroduce `app/favicon.ico`.
-- OG images (`app/opengraph-image.tsx`, `app/writing/[slug]/opengraph-image.tsx`) still use the old dark + lime
-  look; they are on the migration list.
+- OG images (`app/opengraph-image.tsx`, `app/writing/[slug]/opengraph-image.tsx`) share `lib/og.tsx`: the light
+  palette mirrored as hex (Satori can't read CSS variables — keep it in sync with `:root`), and Archivo 900 +
+  Caveat fetched from Google Fonts subset to the drawn text, with a default-font fallback if the fetch fails.
+  Avoid glyphs the fonts lack (e.g. ✦) — Satori has no fallback font configured.
 
 ## What NOT to do
 
