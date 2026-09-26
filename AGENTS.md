@@ -38,7 +38,7 @@ Current stack: Next.js 16 App Router · Tailwind v4 · shadcn/ui · MDX · Resen
 - Frontmatter parsed with `gray-matter`; body rendered with `next-mdx-remote/rsc`
 - Pillar slugs: `blockchain` | `ai` | `leadership`
 - ISO 8601 date sort (`a.date < b.date`) is correct — lexicographic = chronological for `YYYY-MM-DD`
-- Current top-level routes are `/`, `/about`, `/newsletter`, `/projects`, `/resources`, `/work-with-me`, and `/writing`
+- Current top-level routes are `/`, `/about`, `/newsletter`, `/projects`, `/resources`, `/resume`, `/speaking`, `/work-with-me`, and `/writing` (plus the unlisted `/design-lab`)
 - Content authoring instructions live in `docs/content-authoring.md` and are indexed from `docs/README.md`
 - Article slugs are filename-based and resolve under `/writing/[slug]`
 - Standalone pages and article pages include local navigation CTAs; preserve that flow when adding new pages
@@ -80,87 +80,109 @@ Current stack: Next.js 16 App Router · Tailwind v4 · shadcn/ui · MDX · Resen
 - Git hooks: Husky pre-commit runs `npm run lint` and `npm run typecheck` before a commit is created
 - Useful local scripts also include `npm run prepare`, `npm run test:watch`, and `npm run test:ui`
 
-## Design
+## Design — Dream Bazaar (Direction P)
 
-- Dark-only site (no light mode toggle) — `dark` class on `<html>`
-- Current palette in `app/globals.css`: lime primary/blockchain (`hsl(72 100% 49%)`), cyan AI (`hsl(190 100% 52%)`), orange leadership (`hsl(25 100% 60%)`)
-- Background is near-black editorial dark (`hsl(0 0% 3.5%)`) with warm foreground text (`hsl(36 15% 91%)`)
-- Syne for display/UI voice, JetBrains Mono for code/metrics/IDs
-- Spacing and typography create hierarchy — avoid adding new colour variables without reason
-- Favicon source is `public/favicon.svg`; do not reintroduce `app/favicon.ico` unless intentionally switching back to file-based icons
-- OG images should match the live editorial brand: dark background, warm text, and lime/cyan/orange accents
-- Homepage hero is intentionally motion-rich and uses `components/hero-client.tsx` as a layered interactive surface; improve it carefully and do not casually remove depth/motion systems without checking the broader visual direction
+Selected 2026-09-26 by Neel and his wife from the 17 prototypes in `/design-lab`: Maximalism × Dream Collage —
+overlapping torn scraps, polaroids, pattern swatches and ticket-stub chips on a dream-sky gradient, no grid,
+handwritten accents. The live system is `app/globals.css` + `components/bazaar/`; the frozen prototype is
+`app/design-lab/dream-bazaar/page.tsx` (reference only — do not import from `app/design-lab/` into live pages).
 
-## Design: Responsive container scale
+Migration status: pages move one at a time (order in `ROADMAP.md` §0). A page still on the old layout inherits
+the new palette through the mapped shadcn tokens, but its structure is legacy — rebuild it, don't patch it.
 
-Every wide container (nav, footer, hero, page headers, content sections) must use the full 4-stop responsive max-width:
+### Theme: light + dark
 
-```
-max-w-5xl xl:max-w-6xl 2xl:max-w-7xl 3xl:max-w-[1440px]
-```
+- Default follows the visitor's OS (`prefers-color-scheme`). The nav toggle (`components/theme-toggle.tsx`)
+  overrides it and persists the choice in `localStorage['nb-theme']`.
+- The inline script in `app/layout.tsx` sets `data-theme` on `<html>` **before first paint** — keep it the first
+  thing in `<head>`. `dark:` utilities key off `[data-theme="dark"]`, not a `.dark` class.
+- Every colour is a `--dm-*` custom property with a light value on `:root` and a dark value on
+  `:root[data-theme="dark"]`. A new colour needs both, or it breaks one theme.
 
-| Breakpoint | Value | Target |
-|---|---|---|
-| default | `max-w-5xl` = 1024px | Mobile / small tablet |
-| `xl` (1280px+) | `max-w-6xl` = 1152px | Laptop / desktop 1080p |
-| `2xl` (1536px+) | `max-w-7xl` = 1280px | Large desktop / 1440p |
-| `3xl` (1920px+) | `1440px` | 2K native / 4K at 200% DPI |
+### Colour
 
-The `3xl` breakpoint (`--breakpoint-3xl: 1920px`) is registered in `app/globals.css`.
+- Surfaces: the dream-sky gradient (`--dm-dream`, painted on a fixed `body::before`) and `dm-panel` paper.
+- Accents: `dm-rose`, `dm-butter`, `dm-sky`, `dm-lilac`, `dm-sage`, `dm-terra` — muted and low-saturation on
+  purpose. A neon version was rejected as garish; do not add saturated colours.
+- **Filled surfaces use a `tone-*` class** (`tone-panel`, `tone-ink`, `tone-sage`, …). It pairs the fill with the
+  text colour that passes contrast in both themes: text on accent fills is `dm-on-accent`; text on panels and
+  the sky is `dm-ink` / `dm-ink-soft`.
+- **`dm-accent-ink` is the only coloured text colour** (links, handwritten accents, drop caps). The accent fills
+  fail as text (terra is 2.7:1 on panel) — never use `text-dm-terra`, `text-dm-rose`, etc.
+- Borders use `currentColor` (`border-current`), so they always match the text of the surface they sit on.
+- Pillars: blockchain = sage, ai = sky, leadership = rose (`lib/pillars.ts` → `toneClass`).
+- shadcn tokens (`--background`, `--primary`, `--ring`, `--border`…) are mapped onto `--dm-*`, so `components/ui`
+  primitives inherit the palette. `primary` / `ring` = `dm-accent-ink`.
+- Measured contrast (keep it): ink on panel 12.2:1 light / 11.2:1 dark; on-accent on every fill ≥ 4.8:1 in both
+  modes; accent-ink 5.96:1 on the light panel and 5.9:1 on the dark panel.
 
-**Prose containers** (`max-w-2xl`) stay narrow for readability and do NOT follow this scale.
-**Hero font clamp**: `clamp(3rem, 9vw, 10rem)` — vw-based so it scales with viewport, capped at 160px.
+### Type
 
-## Design: Inner page header pattern
+- **Archivo** (variable, one file) for everything. Headlines: `font-black uppercase`, tracking `-0.03em` to
+  `-0.05em`, leading `0.85–0.95`. Body: 400–500.
+- **Caveat** (`.hand`, one static weight) for short handwritten accents only: kickers, captions, one word in a
+  headline, signatures. Never paragraphs, never UI labels, never smaller than ~1.1rem.
+- `.max-outline` outlines a word; set `--stroke` if the ink colour isn't right. At most one outlined word or
+  phrase per heading.
+- Labels: Archivo bold uppercase, 10–12px, tracking `0.12–0.24em`. `font-mono` is a system stack for code only —
+  no mono labels (that was the old system).
 
-Every inner page (about, writing, newsletter, resources, projects, work-with-me, article detail) must use the editorial heading system:
+### Composition
 
-```tsx
-{/* Section label */}
-<p className="font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground mb-4">
-  Section Label
-</p>
-{/* Display heading */}
-<h1 className="font-extrabold text-4xl sm:text-5xl md:text-6xl uppercase tracking-tighter leading-[0.9] mb-6">
-  Page Title
-</h1>
-```
+- **Torn scraps** — `components/bazaar/scrap.tsx`. `clip-path` clips borders, box-shadow and focus rings on the
+  element it is applied to, so `Scrap` draws its shadow as a separate layer behind the paper. Put rotation,
+  links and focus rings on the scrap's wrapper (`className`), never on the paper (`paperClassName`). Use `tall`
+  for long content (fixed 14px tear instead of a percentage jag).
+- **Ticket chips** — `.ticket` + a `tone-*` class, tilted with `rotate-*` utilities (±1–3°).
+- **Polaroids** — panel frame, accent "photo" box, handwritten caption, `shadow-hard-lg`.
+- Shadows are hard offsets only (`shadow-hard`, `shadow-hard-lg`, `.dm-longshadow`) — no blur.
+- Tilt decorative pieces ±1–6°. **Reading surfaces stay at 0°**: article sheets, forms, tables, code.
+- Overlap with negative margins only from `lg:` up; below `lg` stack with normal gaps. Test the longest real
+  title at 375px before calling a layout done (longest article title: 88 characters).
+- Pattern swatches (`pat-dots` / `pat-stripes` / `pat-zig`) and arches (`surreal-arch`) are decoration:
+  `aria-hidden`, `pointer-events-none`, hidden below `lg`.
+- Page container: the `page-wrap` utility (max 1400px, 20/32/48px gutters). Replaces the old 4-stop
+  `max-w-5xl xl:max-w-6xl …` scale.
+- `<main>` has `overflow-x-clip` as a safety net for tilted pieces; still check `scrollWidth` at 375px.
+- Nav switches to the mobile menu below `lg` (1024px): the full chip row needs ~900px and overflowed at 800px.
 
-- Page header section uses `max-w-5xl xl:max-w-6xl px-6 sm:px-12 py-16 sm:py-20 border-b border-border`
-- Content section uses an appropriate narrower container (`max-w-2xl` for prose, `max-w-5xl` for lists)
-- Breadcrumbs use `font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground`
-- Sub-headings within content use `font-extrabold text-2xl sm:text-3xl uppercase tracking-tighter`
-- Section labels inside content use `font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground mb-8`
+### Page header pattern
 
-## Design: Editorial grid dividers
+`.hand` kicker in `dm-accent-ink`, rotated −2° → h1 in Archivo 900 uppercase with a `clamp()` size and an
+outlined last word → standfirst on a torn `Scrap`. See `app/writing/[slug]/page.tsx`. Replaces the old
+mono-label + h1 pattern.
 
-Prefer `grid gap-px bg-border` + `bg-background` on cells for hairline dividers between grid cards (avoids border math):
+### Long-form (MDX)
 
-```tsx
-<div className="grid gap-px bg-border sm:grid-cols-2">
-  <div className="bg-background p-8">…</div>
-</div>
-```
+- Wrap MDX in `prose prose-lg prose-bazaar max-w-none` on a `Scrap tall` sheet. `.prose-bazaar` (globals.css)
+  maps typography colours to the palette and adds the h2 highlighter, drop cap, link underline, code and table
+  styles.
+- Pass `components={articleMdxComponents}` (`components/mdx-components.tsx`) and
+  `options={{ mdxOptions: { remarkPlugins: [remarkGfm] } }}` — without `remark-gfm`, markdown tables render as a
+  paragraph of pipes.
 
-## Design: Interactive elements
+### Interactive elements (accessibility — unchanged)
 
-- All clickable elements (buttons, links styled as buttons) must have `cursor-pointer`
-- Disabled buttons must have `disabled:cursor-not-allowed`
-- All interactive elements must have `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary` — do NOT use `focus:ring-0`
-- Hover transitions: use `transition-colors duration-200`, not `transition-all` (avoid layout reflow)
-- Never animate `padding`, `margin`, or `width`/`height` on hover — use `transform` only
+- All clickable elements have `cursor-pointer`; disabled ones `disabled:cursor-not-allowed`.
+- All interactive elements have `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary`
+  (add `ring-offset-2 ring-offset-dm-panel` on coloured chips). Never `focus:ring-0`.
+- Transitions: colours (`transition-colors`) or transforms only (`transition-[rotate]`, `translate`). Never
+  `transition-all`; never animate padding, margin, width or height.
+- Touch targets ≥ 40px on mobile (`min-h-10` / `min-h-12` on chips and menu rows).
 
-## Design: Motion preferences
+### Motion
 
-`app/globals.css` includes `@media (prefers-reduced-motion: reduce)` that disables all animations/transitions for users who opt out. The marquee on the homepage pauses automatically. Do not add new `@keyframes` without respecting this rule.
+`app/globals.css` has a `prefers-reduced-motion: reduce` guard; new `@keyframes` must respect it. Motion is CSS +
+IntersectionObserver (`components/scroll-reveal.tsx`); framer-motion was removed — don't reintroduce it. Don't
+wrap above-the-fold content in `FadeUp`: it stays invisible until hydration and delays LCP.
 
-## Design: Current UI direction
+### Homepage (legacy until its redesign — last in ROADMAP §0)
 
-- The site has been refactored toward a cleaner editorial dark aesthetic with lighter heading weights than the original first pass
-- Shared shell elements (`nav`, `footer`, inner page headers, forms, CTA links) should stay visually consistent with the newer page optimizations
-- Repeated “boxed grid” treatments can get visually heavy quickly; use `grid gap-px bg-border` intentionally, not by default everywhere
-- On the homepage hero, keep the `HeroWord` `span.block` treatment intact unless explicitly asked to change it
-- The hero eyebrow line and supporting paragraph have already been intentionally strengthened for readability against motion; do not casually fade them back down
+- The homepage still uses the old hero (`components/hero-client.tsx`, lazy desktop constellation). Keep its
+  perf architecture (see `MEMORY.md`) when redesigning it.
+- Favicon source is `public/favicon.svg`; do not reintroduce `app/favicon.ico`.
+- OG images (`app/opengraph-image.tsx`, `app/writing/[slug]/opengraph-image.tsx`) still use the old dark + lime
+  look; they are on the migration list.
 
 ## What NOT to do
 
@@ -175,9 +197,12 @@ Prefer `grid gap-px bg-border` + `bg-background` on cells for hairline dividers 
 - Do not remove or bypass the Husky pre-commit lint hook without a strong reason
 - Do not remove or bypass the Husky pre-commit typecheck without a strong reason
 - Do not document content under `content/articles`; the live article directory is `content/writing`
-- Do not describe the brand colors as indigo/emerald/amber unless the theme tokens are actually changed in `app/globals.css`
+- Do not describe the brand colours as lime/cyan/orange or dark-only — that was the pre-2026-09 system; the palette is the muted Dream Bazaar set in `app/globals.css`
+- Do not hard-code hex colours in components — use `--dm-*` tokens via `tone-*` classes or `dm-*` utilities
+- Do not put `box-shadow`, borders or focus rings on a `clip-path` element — use `Scrap` (shadow layer) and style its wrapper
 - Do not add `app/favicon.ico` back unless you explicitly want Next.js to auto-inject an `.ico` favicon again
 - Do not use `focus:ring-0` or `focus:outline-none` alone on inputs — always pair with `focus-visible:ring-2 focus-visible:ring-primary`
+- Do not use accent fills (`text-dm-terra`, `text-dm-rose`, …) as text colours — they fail contrast; use `text-dm-accent-ink`
 - Do not animate `padding`/`margin` on hover — causes layout reflow; use `transition-colors` or `transform` only
 - Do not use `transition-all` on hover — always specify the property (e.g. `transition-colors duration-200`)
 - Do not use `grid sm:grid-cols-2` for `ArticleCard` lists — ArticleCard is a full-width row component; use a plain `div` (stacked list)

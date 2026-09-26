@@ -12,18 +12,46 @@
 
 The site was judged to have become generic (its near-black + lime palette and Syne/mono
 pairing are a widely-copied preset). `/design-lab` explored 17 directions; **P · Dream
-Bazaar** was selected.
+Bazaar** was selected by Neel and his wife.
 
-Next steps, in order:
+**Decisions (2026-09-27):**
 
-- Extend P beyond the homepage: article template, `/projects`, `/work-with-me` — the
-  reading experience is the real test, and P's overlapping layout is the part most likely
-  to get brittle with variable content lengths.
-- Decide whether the light/dark toggle ships (mechanism already built in
-  `_components/theme-shell.tsx` — CSS custom properties, one class swap).
-- Only then migrate the live design system: `app/globals.css` tokens, font stack, page
-  headers, hero. Expect to rewrite the `AGENTS.md` design rules, which describe the
-  current system and would otherwise block the redesign.
+- **Scope: the full site**, homepage included (done last). The design rules in `AGENTS.md`
+  were rewritten first and now govern every page.
+- **Built live on `dev`**, directly in the real routes — no lab copies. Review happens on Vercel
+  preview deployments (a draft PR is fine for the link). **Don't merge `dev` → `main` until
+  every page below is done**, so production never shows a half-migrated site. Unrelated hotfixes during the
+  redesign must branch from `main`, not `dev`.
+- **Light/dark ships.** Default follows the OS; the nav toggle overrides and is remembered.
+- **Fonts site-wide: Archivo + Caveat** (replaced Syne + JetBrains Mono).
+
+| Page | Status / notes |
+|---|---|
+| Foundation: tokens, fonts, theme, `Scrap`, tickets | ✅ Done 2026-09-27 |
+| Nav + Footer | ✅ Done — nav collapses to a menu below `lg` |
+| `/writing/[slug]` | ✅ Done — wall header, torn reading sheet, GFM tables, keep-reading, arch CTA |
+| `/writing` | **Next.** Archive + pillar filters (URL-driven state must keep working); retire `ArticleCard` rows |
+| `/projects` | Category filter browser; long project titles stress overlap |
+| `/work-with-me` | Services, contact form (shared Zod schema), Cal.com embed (check it in dark mode) |
+| `/about` | Experience, capability map, recognition; still uses `prose-invert` |
+| `/resources`, `/newsletter` | Gated download + subscribe forms |
+| `/speaking` | Talks list |
+| `/resume` | The print-to-PDF sheet must keep working (`@media print` isolation; sky layer hidden in print) |
+| `not-found` | None exists yet — add one |
+| OG images | Root + article images still dark + lime (`next/og`) |
+| Homepage | Last. Keep the lazy, desktop-only constellation architecture or beat its numbers |
+
+Perf baseline (prod build, cold load, measured 2026-09-27):
+
+| | Before (Syne + JetBrains) | After foundation |
+|---|---|---|
+| Homepage JS | ~234 KB | 237 KB (+3 KB: theme toggle) |
+| Article JS | — | 234 KB |
+| Font files | 2 · 65.9 KB | 2 · 85.9 KB (Archivo 34.9 + Caveat 500 static 51.0) |
+| Homepage HTML | ~145 KB | 140 KB |
+
+Caveat's variable file was 74.6 KB; one static weight saves 24 KB. If fonts must shrink
+further, the lever is `preload: false` on Caveat (accents only, not the LCP element).
 
 ### 1. Browser QA and fix pass
 

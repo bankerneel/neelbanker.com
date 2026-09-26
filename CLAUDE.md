@@ -6,8 +6,8 @@ Current setup highlights:
 
 - Next.js 16 App Router with Server Components by default
 - Tailwind CSS v4 with CSS-first configuration in `app/globals.css`
-- Syne + JetBrains Mono via `next/font/google`
-- MDX content in `content/writing`, `content/resources`, and `content/projects`
+- Archivo (variable) + Caveat (handwritten accents) via `next/font/google`
+- MDX content in `content/writing`, `content/resources`, and `content/projects`; articles render with `remark-gfm`
 - Resend for email flows
 - Newsletter emails use `insights@neelbanker.com`; contact emails use `inquiry@neelbanker.com`
 - Contact form validation is shared in `lib/contact-schema.ts` and the UI highlights invalid fields before submit
@@ -17,11 +17,13 @@ Current setup highlights:
 - Husky pre-commit hook runs `npm run lint` and `npm run typecheck`
 - Standalone pages include in-page navigation CTAs to avoid dead-end flows
 
-Design conventions (enforced, see AGENTS.md for full rules):
-- Inner pages use a two-layer header: `font-mono text-xs uppercase tracking-[0.22em]` label + `font-extrabold text-4xl+ uppercase tracking-tighter` h1
+Design conventions — **Dream Bazaar** (redesign in progress, see AGENTS.md "Design" and ROADMAP.md §0):
+- Light + dark: follows the OS, nav toggle overrides (`localStorage['nb-theme']`); `data-theme` on `<html>` is set before paint
+- Colours are `--dm-*` tokens; filled surfaces use `tone-*` classes; the only coloured text is `text-dm-accent-ink`
+- Torn paper = `components/bazaar/scrap.tsx` (never shadow/border/ring a `clip-path` element directly)
+- Headlines Archivo 900 uppercase; Caveat (`.hand`) for short accents only; reading surfaces stay unrotated
 - All interactive elements need `cursor-pointer` and `focus-visible:ring-2 focus-visible:ring-primary` — never `focus:ring-0`
-- Hover animations use `transition-colors duration-200` only — no `transition-all`, no padding/margin animation
-- `app/globals.css` includes `prefers-reduced-motion: reduce` guard — all new keyframes must respect it
-- `ArticleCard` is a full-width row component — never put it in a `sm:grid-cols-2` grid
+- Hover animations use colour or transform transitions only — no `transition-all`, no padding/margin animation
+- `app/globals.css` includes a `prefers-reduced-motion: reduce` guard — all new keyframes must respect it
 
 When in doubt, follow `AGENTS.md` over this file.
