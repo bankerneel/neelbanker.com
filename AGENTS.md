@@ -87,8 +87,7 @@ overlapping torn scraps, polaroids, pattern swatches and ticket-stub chips on a 
 handwritten accents. The live system is `app/globals.css` + `components/bazaar/`; the frozen prototype is
 `app/design-lab/dream-bazaar/page.tsx` (reference only — do not import from `app/design-lab/` into live pages).
 
-Migration status: pages move one at a time (order in `ROADMAP.md` §0). A page still on the old layout inherits
-the new palette through the mapped shadcn tokens, but its structure is legacy — rebuild it, don't patch it.
+Migration status: every page is on the new system (completed 2026-09-27 on `dev`; see `ROADMAP.md` §0).
 
 ### Theme: light + dark
 
@@ -180,10 +179,13 @@ mono-label + h1 pattern.
 IntersectionObserver (`components/scroll-reveal.tsx`); framer-motion was removed — don't reintroduce it. Don't
 wrap above-the-fold content in `FadeUp`: it stays invisible until hydration and delays LCP.
 
-### Homepage (legacy until its redesign — last in ROADMAP §0)
+### Homepage
 
-- The homepage still uses the old hero (`components/hero-client.tsx`, lazy desktop constellation). Keep its
-  perf architecture (see `MEMORY.md`) when redesigning it.
+- The hero (`components/home-hero.tsx`) is the approved lab prototype on real content: "Building / *what's* /
+  Next." (solid / Caveat / outlined), copy scrap, stat polaroids, a straight subscribe strip, and the tech stack
+  as a tilted "ticker tape" marquee (the marquee is a kept user preference; it stops under reduced motion).
+- It is a static server component with no entrance animation — the h1 is the LCP element; keep it that way.
+- The old dark hero, its lazy desktop constellation and `hero-logos` were removed in the redesign.
 - Favicon source is `public/favicon.svg`; do not reintroduce `app/favicon.ico`.
 - OG images (`app/opengraph-image.tsx`, `app/writing/[slug]/opengraph-image.tsx`) share `lib/og.tsx`: the light
   palette mirrored as hex (Satori can't read CSS variables — keep it in sync with `:root`), and Archivo 900 +

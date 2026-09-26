@@ -39,9 +39,20 @@ Bazaar** was selected by Neel and his wife.
 | `/resume` | ✅ Done — screen chrome only (wall header, action tickets, taped sheet); the white document sheet is unchanged. Print verified with Playwright + system Edge in light and dark: nav, footer, `.no-print`, sky layer hidden; sheet header prints |
 | `not-found` | ✅ Done — 404 with outlined 0, scrap + destination tickets; missing articles now titled "Page not found" |
 | OG images | ✅ Done — dream sky, name tag, Caveat kicker, Archivo 900 title (steps down for long titles), pillar ticket; shared `lib/og.tsx` |
-| Homepage | **Next (last).** Keep the lazy, desktop-only constellation architecture or beat its numbers |
+| Homepage | ✅ Done — the approved lab wall on real content, ticker-tape marquee, notebook scraps, arch portal around the lead case study, pillar scraps, field notes + free resource, service price tags. Old hero + constellation removed |
 
-Perf baseline (prod build, cold load, measured 2026-09-27):
+**All pages done (2026-09-27).** Remaining: Neel reviews the `dev` preview, then a PR `dev` → `main`.
+
+Perf after the full redesign (prod build, fresh Edge context per page, 1280px, measured 2026-09-27):
+
+| Page | JS (gz) | Fonts | HTML | LCP (local) | CLS |
+|---|---|---|---|---|---|
+| `/` | 234 KB | 2 · 84 KB | 110 KB | 380 ms | 0 |
+| `/writing` | 237 KB | 2 · 84 KB | 85 KB | 224 ms | 0 |
+| article | 234 KB | 2 · 84 KB | 66 KB | 144 ms | 0 |
+| other pages | 234 KB | 2 · 84 KB | 67–116 KB | 108–148 ms | 0 |
+
+Baseline at the start of the redesign:
 
 | | Before (Syne + JetBrains) | After foundation |
 |---|---|---|
