@@ -114,8 +114,8 @@ _Original checklist:_
 
 - Outcome: "what shipped" bullets on every card, parsed from each project's `## Outcome` section (17 of 20 have
   one; Projects Scales, Ember and Enclave don't). Stack was already shown.
-- Role: `employer` frontmatter → role via `lib/roles.ts` (2026-09-27): 12 Tech Alchemy, 1 SoluLab, 5 Personal;
-  Scales / Coffer have no group until Neel confirms.
+- Role: `employer` frontmatter → role via `lib/roles.ts` (2026-09-27): 14 Tech Alchemy, 1 SoluLab, 5 Personal
+  (groups and pseudonyms confirmed by Neel).
 - Case-study links ✅: `caseStudy` frontmatter renders an external link on the card (DocTrace). The SoluLab section lists
   16 official case studies by name (Neel's list, 2026-09-27).
 - Category transitions / richer interaction: current fade-in filter is fine; not pursued.

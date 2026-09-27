@@ -5,7 +5,7 @@ import type { Employer } from '@/types/content'
 // names, Tech Alchemy projects keep codenames, personal projects use pseudonyms.
 // Projects without an `employer` (not yet mapped) show no role.
 export const ROLE_BY_EMPLOYER: Record<Employer, string> = {
-  'Tech Alchemy': 'Blockchain | Technical Architect | Pseudo Lead',
+  'Tech Alchemy': 'Blockchain | Technical Architect',
   SoluLab: 'Tech Lead | Senior Blockchain Developer',
   Personal: 'Independent build',
 }
