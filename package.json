@@ -12,7 +12,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
-    "test:e2e": "LD_LIBRARY_PATH=/tmp/playwright-libs/extracted/usr/lib/x86_64-linux-gnu npx playwright test",
+    "test:e2e": "playwright test",
     "pretest": "node scripts/check-node.mjs",
     "pretest:watch": "node scripts/check-node.mjs",
     "pretest:ui": "node scripts/check-node.mjs"

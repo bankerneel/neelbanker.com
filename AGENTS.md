@@ -73,7 +73,7 @@ Current stack: Next.js 16 App Router · Tailwind v4 · shadcn/ui · MDX · Resen
 ## Testing
 
 - Unit tests: Vitest + React Testing Library (`npm run test`). Needs **Node ^20.19.0 || >=22.12.0** (Vite 8); `.nvmrc` says 24. A `pretest` guard (`scripts/check-node.mjs`) fails fast on older Node. Don't express this as `engines` in `package.json` — Vercel uses that field to pick the production Node version.
-- E2E tests: Playwright (`npm run test:e2e`) — webServer config auto-starts dev server
+- E2E tests: Playwright (`npm run test:e2e`) — webServer config auto-starts the dev server (or reuses one on :3000). On Windows it runs on the system Edge (`channel: 'msedge'`), so no browser download is needed; `PW_CHANNEL` overrides. Run artifacts (`test-results/`, `playwright-report/`) are gitignored.
 - E2E specs live in `e2e/` and are excluded from Vitest (`vitest.config.ts`) — its default pattern also matches `*.spec.ts`
 - Linting: `npm run lint`
 - Type checking: `npm run typecheck`
