@@ -1,10 +1,13 @@
 import type { ComponentProps } from 'react'
+import { Callout } from '@/components/bazaar/callout'
+import { CodeBlock } from '@/components/bazaar/code-block'
 
 /**
  * Element overrides for long-form MDX (articles). Styling lives in the
- * `.prose-bazaar` rules in app/globals.css; these only add structure CSS
- * cannot: a highlighter span inside h2, and a scroll box around tables so a
- * wide table never overflows (or gets clipped by) the torn reading sheet.
+ * `.prose-bazaar` rules in app/globals.css; these add structure CSS cannot:
+ * a highlighter span inside h2, a scroll box around tables (so a wide table
+ * never overflows — or gets clipped by — the torn reading sheet), code
+ * blocks with a copy button, and the <Callout> authors can use in MDX.
  */
 export const articleMdxComponents = {
   h2: ({ children, ...props }: ComponentProps<'h2'>) => (
@@ -17,4 +20,6 @@ export const articleMdxComponents = {
       <table {...props} />
     </div>
   ),
+  pre: CodeBlock,
+  Callout,
 }

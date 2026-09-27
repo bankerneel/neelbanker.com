@@ -12,6 +12,8 @@ import { PillarBadge } from '@/components/pillar-badge'
 import { FadeUp } from '@/components/scroll-reveal'
 import { Scrap } from '@/components/bazaar/scrap'
 import { articleMdxComponents } from '@/components/mdx-components'
+import { ReadingProgress } from '@/components/bazaar/reading-progress'
+import { chipLink } from '@/components/bazaar/styles'
 
 export async function generateStaticParams() {
   return getAllArticleMeta().map((a) => ({ slug: a.slug }))
@@ -56,6 +58,9 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
   ].filter(Boolean) as { label: string; tone: string; meta: ArticleMeta }[]
 
   const pillar = getPillarBySlug(article.pillar)
+  // Same-pillar pieces the reader hasn't just been offered as newer/earlier.
+  const shown = new Set([article.slug, ...neighbours.map((n) => n.meta.slug)])
+  const related = allArticles.filter((a) => a.pillar === article.pillar && !shown.has(a.slug)).slice(0, 3)
   const { lead, tail } = splitTitle(article.title)
   const month = new Date(article.date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
 
@@ -128,8 +133,10 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
         </div>
       </header>
 
+      <ReadingProgress targetId="article-body" />
+
       {/* ── The reading sheet — straight, so long text stays easy to read ── */}
-      <div className="page-wrap mt-16 sm:mt-24">
+      <div id="article-body" className="page-wrap mt-16 sm:mt-24">
         <Scrap tall tape className="mx-auto max-w-[800px]" paperClassName="tone-panel px-6 pb-14 pt-14 sm:px-14 sm:pb-20 sm:pt-20">
           <div className="prose prose-lg prose-bazaar max-w-none">
             <MDXRemote
@@ -175,6 +182,41 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                   </Scrap>
                 </Link>
               ))}
+            </div>
+          </FadeUp>
+        </section>
+      )}
+
+      {/* ── More from the same pillar ───────────────────────────────────── */}
+      {pillar && related.length > 0 && (
+        <section aria-labelledby="more-on-pillar" className="page-wrap mt-20">
+          <FadeUp>
+            <div className="tone-panel mx-auto max-w-[800px] border-2 border-current px-7 py-9 shadow-hard sm:px-10">
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <h2 id="more-on-pillar" className="text-[1.35rem] font-black uppercase leading-tight tracking-tight">
+                  More on <span className="hand text-[1.3em] font-normal normal-case text-dm-accent-ink">{pillar.short}</span>
+                </h2>
+                <Link href={`/writing?pillar=${pillar.slug}`} className={cn(chipLink, pillar.toneClass, 'rotate-1')}>
+                  All {pillar.short} →
+                </Link>
+              </div>
+              <ol className="mt-6 space-y-4">
+                {related.map((a, i) => (
+                  <li key={a.slug} className="grid grid-cols-[2rem_1fr] gap-2">
+                    <span aria-hidden="true" className="hand text-[1.6rem] leading-none text-dm-accent-ink">
+                      {i + 1}.
+                    </span>
+                    <Link href={`/writing/${a.slug}`} className={cn('group block cursor-pointer', focusRing)}>
+                      <span className="block font-bold leading-[1.45] underline decoration-dm-terra decoration-2 underline-offset-4 transition-colors duration-200 group-hover:text-dm-accent-ink">
+                        {a.title}
+                      </span>
+                      <span className="mt-0.5 block text-[12px] font-bold uppercase tracking-[0.12em] text-dm-ink-soft">
+                        {a.readingTime} min · {parseDate(a.date)}
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ol>
             </div>
           </FadeUp>
         </section>

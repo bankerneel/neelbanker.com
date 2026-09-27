@@ -105,14 +105,11 @@ further, the lever is `preload: false` on Caveat (accents only, not the LCP elem
 - Improve spotlight/category transitions if needed
 - Consider richer featured-by-category interaction
 
-### 5. Writing system polish
+### 5. Writing system polish ✅ (2026-09-27)
 
-- Improve MDX treatment for:
-  - tables
-  - callouts
-  - code blocks
-- Add stronger related-reading behavior at article end
-- Consider subtle reading progress indicator
+- Tables: `remark-gfm` + scroll box (redesign). Callouts: `<Callout>` MDX component. Code blocks: copy button + language label.
+- Related reading: same-pillar "More on …" list after the newer/earlier cards.
+- Reading progress: thin accent-ink bar tracking the article sheet.
 
 ## Later
 

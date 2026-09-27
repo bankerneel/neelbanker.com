@@ -138,6 +138,21 @@ Notes:
 - Projects are list-only right now; there is no individual project page helper.
 - Projects are sorted by `date` descending.
 
+## Callouts And Code In Articles
+
+Articles can pin a note with the `<Callout>` component — no import needed:
+
+```mdx
+<Callout type="warning" title="Oracle keys">
+  Treat the oracle as your highest-risk component.
+</Callout>
+```
+
+- `type`: `note` (sky), `tip` (sage) or `warning` (rose). `title` is optional.
+- Keep callouts to one or two sentences; they are for the thing a reader must not miss.
+- Fenced code blocks get a copy button automatically. Add a language (```` ```solidity ````) to show a label.
+- GitHub-style tables work (`remark-gfm`); wide tables scroll inside the article instead of overflowing.
+
 ## Writing Tips
 
 - Keep excerpts tight and specific.

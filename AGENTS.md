@@ -163,6 +163,9 @@ mono-label + h1 pattern.
 - Wrap MDX in `prose prose-lg prose-bazaar max-w-none` on a `Scrap tall` sheet. `.prose-bazaar` (globals.css)
   maps typography colours to the palette and adds the h2 highlighter, drop cap, link underline, code and table
   styles.
+- `articleMdxComponents` also provides `<Callout type="note|tip|warning">` for authors and wraps `<pre>` in
+  `components/bazaar/code-block.tsx` (copy button + language label). Article pages show a reading-progress bar
+  (`components/bazaar/reading-progress.tsx`, tracks `#article-body`) and a same-pillar "More on …" list.
 - Pass `components={articleMdxComponents}` (`components/mdx-components.tsx`) and
   `options={{ mdxOptions: { remarkPlugins: [remarkGfm] } }}` — without `remark-gfm`, markdown tables render as a
   paragraph of pipes.
