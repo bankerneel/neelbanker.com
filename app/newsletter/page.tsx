@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { NewsletterForm } from '@/components/newsletter-form'
-import { FadeUp } from '@/components/scroll-reveal'
+import { Band } from '@/components/bazaar/band'
+import { MotionStage } from '@/components/motion/motion-stage'
+import { FilmProgress, Scribbled } from '@/components/motion/scribbled'
 import { PageIntro } from '@/components/bazaar/page-intro'
 import { Scrap } from '@/components/bazaar/scrap'
 import { pick, tilts } from '@/components/bazaar/styles'
@@ -32,12 +34,13 @@ const highlights = [
 const signals = ['One strong idea each week', 'No filler or growth-hack cadence', 'Built for builders and technical leaders']
 
 const sectionTitle = 'text-[clamp(2rem,5vw,3.4rem)] font-black uppercase leading-none tracking-tighter'
-const handWord = 'hand text-[1.15em] font-normal lowercase text-dm-accent-ink'
 
 export default function NewsletterPage() {
   return (
     <>
+      <FilmProgress />
       <PageIntro
+        motion
         crumbs={[
           { href: '/', label: '← Home' },
           { href: '/writing', label: 'Writing' },
@@ -57,7 +60,7 @@ export default function NewsletterPage() {
             </p>
             <p className="hand mt-4 text-[1.5rem] leading-none text-dm-accent-ink">short, opinionated, grounded in delivery</p>
           </Scrap>
-          <ul className="flex flex-wrap gap-3 lg:-ml-4 lg:mt-12 lg:max-w-[320px] lg:flex-col lg:items-start">
+          <ul className="hook-deal-any flex flex-wrap gap-3 lg:-ml-4 lg:mt-12 lg:max-w-[320px] lg:flex-col lg:items-start">
             {signals.map((item, i) => (
               <li key={item} className={cn('ticket shadow-hard', ['tone-butter', 'tone-lilac', 'tone-sage'][i], pick(tilts, i))}>
                 {item}
@@ -68,7 +71,7 @@ export default function NewsletterPage() {
       </PageIntro>
 
       {/* ── Subscribe portal ──────────────────────────────────────────── */}
-      <section aria-labelledby="join" className="page-wrap mt-24">
+      <section aria-labelledby="join" className="page-wrap mt-24" data-sky-window>
         <div className="surreal-arch dm-longshadow tone-lilac mx-auto max-w-[880px] px-6 pb-12 pt-24 text-center sm:px-14 sm:pt-20">
           <p className="text-[11px] font-bold uppercase tracking-[0.24em]">Subscribe ✦</p>
           <h2 id="join" className="mt-4 text-[clamp(1.9rem,4.6vw,3rem)] font-black uppercase leading-[1.02] tracking-tight">
@@ -86,17 +89,17 @@ export default function NewsletterPage() {
       </section>
 
       {/* ── What you get ──────────────────────────────────────────────── */}
-      <section aria-labelledby="what-you-get" className="page-wrap mt-24 sm:mt-28">
-        <FadeUp>
-          <h2 id="what-you-get" className={sectionTitle}>
-            What you <span className={handWord}>get</span>
+      <Band tone="butter" edge="zig" bottomEdge="torn" className="mt-24 sm:mt-28">
+      <section aria-labelledby="what-you-get" className="page-wrap py-24 sm:py-28">
+          <h2 id="what-you-get" data-sd className={cn(sectionTitle, 'sd-slam')}>
+            What you <Scribbled>get</Scribbled>
           </h2>
           <div className="mt-10 flex flex-col gap-10 lg:flex-row lg:items-start">
             {highlights.map((h, i) => (
               <Scrap
                 key={h.label}
                 className={cn(
-                  'relative w-full lg:flex-1',
+                  'sd-scroll sd-rise relative w-full lg:flex-1',
                   ['-rotate-[1.4deg]', 'rotate-[1.2deg] lg:-ml-6 lg:mt-10', '-rotate-[0.8deg] lg:-ml-6 lg:mt-3'][i],
                 )}
                 paperClassName={cn(h.tone, 'px-7 py-9')}
@@ -107,12 +110,12 @@ export default function NewsletterPage() {
               </Scrap>
             ))}
           </div>
-        </FadeUp>
       </section>
+      </Band>
 
       {/* ── Fit ───────────────────────────────────────────────────────── */}
-      <section aria-labelledby="fit" className="page-wrap mt-24 sm:mt-28">
-        <div className="tone-panel mx-auto max-w-3xl -rotate-[0.6deg] border-2 border-dashed border-current px-7 py-9 sm:px-10">
+      <section aria-labelledby="fit" className="page-wrap mt-24 sm:mt-28" data-sky-window>
+        <div data-reveal className="rv-stamp tone-panel mx-auto max-w-3xl -rotate-[0.6deg] border-2 border-dashed border-current px-7 py-9 sm:px-10">
           <h2 id="fit" className="hand text-[2rem] leading-none text-dm-accent-ink">Good fit if…</h2>
           <p className="mt-4 text-[1.05rem] leading-[1.75]">
             You build or lead technical systems, care about architecture quality, and prefer signal over content volume.
@@ -120,6 +123,7 @@ export default function NewsletterPage() {
           </p>
         </div>
       </section>
+      <MotionStage />
     </>
   )
 }

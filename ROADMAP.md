@@ -98,6 +98,14 @@ _Original checklist:_
 - Tune animation density by viewport size if needed
 - Check hero hover behavior on real devices before adding more visual chrome
 
+### 2b. Section breaks + the homepage film ✅ (2026-09-27, local branch `feat/motion-film`)
+
+- Bands with shaped edges and the light film on every page except articles and `/resume`; the full homepage
+  film (CSS hook, scroll-driven sequence, finale, living WebGL sky). Rules, the do / don't list and budgets:
+  AGENTS.md "Motion".
+- **Open:** Neel's review → PR; a Firefox check of the no-scroll-timeline fallback (no Firefox installed
+  locally); real-phone check of the WebGL sky's battery/heat on a low-end Android.
+
 ## Next
 
 ### 3. Homepage proof refinement ✅ (2026-09-27)

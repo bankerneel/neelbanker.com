@@ -1,11 +1,14 @@
 import Link from 'next/link'
+import type { CSSProperties } from 'react'
 import { getAllArticleMeta, getAllProjectMeta, getAllResourceMeta } from '@/lib/mdx'
 import { ServiceCard } from '@/components/service-card'
 import { ProjectCard } from '@/components/project-card'
 import { PILLARS, getPillarBySlug } from '@/lib/pillars'
 import { HomeHero } from '@/components/home-hero'
-import { FadeUp } from '@/components/scroll-reveal'
+import { MotionStage } from '@/components/motion/motion-stage'
+import { FilmProgress, Scribbled } from '@/components/motion/scribbled'
 import { Scrap } from '@/components/bazaar/scrap'
+import { Band } from '@/components/bazaar/band'
 import { chipLink, focusRing, pick, tilts } from '@/components/bazaar/styles'
 import { cn } from '@/lib/utils'
 
@@ -47,9 +50,8 @@ const principles = [
 ]
 
 const sectionTitle = 'text-[clamp(2rem,6vw,4rem)] font-black uppercase leading-none tracking-tighter'
-const handWord = 'hand text-[1.15em] font-normal lowercase text-dm-accent-ink'
 const noteTilts = ['-rotate-[2.4deg]', 'rotate-[1.6deg]', '-rotate-[1.2deg]']
-const noteTones = ['tone-butter', 'tone-panel', 'tone-rose']
+const noteTones = ['tone-butter', 'tone-lilac', 'tone-rose']
 
 export default function HomePage() {
   const articles = getAllArticleMeta().slice(0, 3)
@@ -61,10 +63,11 @@ export default function HomePage() {
 
   return (
     <>
+      <FilmProgress />
       <HomeHero />
 
       {/* ── Receipts — proof near the fold ─────────────────────────── */}
-      <section aria-labelledby="receipts" className="page-wrap mt-20 sm:mt-24">
+      <section aria-labelledby="receipts" className="page-wrap mt-20 sm:mt-24" data-sky-window>
         <h2 id="receipts" className="hand -rotate-2 text-[1.9rem] leading-none text-dm-accent-ink sm:text-[2.2rem]">
           receipts, not adjectives
         </h2>
@@ -72,7 +75,8 @@ export default function HomePage() {
           {receipts.map((r, i) => (
             <li
               key={r.title}
-              className={cn('flex flex-col border-2 border-current p-5 shadow-hard', r.tone, pick(tilts, i))}
+              data-reveal
+              className={cn('rv-stamp flex flex-col border-2 border-current p-5 shadow-hard', r.tone, pick(tilts, i))}
             >
               <span className="text-[10px] font-bold uppercase tracking-[0.2em]">{r.label}</span>
               <span className="mt-2 text-[1.1rem] font-black uppercase leading-[1.1] tracking-tight">{r.title}</span>
@@ -84,9 +88,10 @@ export default function HomePage() {
 
       {/* ── Work — an arch portal around the lead case study ──────── */}
       {spotlight && (
-        <section aria-labelledby="selected-work" className="page-wrap mt-24 sm:mt-28">
-          <FadeUp>
-            <div className="surreal-arch dm-longshadow tone-lilac px-4 pb-12 pt-24 min-[360px]:px-7 sm:px-12 sm:pt-20">
+        <Band tone="night" edge="torn" pattern="stars" spotlight className="mt-24 sm:mt-28">
+        <div aria-hidden="true" className="band-dusk" />
+        <section aria-labelledby="selected-work" className="page-wrap py-24 sm:py-28">
+            <div data-sd className="sd-moonrise surreal-arch arch-halo tone-lilac px-4 pb-12 pt-24 min-[360px]:px-7 sm:px-12 sm:pt-20">
               <p className="text-center text-[11px] font-bold uppercase tracking-[0.24em]">Selected work ✦</p>
               <h2 id="selected-work" className="mx-auto mt-4 max-w-2xl text-center text-[clamp(1.5rem,3.6vw,2.4rem)] font-black uppercase leading-[1.1]">
                 {spotlight.title}
@@ -125,13 +130,13 @@ export default function HomePage() {
 
               <ul className="mt-12 grid gap-8 md:grid-cols-3">
                 {featuredProjects.map((project, i) => (
-                  <li key={project.slug} className="min-w-0">
+                  <li key={project.slug} data-sd className="sd-flip min-w-0">
                     <ProjectCard project={project} featured index={i + 1} />
                   </li>
                 ))}
               </ul>
               <div className="mt-10 flex flex-wrap justify-center gap-4">
-                <Link href="/projects" className={cn(chipLink, 'tone-ink min-h-11 px-6 shadow-hard -rotate-1')}>
+                <Link href="/projects" data-magnetic className={cn(chipLink, 'magnetic tone-ink min-h-11 px-6 shadow-hard -rotate-1')}>
                   Browse all projects →
                 </Link>
                 {spotlight.caseStudy && (
@@ -146,16 +151,16 @@ export default function HomePage() {
                 )}
               </div>
             </div>
-          </FadeUp>
         </section>
+        </Band>
       )}
 
       {/* ── From the notebook — pinned at angles, overlapping ──────── */}
-      <section aria-labelledby="notebook" className="page-wrap mt-24 sm:mt-28">
-        <FadeUp>
+      <Band tone="panel" edge="perf" pattern="ruled">
+      <section aria-labelledby="notebook" className="page-wrap py-24 sm:py-28">
           <div className="flex flex-wrap items-end justify-between gap-4">
-            <h2 id="notebook" className={sectionTitle}>
-              From the <span className={handWord}>notebook</span>
+            <h2 id="notebook" data-sd className={cn(sectionTitle, 'sd-slam')}>
+              From the <Scribbled>notebook</Scribbled>
             </h2>
             <Link href="/writing" className={cn(chipLink, 'tone-panel rotate-1')}>
               All articles →
@@ -166,8 +171,9 @@ export default function HomePage() {
               <Link
                 key={a.slug}
                 href={`/writing/${a.slug}`}
+                data-reveal
                 className={cn(
-                  'group relative block w-full cursor-pointer transition-[rotate] duration-200 hover:rotate-0 lg:max-w-[400px]',
+                  'rv-pin group relative block w-full cursor-pointer transition-[rotate] duration-200 hover:rotate-0 lg:max-w-[400px]',
                   noteTilts[i],
                   i > 0 && 'lg:-ml-8',
                   focusRing,
@@ -184,22 +190,28 @@ export default function HomePage() {
               </Link>
             ))}
           </div>
-        </FadeUp>
       </section>
+      </Band>
 
       {/* ── Focus areas ────────────────────────────────────────────── */}
-      <section aria-labelledby="focus" className="page-wrap mt-24 sm:mt-28">
-        <FadeUp>
-          <h2 id="focus" className={sectionTitle}>
-            Three recurring <span className={handWord}>themes</span>
+      <Band tone="butter" edge="zig">
+      <div aria-hidden="true" className="type-ribbon">
+        <p className="ribbon-l">Blockchain ✦ AI × Web3 ✦ Leadership ✦ Blockchain ✦ AI × Web3 ✦</p>
+        <p className="ribbon-r max-outline">Architecture ✦ Custody ✦ Delivery ✦ Architecture ✦ Custody ✦</p>
+      </div>
+      <section aria-labelledby="focus" className="page-wrap pt-16 sm:pt-20">
+          <h2 id="focus" data-sd className={cn(sectionTitle, 'sd-slam')}>
+            Three recurring <Scribbled>themes</Scribbled>
           </h2>
           <div className="mt-10 flex flex-col gap-10 lg:flex-row lg:items-start">
             {PILLARS.map((p, i) => (
               <Link
                 key={p.slug}
                 href={`/writing?pillar=${p.slug}`}
+                data-sd
                 className={cn(
-                  'group relative block w-full cursor-pointer transition-[rotate] duration-200 hover:rotate-0 lg:flex-1',
+                  'sd-pan group relative block w-full cursor-pointer transition-[rotate] duration-200 hover:rotate-0 lg:flex-1',
+                  i % 2 ? 'pan-r' : 'pan-l',
                   ['-rotate-[1.4deg]', 'rotate-[1.2deg] lg:-ml-6 lg:mt-10', '-rotate-[0.8deg] lg:-ml-6 lg:mt-3'][i],
                   focusRing,
                 )}
@@ -217,13 +229,12 @@ export default function HomePage() {
               </Link>
             ))}
           </div>
-        </FadeUp>
       </section>
 
       {/* ── Hiring lane ─────────────────────────────────────────────── */}
-      <section aria-labelledby="hiring" className="page-wrap mt-24 sm:mt-28">
-        <FadeUp>
-          <div className="tone-panel mx-auto flex max-w-4xl -rotate-[0.6deg] flex-col gap-6 border-2 border-dashed border-current px-7 py-9 sm:px-10 lg:flex-row lg:items-center lg:justify-between">
+      <section aria-labelledby="hiring" className="page-wrap pb-24 pt-24 sm:pb-28 sm:pt-28">
+          <div className="tone-panel relative mx-auto flex max-w-4xl -rotate-[0.6deg] flex-col gap-6 border-2 border-dashed border-current px-7 py-9 sm:px-10 lg:flex-row lg:items-center lg:justify-between">
+            <span aria-hidden="true" data-sd className="seal-tape sd-seal" />
             <div className="max-w-xl">
               <span className="ticket tone-terra -rotate-2">For recruiters</span>
               <h2 id="hiring" className="mt-4 text-[clamp(1.4rem,3vw,1.9rem)] font-black uppercase leading-[1.08] tracking-tight">
@@ -235,7 +246,7 @@ export default function HomePage() {
               </p>
             </div>
             <div className="flex flex-wrap gap-3 lg:flex-col lg:items-stretch">
-              <Link href="/resume" className={cn(chipLink, 'tone-ink min-h-11 justify-center px-5 shadow-hard')}>
+              <Link href="/resume" data-magnetic className={cn(chipLink, 'magnetic tone-ink min-h-11 justify-center px-5 shadow-hard')}>
                 Resume →
               </Link>
               <Link href="/work-with-me#recruiters" className={cn(chipLink, 'tone-panel min-h-11 justify-center px-5')}>
@@ -251,20 +262,21 @@ export default function HomePage() {
               </a>
             </div>
           </div>
-        </FadeUp>
       </section>
+      </Band>
 
       {/* ── How I work + free resource ─────────────────────────────── */}
-      <section aria-labelledby="how-i-work" className="page-wrap mt-24 sm:mt-28">
-        <FadeUp>
+      <Band tone="sky" edge="scallop" bottomEdge="torn" pattern="blueprint">
+      <section aria-labelledby="how-i-work" className="page-wrap py-24 sm:py-28">
           <div className="flex flex-wrap items-end justify-between gap-4">
-            <h2 id="how-i-work" className={sectionTitle}>
-              How I <span className={handWord}>work</span>
+            <h2 id="how-i-work" data-sd className={cn(sectionTitle, 'sd-slam')}>
+              How I <Scribbled>work</Scribbled>
             </h2>
             <Link href="/about" className={cn(chipLink, 'tone-panel -rotate-1')}>
               More context →
             </Link>
           </div>
+          <BlueprintDiagram />
           <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:gap-12">
             <Scrap className="-rotate-[0.6deg]" paperClassName="tone-panel px-7 py-10 sm:px-10">
               <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-dm-ink-soft">Field notes</p>
@@ -298,32 +310,66 @@ export default function HomePage() {
               </div>
             )}
           </div>
-        </FadeUp>
       </section>
+      </Band>
 
       {/* ── Services ───────────────────────────────────────────────── */}
-      <section aria-labelledby="services" className="page-wrap mt-24 sm:mt-28">
-        <FadeUp>
+      <section aria-labelledby="services" className="page-wrap mt-24 sm:mt-28" data-sky-window>
           <div className="flex flex-wrap items-end justify-between gap-4">
-            <h2 id="services" className={sectionTitle}>
-              Work <span className={handWord}>with</span> me
+            <h2 id="services" data-sd className={cn(sectionTitle, 'sd-slam')}>
+              Work <Scribbled>with</Scribbled> me
             </h2>
             <Link href="/work-with-me" className={cn(chipLink, 'tone-panel rotate-1')}>
               All services →
             </Link>
           </div>
-          <div className="mt-10 space-y-7">
+          <ol className="stack mt-10 space-y-7">
             {services.map((s, i) => (
-              <ServiceCard key={s.title} title={s.title} description={s.description} index={i} meta={s.meta} />
+              <li key={s.title} className="stack-item" style={{ '--i': i } as CSSProperties}>
+                <ServiceCard title={s.title} description={s.description} index={i} meta={s.meta} />
+              </li>
             ))}
-          </div>
+          </ol>
           <div className="mt-12">
-            <Link href="/work-with-me" className={cn(chipLink, 'tone-terra min-h-12 px-7 text-xs shadow-hard -rotate-1')}>
+            <Link href="/work-with-me" data-magnetic className={cn(chipLink, 'magnetic tone-terra min-h-12 px-7 text-xs shadow-hard -rotate-1')}>
               Book a strategy call →
             </Link>
           </div>
-        </FadeUp>
       </section>
+      <MotionStage />
     </>
+  )
+}
+
+/** Decorative: client → API → ledger, with an AI node beside the API. Draws itself on scroll. */
+function BlueprintDiagram() {
+  const node = 'sd-node fill-dm-panel'
+  const label = 'sd-node fill-current font-[family-name:var(--font-caveat)] text-[15px]'
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 372 132"
+      className="sd-draw mt-8 w-full max-w-[460px] overflow-visible"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+    >
+      <path pathLength={1} d="M70 46 H126" />
+      <path pathLength={1} d="M192 46 H244" />
+      <path pathLength={1} d="M272 46 H286" />
+      <path pathLength={1} d="M314 46 H328" />
+      <path pathLength={1} d="M159 62 V92" />
+      <rect className={node} x="4" y="30" width="66" height="32" />
+      <rect className={node} x="126" y="30" width="66" height="32" />
+      <rect className={node} x="244" y="34" width="28" height="24" />
+      <rect className={node} x="286" y="34" width="28" height="24" />
+      <rect className={node} x="328" y="34" width="28" height="24" />
+      <rect className={node} x="126" y="92" width="66" height="30" />
+      <text className={label} x="37" y="22" stroke="none" textAnchor="middle">client</text>
+      <text className={label} x="159" y="22" stroke="none" textAnchor="middle">api</text>
+      <text className={label} x="300" y="22" stroke="none" textAnchor="middle">ledger</text>
+      <text className={label} x="224" y="112" stroke="none" textAnchor="middle">ai, beside it</text>
+    </svg>
   )
 }

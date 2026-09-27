@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test'
-import { gotoHydrated } from './helpers'
+import { gotoHydrated, waitForHydration } from './helpers'
 
 test.describe('desktop nav', () => {
   test.use({ viewport: { width: 1280, height: 800 } })
@@ -74,7 +74,9 @@ test.describe('writing archive filter', () => {
   test('filters by pillar and keeps the choice in the URL', async ({ page }) => {
     await gotoHydrated(page, '/writing')
     const filters = page.getByRole('group', { name: 'Filter by pillar' })
-    await filters.getByRole('button', { name: 'AI × Web3' }).click()
+    const ai = filters.getByRole('button', { name: 'AI × Web3' })
+    await waitForHydration(ai)
+    await ai.click()
     await expect(page).toHaveURL(/\?pillar=ai$/)
     await expect(filters.getByRole('button', { name: 'AI × Web3' })).toHaveAttribute('aria-pressed', 'true')
     await expect(page.getByText(/^AI × Web3 · \d+ of \d+$/)).toBeVisible()

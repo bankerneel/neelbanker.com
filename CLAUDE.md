@@ -25,5 +25,6 @@ Design conventions — **Dream Bazaar** (live since 2026-09-26; full rules in AG
 - All interactive elements need `cursor-pointer` and `focus-visible:ring-2 focus-visible:ring-primary` — never `focus:ring-0`
 - Hover animations use colour or transform transitions only — no `transition-all`, no padding/margin animation
 - `app/globals.css` includes a `prefers-reduced-motion: reduce` guard — all new keyframes must respect it
+- Sections sit on full-bleed bands (`components/bazaar/band.tsx`); the homepage "film" lives in `app/motion.css` + `components/motion/` (CSS scroll-driven animations, one tiny client script, a WebGL sky) — rules and budgets in AGENTS.md "Motion"
 
 When in doubt, follow `AGENTS.md` over this file.

@@ -15,6 +15,15 @@ Core routes now feel substantially more consistent, lighter, and more editorial 
 
 ## Completed
 
+- **Bands + the homepage film (2026-09-27, local branch `feat/motion-film`, not pushed):**
+  - Section breaks: full-bleed bands with torn / perforated / zig-zag / scalloped edges on `/`, `/about`, `/projects`, `/work-with-me`.
+  - Homepage motion: CSS hook (paper strips rip off the headline), scroll-driven sequence (a different technique per section), footer finale at dusk, living WebGL sky (dawn → dusk). Rules and budgets in AGENTS.md "Motion".
+  - Bake-off: GSAP hook and Three.js sky built, measured and rejected (TBT and weight); CSS hook + shader sky chosen by Neel.
+  - `/about` polaroid uses Neel's photo (`public/images/neel-banker.webp`, 320px, 6.7 KB, from his GitHub avatar; a plain `img` — `next/image` cost more JS than it saved).
+  - Every other page got the light version (Neel's do / don't in AGENTS.md "Motion"): `/about`, `/projects`, `/work-with-me`, `/writing`, `/resources`, `/speaking`, `/newsletter`. Articles, `/resume` and all forms stay still. The old `FadeUp` (content invisible until hydration) is deleted; article footers are now static.
+  - Inner pages measured before → after (375px, CPU 4×, slow 4G): LCP within noise, TBT within +25 ms, JS +1.7–4.7 KB, CLS 0 everywhere (rolling counters reserve their width).
+  - Measured (375px, CPU 4×, slow 4G): TBT 86 ms (unchanged), CLS 0, +2.5 KB JS, 3.5 KB gz motion CSS, 0 janky frames. 40 e2e + 9 unit tests pass.
+
 - **Project naming by group + drafts published (2026-09-27, on `dev`, PR #13):**
   - SoluLab projects use real names; Tech Alchemy keeps codenames; personal projects get pseudonym product names (groups confirmed by Neel: 14 TA, 1 SoluLab, 5 Personal). `employer` now accepts `Personal`.
   - DocTrace restored (`doctrace-fabric-documents`), rewritten from Neel's notes + SoluLab's case study, pinned first on `/projects` and leading the homepage arch.
@@ -27,7 +36,7 @@ Core routes now feel substantially more consistent, lighter, and more editorial 
   - Homepage: "receipts, not adjectives" proof strip, recruiter lane, conversion-ordered sections ("Start here" removed).
   - Tests: 32 Playwright e2e tests (routes, nav, forms with mocked APIs, print, layout-overflow guard) + 9 Vitest unit tests; `npm run test:e2e` works on Windows (system Edge), run artifacts gitignored.
   - Fixed on the way: 320px overflow of homepage polaroids and of a featured project card with a long uppercase word.
-  - Verified: `health-app.neelbanker.com` is live on its own Vercel project. DMARC is still missing (DNS change for Neel).
+  - Verified: `health-app.neelbanker.com` is live on its own Vercel project. DMARC was added by Neel on 2026-09-27 and verified on public DNS (`p=none`; tighten to `p=quarantine` after a few weeks of clean sending).
 
 - **Dream Bazaar redesign — live in production** (PR #10 merged 2026-09-26 19:38 UTC, merge `273162a`; Vercel production deploy succeeded):
   - Foundation: `--dm-*` palette with light + dark values (contrast measured and corrected), `tone-*` surfaces, `.ticket`, `.torn` / `.torn-sheet`, `page-wrap`, `.prose-bazaar`, fixed dream-sky layer; shadcn tokens mapped onto the palette.
@@ -103,7 +112,6 @@ Core routes now feel substantially more consistent, lighter, and more editorial 
 ## Needs Review
 
 - `skale-appchains` draft is an outline of questions for Neel; it stays in gitignored `content/drafts/`.
-- DMARC TXT record at Squarespace (`_dmarc`: `v=DMARC1; p=none; adkim=r; aspf=r`).
 - Real-device QA: iOS Safari (fixed sky layer, `100lvh`, clip-path), a low-end Android (long article sheet), and the Cal embed on phones.
 - End-to-end form/download behaviour against production Resend: newsletter subscribe, contact form, resource download.
 - Category choice for Project Pulse (`fightout-move-to-earn` → infrastructure + leadership) was a judgement call from its excerpt.

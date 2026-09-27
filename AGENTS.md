@@ -74,7 +74,7 @@ Current stack: Next.js 16 App Router · Tailwind v4 · shadcn/ui · MDX · Resen
 
 - Unit tests: Vitest + React Testing Library (`npm run test`). Needs **Node ^20.19.0 || >=22.12.0** (Vite 8); `.nvmrc` says 24. A `pretest` guard (`scripts/check-node.mjs`) fails fast on older Node. Don't express this as `engines` in `package.json` — Vercel uses that field to pick the production Node version.
 - E2E tests: Playwright (`npm run test:e2e`) — webServer config auto-starts the dev server (or reuses one on :3000). On Windows it runs on the system Edge (`channel: 'msedge'`), so no browser download is needed; `PW_CHANNEL` overrides. Run artifacts (`test-results/`, `playwright-report/`) are gitignored.
-- E2E specs live in `e2e/` (routes, navigation, forms with mocked APIs, print, layout overflow guard); interact via `gotoHydrated()` from `e2e/helpers.ts`, never before hydration. They are excluded from Vitest (`vitest.config.ts`) — its default pattern also matches `*.spec.ts`
+- E2E specs live in `e2e/` (routes, navigation, forms with mocked APIs, print, layout overflow guard, motion); interact via `gotoHydrated()` from `e2e/helpers.ts`, never before hydration. Emulate reduced motion with `page.emulateMedia({ reducedMotion })` — `test.use({ reducedMotion })` is silently ignored in this setup. The layout guard measures at rest (motion off) and separately checks that motion never makes the page scroll sideways. They are excluded from Vitest (`vitest.config.ts`) — its default pattern also matches `*.spec.ts`
 - Linting: `npm run lint`
 - Type checking: `npm run typecheck`
 - Git hooks: Husky pre-commit runs `npm run lint` and `npm run typecheck` before a commit is created
@@ -152,6 +152,23 @@ Migration status: every page is on the new system (completed 2026-09-27 on `dev`
   behind it. Its height never changes (no padding animation). `html` has `scroll-padding-top: 6rem` so anchor targets
   clear it. The print rule `body > header` still hides it.
 
+### Bands — section breaks (2026-09-27)
+
+- `components/bazaar/band.tsx`: a full-bleed "set" with its own ground (`tone`: `night` / `panel` / `butter` /
+  `sky`), an optional texture (`pattern`: `stars` / `ruled` / `blueprint`), a shaped top edge (`edge`: `torn` /
+  `perf` / `zig` / `scallop`), an optional `bottomEdge`, and an optional pointer `spotlight`. Put `page-wrap`
+  sections *inside* a band, never a band inside `page-wrap`.
+- Edges are small separate strips that overlap the neighbour; the band itself is never clipped or masked (a
+  clip-path on a tall band would clip every animated child and make scrolling expensive).
+- `tone-night` (`--dm-night`) stays dark in both themes; `tone-ink` flips, so don't use it for a night set.
+- Anything with a background inside a band must set its own text colour with a `tone-*` class (a bare
+  `bg-dm-panel` inherits the band's text colour and fails contrast on the dark blueprint band). Hand-lettered
+  words use `.hand-ink` (the band's text colour on coloured bands, accent ink on paper); don't put
+  `text-dm-ink-soft` directly on a coloured band.
+- Measured contrast on bands: lowest is dark blueprint 4.77:1; night 12.2 / 15.6, butter 9.4 / 7.5.
+- Used on `/` (night: selected work, panel: notebook, butter: themes + hiring, sky: how I work), `/about`
+  (experience, recognition, capabilities), `/projects` (archive, SoluLab case studies), `/work-with-me` (recruiters).
+
 ### Page header pattern
 
 `.hand` kicker in `dm-accent-ink`, rotated −2° → h1 in Archivo 900 uppercase with a `clamp()` size and an
@@ -181,16 +198,53 @@ mono-label + h1 pattern.
 
 ### Motion
 
-`app/globals.css` has a `prefers-reduced-motion: reduce` guard; new `@keyframes` must respect it. Motion is CSS +
-IntersectionObserver (`components/scroll-reveal.tsx`); framer-motion was removed — don't reintroduce it. Don't
-wrap above-the-fold content in `FadeUp`: it stays invisible until hydration and delays LCP.
+`app/globals.css` and `app/motion.css` have `prefers-reduced-motion: reduce` guards; new `@keyframes` must respect
+them. framer-motion was removed — don't reintroduce it. The old `FadeUp` / `components/scroll-reveal.tsx` is gone
+(2026-09-27): it hid content until hydration. Use the film's vocabulary below instead.
+
+**Where motion goes (Neel's do / don't, 2026-09-27):**
+- **Do** — `/` (the full film) and a lighter set on `/about`, `/projects`, `/work-with-me`, `/writing`, `/resources`,
+  `/speaking`, `/newsletter`: `PageIntro motion` (arch rises, sun drops, kicker pops, h1 slams in, wall settles,
+  `hook-deal-any` lists are dealt), `FilmProgress`, title `sd-slam` + `Scribbled` underlines, night bands with
+  `spotlight`, `rv-*` / `sd-*` card entrances, the living sky (`data-sky-window` sections), `<MotionStage />`.
+- **Don't** — article pages and `/resume` (reading surfaces stay still; articles keep their reading-progress
+  bar, the resume must print), and anything next to a form (contact form, Cal embed, subscribe and download
+  forms): those blocks stay static even when the page around them moves. The footer's end card (shapes
+  reassemble, sunset, reverse ticker) is site chrome below the content and plays on every page.
+- Lists that React re-renders (filtered grids) use `sd-scroll` entrances — pure CSS, nothing for JS to mark —
+  never `data-reveal` / `data-sd`.
+
+**The homepage film** (`app/motion.css`, imported from `app/layout.tsx` — an `@import` inside `globals.css` is
+silently dropped by Turbopack in dev):
+- Act 0, hook (CSS only, ~1.3s): paper strips rip off the headline, *what's* writes on, NEXT. floods with ink,
+  arch rises, sun drops, polaroids are dealt and their counters roll up, the hero dollies out. The hero
+  paragraph is the LCP element: it may move, never start invisible.
+- Act 1, scroll: native scroll-driven animations (`animation-timeline: view()/scroll()`) inside
+  `@supports`; each section uses a different technique (stamp, moonrise + card flip, pin drop, camera pan,
+  tape seal, blueprint scan + self-drawing diagram, sticky card stack, title slam + scribble, kinetic type
+  ribbon, star-field parallax, fly-through NEXT., film-strip progress).
+- Act 2, finale: the footer reassembles the hero's shapes, *staying power* writes on, the sun sets.
+- Ambient: shapes breathe (paused off-screen), two tickers, and the living sky
+  (`components/motion/sky-shader.ts`: one WebGL fragment shader, dawn → dusk with scroll, half resolution,
+  30fps, draws only while a `[data-sky-window]` is visible, starts after load + idle, skipped under reduced
+  motion / Save-Data).
+- `components/motion/motion-stage.tsx` is the only JS: reveal marking (`data-reveal` time-based, `data-sd`
+  fallback where scroll timelines are missing), ambient pausing, desktop-only pointer parallax / night-set
+  spotlight / `data-magnetic` buttons, and starting the sky.
+- Rules: animate only transform / opacity / translate / scale / rotate (plus one clip-path word, SVG strokes,
+  and the shader). Nothing is hidden unless `html.motion-ready` or a scroll timeline can bring it back.
+  Every new keyframe goes into the reduced-motion list at the bottom of `motion.css`.
+- Budgets (measured 2026-09-27, 375px, CPU 4×, slow 4G): TBT unchanged at 86 ms, CLS 0, +2.5 KB JS,
+  motion CSS 3.5 KB gz, 0 janky frames. A GSAP hook (+141 ms TBT, headline ~1s late) and a Three.js sky
+  (+133 KB, −27% scroll fps) were built, measured and rejected — don't reintroduce them.
 
 ### Homepage
 
 - The hero (`components/home-hero.tsx`) is the approved lab prototype on real content: "Building / *what's* /
   Next." (solid / Caveat / outlined), copy scrap, stat polaroids, a straight subscribe strip, and the tech stack
   as a tilted "ticker tape" marquee (the marquee is a kept user preference; it stops under reduced motion).
-- It is a static server component with no entrance animation — the h1 is the LCP element; keep it that way.
+- It is a static server component. Its entrance is CSS only (see Motion); the hero paragraph is the LCP element,
+  so it may move but must never start invisible.
 - The old dark hero, its lazy desktop constellation and `hero-logos` were removed in the redesign.
 - Favicon source is `public/favicon.svg`; do not reintroduce `app/favicon.ico`.
 - OG images (`app/opengraph-image.tsx`, `app/writing/[slug]/opengraph-image.tsx`) share `lib/og.tsx`: the light

@@ -1,9 +1,11 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { FadeUp } from '@/components/scroll-reveal'
+import { MotionStage } from '@/components/motion/motion-stage'
+import { FilmProgress, Scribbled } from '@/components/motion/scribbled'
 import { AboutTechStack } from '@/components/about-tech-stack'
 import { PageIntro } from '@/components/bazaar/page-intro'
 import { Scrap } from '@/components/bazaar/scrap'
+import { Band } from '@/components/bazaar/band'
 import { chipLink, focusRing, pick, softTilts, tilts, tones } from '@/components/bazaar/styles'
 import { cn } from '@/lib/utils'
 
@@ -113,12 +115,13 @@ const stats = [
 ]
 
 const sectionTitle = 'text-[clamp(2rem,5vw,3.4rem)] font-black uppercase leading-none tracking-tighter'
-const handWord = 'hand text-[1.15em] font-normal lowercase text-dm-accent-ink'
 
 export default function AboutPage() {
   return (
     <>
+      <FilmProgress />
       <PageIntro
+        motion
         crumbs={[
           { href: '/', label: '← Home' },
           { href: '/work-with-me', label: 'Work with me' },
@@ -144,10 +147,20 @@ export default function AboutPage() {
             <p className="hand mt-4 text-[1.5rem] leading-none text-dm-accent-ink">— Ahmedabad, India</p>
           </Scrap>
 
-          <div className="flex items-start pl-1 lg:-ml-8 lg:mt-6">
-            <div className="relative z-30 w-[124px] -rotate-6 bg-dm-panel p-2.5 pb-3 shadow-hard-lg sm:w-[150px] sm:p-3">
-              <div className="tone-lilac flex h-[112px] items-center justify-center sm:h-[136px]">
-                <span className="text-[3rem] font-black leading-none tracking-tighter sm:text-[3.6rem]">NB</span>
+          <div className="hook-deal-any flex items-start pl-1 lg:-ml-8 lg:mt-6">
+            <div className="relative z-30 w-[136px] -rotate-6 bg-dm-panel p-2.5 pb-3 shadow-hard-lg sm:w-[172px] sm:p-3">
+              <div className="tone-lilac relative h-[124px] overflow-hidden sm:h-[156px]">
+                {/* A pre-sized 320px WebP (6.7 KB) as a plain img: next/image's client JS
+                    (~6 KB gz) would outweigh what it saves on one small photo. */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/images/neel-banker.webp"
+                  alt="Neel Banker"
+                  width={320}
+                  height={320}
+                  decoding="async"
+                  className="absolute inset-0 size-full object-cover object-[50%_28%]"
+                />
               </div>
               <p className="hand mt-1.5 text-center text-[1.1rem] leading-tight text-dm-ink">hi, I&apos;m Neel</p>
             </div>
@@ -180,9 +193,9 @@ export default function AboutPage() {
       </PageIntro>
 
       {/* ── The long version ─────────────────────────────────────────── */}
-      <section aria-labelledby="long-version" className="page-wrap mt-24">
-        <h2 id="long-version" className={sectionTitle}>
-          The long <span className={handWord}>version</span>
+      <section aria-labelledby="long-version" className="page-wrap mt-24" data-sky-window>
+        <h2 id="long-version" data-sd className={cn(sectionTitle, 'sd-slam')}>
+          The long <Scribbled>version</Scribbled>
         </h2>
         <div className="mt-10 grid gap-12 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-14">
           <Scrap tall tape paperClassName="tone-panel px-6 pb-12 pt-14 sm:px-12 sm:pb-16 sm:pt-16">
@@ -277,14 +290,14 @@ export default function AboutPage() {
       </section>
 
       {/* ── Experience ───────────────────────────────────────────────── */}
-      <section aria-labelledby="experience" className="page-wrap mt-24 sm:mt-28">
-        <h2 id="experience" className={sectionTitle}>
-          Where I&apos;ve <span className={handWord}>worked</span>
+      <Band tone="night" edge="torn" pattern="stars" spotlight className="mt-24 sm:mt-28">
+      <section aria-labelledby="experience" className="page-wrap py-24 sm:py-28">
+        <h2 id="experience" data-sd className={cn(sectionTitle, 'sd-slam')}>
+          Where I&apos;ve <Scribbled>worked</Scribbled>
         </h2>
         <ol className="mt-10 space-y-12">
           {experience.map((exp, i) => (
-            <li key={exp.company}>
-              <FadeUp>
+            <li key={exp.company} data-reveal className="rv-rise">
                 <Scrap
                   className={i % 2 ? 'rotate-[0.5deg]' : '-rotate-[0.5deg]'}
                   paperClassName="tone-panel grid gap-6 px-7 py-10 sm:px-10 md:grid-cols-[220px_minmax(0,1fr)] md:gap-10"
@@ -316,19 +329,20 @@ export default function AboutPage() {
                     )}
                   </div>
                 </Scrap>
-              </FadeUp>
             </li>
           ))}
         </ol>
       </section>
+      </Band>
 
       {/* ── Recognition ──────────────────────────────────────────────── */}
-      <section aria-labelledby="recognition" className="page-wrap mt-24 sm:mt-28">
+      <Band tone="butter" edge="zig">
+      <section aria-labelledby="recognition" className="page-wrap py-24 sm:py-28">
         <div className="max-w-3xl">
-          <h2 id="recognition" className={sectionTitle}>
-            Signals of <span className={handWord}>trust</span>
+          <h2 id="recognition" data-sd className={cn(sectionTitle, 'sd-slam')}>
+            Signals of <Scribbled>trust</Scribbled>
           </h2>
-          <p className="mt-4 text-[15px] leading-[1.75] text-dm-ink-soft">
+          <p className="mt-4 text-[15px] leading-[1.75]">
             A few selected proof points that show the range of the work: leadership, academic rigor, and delivery across
             high-stakes systems.
           </p>
@@ -337,7 +351,8 @@ export default function AboutPage() {
           {recognition.map((item, i) => (
             <li
               key={item.title + item.meta}
-              className={cn('flex flex-col border-2 border-current p-6 shadow-hard', pick(tones, i), pick(softTilts, i))}
+              data-reveal
+              className={cn('rv-stamp flex flex-col border-2 border-current p-6 shadow-hard', pick(tones, i), pick(softTilts, i))}
             >
               <span className="ticket w-fit">{item.label}</span>
               <h3 className="mt-4 text-[1.2rem] font-black uppercase leading-[1.1] tracking-tight">{item.title}</h3>
@@ -345,7 +360,7 @@ export default function AboutPage() {
               <p className="mt-3 text-[15px] font-medium leading-[1.65]">{item.detail}</p>
             </li>
           ))}
-          <li className="tone-panel flex flex-col justify-center border-2 border-dashed border-current p-6 rotate-[0.6deg]">
+          <li data-reveal className="rv-stamp tone-panel flex flex-col justify-center border-2 border-dashed border-current p-6 rotate-[0.6deg]">
             <p className="hand text-[1.7rem] leading-tight text-dm-accent-ink">Academic grounding</p>
             <p className="mt-2 text-[15px] leading-[1.65]">
               <strong>MTech, Information Technology</strong> — review work on{' '}
@@ -355,14 +370,16 @@ export default function AboutPage() {
           </li>
         </ul>
       </section>
+      </Band>
 
       {/* ── Capability map ───────────────────────────────────────────── */}
-      <section aria-labelledby="capabilities" className="page-wrap mt-24 sm:mt-28">
+      <Band tone="sky" edge="scallop" bottomEdge="torn" pattern="blueprint">
+      <section aria-labelledby="capabilities" className="page-wrap py-24 sm:py-28">
         <div className="max-w-3xl">
-          <h2 id="capabilities" className={sectionTitle}>
-            Capability <span className={handWord}>map</span>
+          <h2 id="capabilities" data-sd className={cn(sectionTitle, 'sd-slam')}>
+            Capability <Scribbled>map</Scribbled>
           </h2>
-          <p className="mt-4 text-[15px] leading-[1.75] text-dm-ink-soft">
+          <p className="mt-4 text-[15px] leading-[1.75]">
             The work spans protocol architecture, custody systems, backend delivery, cloud operations, and AI-assisted
             engineering — grouped so it shows breadth without turning into a resume wall.
           </p>
@@ -371,12 +388,13 @@ export default function AboutPage() {
           <AboutTechStack />
         </div>
       </section>
+      </Band>
 
       {/* ── Speaking ─────────────────────────────────────────────────── */}
-      <section aria-labelledby="talks" className="page-wrap mt-24 sm:mt-28">
+      <section aria-labelledby="talks" className="page-wrap mt-24 sm:mt-28" data-sky-window>
         <div className="flex flex-wrap items-end justify-between gap-4">
-          <h2 id="talks" className={sectionTitle}>
-            On <span className={handWord}>stage</span>
+          <h2 id="talks" data-sd className={cn(sectionTitle, 'sd-slam')}>
+            On <Scribbled>stage</Scribbled>
           </h2>
           <Link href="/speaking" className={cn(chipLink, 'tone-panel rotate-1')}>
             All talks →
@@ -384,7 +402,7 @@ export default function AboutPage() {
         </div>
         <ul className="mt-10 grid gap-8 md:grid-cols-3">
           {talks.map((talk, i) => (
-            <li key={talk.title}>
+            <li key={talk.title} data-reveal className="rv-pin">
               <a
                 href={talk.youtubeUrl}
                 target="_blank"
@@ -416,6 +434,7 @@ export default function AboutPage() {
           ))}
         </ul>
       </section>
+      <MotionStage />
     </>
   )
 }

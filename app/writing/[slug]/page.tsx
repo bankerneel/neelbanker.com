@@ -9,7 +9,6 @@ import { getPillarBySlug } from '@/lib/pillars'
 import { parseDate } from '@/lib/utils-date'
 import { cn } from '@/lib/utils'
 import { PillarBadge } from '@/components/pillar-badge'
-import { FadeUp } from '@/components/scroll-reveal'
 import { Scrap } from '@/components/bazaar/scrap'
 import { articleMdxComponents } from '@/components/mdx-components'
 import { ReadingProgress } from '@/components/bazaar/reading-progress'
@@ -156,7 +155,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
       {/* ── Keep reading — neighbours pinned at angles ─────────────────── */}
       {neighbours.length > 0 && (
         <section aria-labelledby="keep-reading" className="page-wrap mt-24 sm:mt-28">
-          <FadeUp>
+          <div>
             <h2 id="keep-reading" className="text-[clamp(2rem,5vw,3.4rem)] font-black uppercase leading-none tracking-tighter">
               Keep{' '}
               <span className="hand text-[1.15em] font-normal lowercase text-dm-accent-ink">reading</span>
@@ -188,14 +187,14 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                 </Link>
               ))}
             </div>
-          </FadeUp>
+          </div>
         </section>
       )}
 
       {/* ── More from the same pillar ───────────────────────────────────── */}
       {pillar && related.length > 0 && (
         <section aria-labelledby="more-on-pillar" className="page-wrap mt-20">
-          <FadeUp>
+          <div>
             <div className="tone-panel mx-auto max-w-[800px] border-2 border-current px-7 py-9 shadow-hard sm:px-10">
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <h2 id="more-on-pillar" className="text-[1.35rem] font-black uppercase leading-tight tracking-tight">
@@ -223,13 +222,13 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                 ))}
               </ol>
             </div>
-          </FadeUp>
+          </div>
         </section>
       )}
 
       {/* ── Newsletter portal ─────────────────────────────────────────── */}
       <section aria-labelledby="subscribe" className="page-wrap mt-24 sm:mt-28">
-        <FadeUp>
+        <div>
           <div className="surreal-arch dm-longshadow tone-lilac mx-auto max-w-[880px] px-7 pb-12 pt-24 text-center sm:px-14 sm:pt-20">
             <p className="text-[11px] font-bold uppercase tracking-[0.24em]">Free · Weekly ✦</p>
             <h2 id="subscribe" className="mt-4 text-[clamp(1.8rem,4.6vw,3rem)] font-black uppercase leading-[1.02] tracking-tight">
@@ -250,7 +249,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
               Subscribe free →
             </Link>
           </div>
-        </FadeUp>
+        </div>
 
         <div className="mt-14 flex flex-wrap justify-center gap-3">
           <Link

@@ -3,6 +3,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { PILLARS } from '@/lib/pillars'
 import { cn } from '@/lib/utils'
 import { focusRing, pick, tilts } from '@/components/bazaar/styles'
+import { Scribbled } from '@/components/motion/scribbled'
 import { ArticleCard } from './article-card'
 import type { ArticleMeta, PillarSlug } from '@/types/content'
 
@@ -53,12 +54,11 @@ export function PillarFilter({
     <div>
       <div className="mb-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <h2 id="archive" className="text-[clamp(2rem,5vw,3.4rem)] font-black uppercase leading-none tracking-tighter">
-            The{' '}
-            <span className="hand text-[1.15em] font-normal lowercase text-dm-accent-ink">whole</span>{' '}
-            archive
+          <h2 id="archive" data-sd className="sd-slam text-[clamp(2rem,5vw,3.4rem)] font-black uppercase leading-none tracking-tighter">
+            The <Scribbled>whole</Scribbled> archive
           </h2>
-          <p className="mt-3 text-[13px] font-bold uppercase tracking-[0.14em] text-dm-ink-soft" aria-live="polite">
+          {/* sits on the night band: inherit the band's text colour, not ink-soft */}
+          <p className="mt-3 text-[13px] font-bold uppercase tracking-[0.14em]" aria-live="polite">
             {activeLabel} · {filtered.length} of {articles.length}
           </p>
         </div>
@@ -87,7 +87,9 @@ export function PillarFilter({
       {filtered.length > 0 ? (
         <div className="space-y-7">
           {filtered.map((a, i) => (
-            <ArticleCard key={a.slug} article={a} index={i} />
+            <div key={a.slug} className="sd-scroll sd-rise">
+              <ArticleCard article={a} index={i} />
+            </div>
           ))}
         </div>
       ) : (
