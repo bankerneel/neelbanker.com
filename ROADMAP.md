@@ -64,7 +64,13 @@ Baseline at the start of the redesign:
 Caveat's variable file was 74.6 KB; one static weight saves 24 KB. If fonts must shrink
 further, the lever is `preload: false` on Caveat (accents only, not the LCP element).
 
-### 1. Browser QA and fix pass
+### 1. Browser QA and fix pass — automated part ✅, real devices still open
+
+- Automated: the §7 suite now covers routes, nav, forms UX, print and horizontal overflow at 320–1024px.
+- **Still needs Neel:** real iPhone Safari + low-end Android pass, and the three forms against production
+  Resend (they send real email).
+
+_Original checklist:_
 
 - Verify homepage hero on:
   - mobile
@@ -81,9 +87,10 @@ further, the lever is `preload: false` on Caveat (accents only, not the LCP elem
   - resource download
 - Verify nav/footer behavior on edge widths and sticky scroll behavior
 
-### 2. Motion/performance tuning
+### 2. Motion/performance tuning ✅
 
-> Largely done: framer-motion removed entirely (CSS + IntersectionObserver reveals), hero split + calmed + lazy-loaded desktop-only, homepage First Load JS ~292 KB → ~234 KB. Remaining: profile on real low-end devices if needed.
+> Done. The old hero and its constellation were removed in the redesign; the only motion left is CSS reveals and
+> the marquee (both reduced-motion safe). Profile on a real low-end phone only if it feels slow. History: framer-motion removed entirely (CSS + IntersectionObserver reveals), hero split + calmed + lazy-loaded desktop-only, homepage First Load JS ~292 KB → ~234 KB. Remaining: profile on real low-end devices if needed.
 
 
 - Profile `components/hero-client.tsx` in browser DevTools
@@ -125,13 +132,18 @@ further, the lever is `preload: false` on Caveat (accents only, not the LCP elem
 - Add more writing from `profile-data/WEBSITE.md` backlog
 - Resume page shipped as an HTML "document sheet" (`/resume`) with print-to-PDF + `.tex` download. If a compiled PDF or a LaTeX toolchain in CI becomes available, optionally swap to an embedded real PDF for exact fidelity.
 
-### 7. QA / testing hardening
+### 7. QA / testing hardening ✅ (2026-09-27)
 
-- Add targeted Playwright coverage for:
-  - key routes
-  - nav flow
-  - form submission UX
-  - resource download flow
+`npm run test:e2e` — 32 tests, stable across repeated full runs:
+- `routes` — every page 200, one h1, no uncaught errors, no same-origin 4xx/5xx; 404s for unknown URLs/articles
+- `navigation` — desktop nav + aria-current, sticky strip, mobile menu (open / Escape / navigate), theme toggle
+  persistence, theme on notFound() pages, writing pillar filter + URL state
+- `forms` — contact validation, success and failure; newsletter success and failure; resource download + fallback
+  link. API routes are mocked with `page.route()` — no real email is sent
+- `print` — /resume under print media shows only the sheet (with its header)
+- `layout` — no element past the viewport at 320 / 375 / 768 / 1024px on seven key routes. It caught two real
+  bugs on the way in (homepage polaroids and a long uppercase project title at 320px)
+- `e2e/helpers.ts` `gotoHydrated()` waits for React hydration before interacting
 
 ## Ongoing Rules
 

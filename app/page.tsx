@@ -86,7 +86,7 @@ export default function HomePage() {
       {spotlight && (
         <section aria-labelledby="selected-work" className="page-wrap mt-24 sm:mt-28">
           <FadeUp>
-            <div className="surreal-arch dm-longshadow tone-lilac px-7 pb-12 pt-24 sm:px-12 sm:pt-20">
+            <div className="surreal-arch dm-longshadow tone-lilac px-4 pb-12 pt-24 min-[360px]:px-7 sm:px-12 sm:pt-20">
               <p className="text-center text-[11px] font-bold uppercase tracking-[0.24em]">Selected work ✦</p>
               <h2 id="selected-work" className="mx-auto mt-4 max-w-2xl text-center text-[clamp(1.5rem,3.6vw,2.4rem)] font-black uppercase leading-[1.1]">
                 {spotlight.title}
@@ -120,7 +120,7 @@ export default function HomePage() {
 
               <ul className="mt-12 grid gap-8 md:grid-cols-3">
                 {featuredProjects.map((project, i) => (
-                  <li key={project.slug}>
+                  <li key={project.slug} className="min-w-0">
                     <ProjectCard project={project} featured index={i + 1} />
                   </li>
                 ))}
