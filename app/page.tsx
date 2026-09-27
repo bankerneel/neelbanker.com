@@ -161,7 +161,7 @@ export default function HomePage() {
               >
                 <Scrap className={cn(i === 1 && 'lg:mt-7', i === 2 && 'lg:mt-14')} paperClassName={cn(noteTones[i], 'px-6 py-8')}>
                   <span className="ticket">
-                    {getPillarBySlug(a.pillar)?.short} · {a.readingTime} min
+                    {a.draft ? 'Draft' : `${getPillarBySlug(a.pillar)?.short} · ${a.readingTime} min`}
                   </span>
                   <h3 className="mt-4 text-[1.15rem] font-black uppercase leading-tight tracking-tight">{a.title}</h3>
                   <p className="mt-2 text-[14px] font-medium leading-[1.65]">{a.excerpt}</p>

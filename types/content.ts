@@ -19,6 +19,7 @@ export interface ArticleMeta {
   pillar: PillarSlug
   excerpt: string
   readingTime: number   // minutes, computed
+  draft?: boolean       // from content/drafts/ — only ever present under `next dev`
 }
 
 export interface Article extends ArticleMeta {

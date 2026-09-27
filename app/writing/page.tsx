@@ -59,7 +59,7 @@ function PinnedArticle({
       className={cn('group block cursor-pointer transition-[rotate] duration-200 hover:rotate-0', tilt, focusRing, className)}
     >
       <Scrap paperClassName={cn(tone, size === 'lead' ? 'px-8 py-11 sm:px-11 sm:py-14' : 'px-7 py-9')}>
-        <span className="ticket">{size === 'lead' ? 'Latest ✦' : pillar?.short}</span>
+        <span className="ticket">{article.draft ? 'Draft — not published' : size === 'lead' ? 'Latest ✦' : pillar?.short}</span>
         <h3
           className={cn(
             'mt-5 font-black uppercase tracking-tight',

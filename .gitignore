@@ -10,6 +10,9 @@
 !.yarn/releases
 !.yarn/versions
 
+# unreviewed article drafts — rendered by `next dev` only (lib/mdx.ts)
+/content/drafts/
+
 # testing
 /coverage
 /test-results/

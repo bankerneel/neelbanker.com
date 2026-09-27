@@ -22,6 +22,7 @@ export function ArticleCard({ article, index = 0 }: { article: ArticleMeta; inde
       <div className="tone-panel grid gap-4 border-2 border-current p-6 shadow-hard sm:p-7 md:grid-cols-[210px_minmax(0,1fr)_auto] md:items-start md:gap-7">
         <div className="flex flex-wrap items-center gap-2.5 md:flex-col md:items-start md:pt-1">
           <PillarBadge pillar={article.pillar} className="whitespace-normal leading-tight" />
+          {article.draft && <span className="ticket tone-ink">Draft</span>}
           <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-dm-ink-soft">
             {parseDate(article.date)} · {article.readingTime} min
           </span>

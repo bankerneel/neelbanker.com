@@ -152,6 +152,13 @@ Notes:
   show no outcome block.
 - Add the new slug to `PROJECT_CATEGORIES` in `components/project-browser.tsx`, or it only appears under "All work".
 
+## Drafts
+
+Put unreviewed articles in `content/drafts/` (same frontmatter as `content/writing/`). The folder is gitignored
+and only `next dev` reads it: drafts appear in the archive and at `/writing/<slug>` with a "Draft — not published"
+marker, and never reach a production build. To publish, move the file to `content/writing/`, set the real
+`date`, and delete the review-notes callout at the top.
+
 ## Callouts And Code In Articles
 
 Articles can pin a note with the `<Callout>` component — no import needed:
