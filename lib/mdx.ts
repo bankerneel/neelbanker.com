@@ -70,11 +70,31 @@ export function getAllResourceMeta(): ResourceMeta[] {
 
 // ─── Projects ────────────────────────────────────────────────────────────────
 
+/**
+ * The bullet list under a project's `## Outcome` heading, as plain text
+ * (inline code, bold and links unwrapped). Empty when the section is missing.
+ */
+export function extractOutcome(content: string): string[] {
+  const section = content.split(/^## Outcome\s*$/m)[1]?.split(/^## /m)[0] ?? ''
+  return section
+    .split('\n')
+    .filter((line) => /^\s*[-*] /.test(line))
+    .map((line) =>
+      line
+        .replace(/^\s*[-*] /, '')
+        .replace(/`([^`]+)`/g, '$1')
+        .replace(/\*\*([^*]+)\*\*/g, '$1')
+        .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+        .trim(),
+    )
+    .filter(Boolean)
+}
+
 export function getAllProjectMeta(): ProjectMeta[] {
   return readMdxDir('projects').map((file) => {
     const slug = file.replace(/\.mdx$/, '')
     const raw = fs.readFileSync(path.join(CONTENT_DIR, 'projects', file), 'utf-8')
-    const { data } = matter(raw)
+    const { data, content } = matter(raw)
     return {
       slug,
       title: data.title,
@@ -82,6 +102,7 @@ export function getAllProjectMeta(): ProjectMeta[] {
       chain: data.chain,
       stack: data.stack ?? [],
       date: data.date,
+      outcome: extractOutcome(content),
     } satisfies ProjectMeta
   }).sort((a, b) => (a.date < b.date ? 1 : -1))
 }

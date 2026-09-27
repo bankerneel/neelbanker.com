@@ -1,5 +1,7 @@
 import { defineConfig, devices } from '@playwright/test'
 
+const browserChannel = process.env.PW_CHANNEL || (process.platform === 'win32' ? 'msedge' : undefined)
+
 export default defineConfig({
   testDir: './e2e',
   fullyParallel: true,
@@ -14,7 +16,9 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      // No bundled browser is needed on Windows: use the system Edge there.
+      // PW_CHANNEL overrides either default (e.g. PW_CHANNEL=chrome).
+      use: { ...devices['Desktop Chrome'], channel: browserChannel },
     },
   ],
   webServer: {

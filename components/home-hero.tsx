@@ -71,7 +71,7 @@ export function HomeHero() {
               <li
                 key={s.label}
                 className={cn(
-                  'relative w-[108px] bg-dm-panel p-2.5 pb-3.5 shadow-[9px_9px_0_var(--dm-shadow)] sm:w-[160px] sm:p-3 sm:pb-5',
+                  'relative w-[96px] bg-dm-panel p-2.5 pb-3.5 shadow-[9px_9px_0_var(--dm-shadow)] min-[360px]:w-[108px] sm:w-[160px] sm:p-3 sm:pb-5',
                   s.tilt,
                   i > 0 && '-ml-3 sm:-ml-6',
                 )}

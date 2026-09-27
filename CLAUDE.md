@@ -17,7 +17,7 @@ Current setup highlights:
 - Husky pre-commit hook runs `npm run lint` and `npm run typecheck`
 - Standalone pages include in-page navigation CTAs to avoid dead-end flows
 
-Design conventions — **Dream Bazaar** (redesign in progress, see AGENTS.md "Design" and ROADMAP.md §0):
+Design conventions — **Dream Bazaar** (live since 2026-09-26; full rules in AGENTS.md "Design"):
 - Light + dark: follows the OS, nav toggle overrides (`localStorage['nb-theme']`); `data-theme` on `<html>` is set before paint
 - Colours are `--dm-*` tokens; filled surfaces use `tone-*` classes; the only coloured text is `text-dm-accent-ink`
 - Torn paper = `components/bazaar/scrap.tsx` (never shadow/border/ring a `clip-path` element directly)

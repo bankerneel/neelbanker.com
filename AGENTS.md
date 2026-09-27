@@ -73,8 +73,8 @@ Current stack: Next.js 16 App Router · Tailwind v4 · shadcn/ui · MDX · Resen
 ## Testing
 
 - Unit tests: Vitest + React Testing Library (`npm run test`). Needs **Node ^20.19.0 || >=22.12.0** (Vite 8); `.nvmrc` says 24. A `pretest` guard (`scripts/check-node.mjs`) fails fast on older Node. Don't express this as `engines` in `package.json` — Vercel uses that field to pick the production Node version.
-- E2E tests: Playwright (`npm run test:e2e`) — webServer config auto-starts dev server
-- E2E specs live in `e2e/` and are excluded from Vitest (`vitest.config.ts`) — its default pattern also matches `*.spec.ts`
+- E2E tests: Playwright (`npm run test:e2e`) — webServer config auto-starts the dev server (or reuses one on :3000). On Windows it runs on the system Edge (`channel: 'msedge'`), so no browser download is needed; `PW_CHANNEL` overrides. Run artifacts (`test-results/`, `playwright-report/`) are gitignored.
+- E2E specs live in `e2e/` (routes, navigation, forms with mocked APIs, print, layout overflow guard); interact via `gotoHydrated()` from `e2e/helpers.ts`, never before hydration. They are excluded from Vitest (`vitest.config.ts`) — its default pattern also matches `*.spec.ts`
 - Linting: `npm run lint`
 - Type checking: `npm run typecheck`
 - Git hooks: Husky pre-commit runs `npm run lint` and `npm run typecheck` before a commit is created
@@ -163,6 +163,9 @@ mono-label + h1 pattern.
 - Wrap MDX in `prose prose-lg prose-bazaar max-w-none` on a `Scrap tall` sheet. `.prose-bazaar` (globals.css)
   maps typography colours to the palette and adds the h2 highlighter, drop cap, link underline, code and table
   styles.
+- `articleMdxComponents` also provides `<Callout type="note|tip|warning">` for authors and wraps `<pre>` in
+  `components/bazaar/code-block.tsx` (copy button + language label). Article pages show a reading-progress bar
+  (`components/bazaar/reading-progress.tsx`, tracks `#article-body`) and a same-pillar "More on …" list.
 - Pass `components={articleMdxComponents}` (`components/mdx-components.tsx`) and
   `options={{ mdxOptions: { remarkPlugins: [remarkGfm] } }}` — without `remark-gfm`, markdown tables render as a
   paragraph of pipes.

@@ -64,7 +64,13 @@ Baseline at the start of the redesign:
 Caveat's variable file was 74.6 KB; one static weight saves 24 KB. If fonts must shrink
 further, the lever is `preload: false` on Caveat (accents only, not the LCP element).
 
-### 1. Browser QA and fix pass
+### 1. Browser QA and fix pass — automated part ✅, real devices still open
+
+- Automated: the §7 suite now covers routes, nav, forms UX, print and horizontal overflow at 320–1024px.
+- **Still needs Neel:** real iPhone Safari + low-end Android pass, and the three forms against production
+  Resend (they send real email).
+
+_Original checklist:_
 
 - Verify homepage hero on:
   - mobile
@@ -81,9 +87,10 @@ further, the lever is `preload: false` on Caveat (accents only, not the LCP elem
   - resource download
 - Verify nav/footer behavior on edge widths and sticky scroll behavior
 
-### 2. Motion/performance tuning
+### 2. Motion/performance tuning ✅
 
-> Largely done: framer-motion removed entirely (CSS + IntersectionObserver reveals), hero split + calmed + lazy-loaded desktop-only, homepage First Load JS ~292 KB → ~234 KB. Remaining: profile on real low-end devices if needed.
+> Done. The old hero and its constellation were removed in the redesign; the only motion left is CSS reveals and
+> the marquee (both reduced-motion safe). Profile on a real low-end phone only if it feels slow. History: framer-motion removed entirely (CSS + IntersectionObserver reveals), hero split + calmed + lazy-loaded desktop-only, homepage First Load JS ~292 KB → ~234 KB. Remaining: profile on real low-end devices if needed.
 
 
 - Profile `components/hero-client.tsx` in browser DevTools
@@ -93,26 +100,29 @@ further, the lever is `preload: false` on Caveat (accents only, not the LCP elem
 
 ## Next
 
-### 3. Homepage proof refinement
+### 3. Homepage proof refinement ✅ (2026-09-27)
 
-- Add or refine one stronger trust/proof strip near the fold
-- Sharpen recruiter/employer proof messaging
-- Reassess section ordering based on what should convert best
+- "Receipts, not adjectives" strip right after the hero: current role, SoluLab lead path (10 → 50+), Best Team
+  Lead 2021 + 2022, talks. Facts only from /about and /resume.
+- Recruiter lane: resume, the /work-with-me recruiter section, LinkedIn.
+- Order: hero → receipts → selected work → writing → themes → hiring → how I work → services. "Start here" was
+  dropped (it repeated the nav and the sections below it).
+- **To confirm:** `profile-data/WEBSITE.md` says the SoluLab team grew 10 → **40+**; the site and resume say
+  **50+**. The site keeps 50+.
 
-### 4. `/projects` depth upgrade
+### 4. `/projects` depth upgrade ✅ (2026-09-27, partly)
 
-- Add stronger role/stack/outcome summaries per featured project
-- Improve spotlight/category transitions if needed
-- Consider richer featured-by-category interaction
+- Outcome: "what shipped" bullets on every card, parsed from each project's `## Outcome` section (17 of 20 have
+  one; Fireblocks vs BitGo, Project Ember and PrivateGPT don't). Stack was already shown.
+- **Role is not done:** no per-project role data exists anywhere in the content. Needs Neel to supply one line
+  per project (e.g. "Architect + delivery lead") — then add a `role` frontmatter field.
+- Category transitions / richer interaction: current fade-in filter is fine; not pursued.
 
-### 5. Writing system polish
+### 5. Writing system polish ✅ (2026-09-27)
 
-- Improve MDX treatment for:
-  - tables
-  - callouts
-  - code blocks
-- Add stronger related-reading behavior at article end
-- Consider subtle reading progress indicator
+- Tables: `remark-gfm` + scroll box (redesign). Callouts: `<Callout>` MDX component. Code blocks: copy button + language label.
+- Related reading: same-pillar "More on …" list after the newer/earlier cards.
+- Reading progress: thin accent-ink bar tracking the article sheet.
 
 ## Later
 
@@ -122,13 +132,18 @@ further, the lever is `preload: false` on Caveat (accents only, not the LCP elem
 - Add more writing from `profile-data/WEBSITE.md` backlog
 - Resume page shipped as an HTML "document sheet" (`/resume`) with print-to-PDF + `.tex` download. If a compiled PDF or a LaTeX toolchain in CI becomes available, optionally swap to an embedded real PDF for exact fidelity.
 
-### 7. QA / testing hardening
+### 7. QA / testing hardening ✅ (2026-09-27)
 
-- Add targeted Playwright coverage for:
-  - key routes
-  - nav flow
-  - form submission UX
-  - resource download flow
+`npm run test:e2e` — 32 tests, stable across repeated full runs:
+- `routes` — every page 200, one h1, no uncaught errors, no same-origin 4xx/5xx; 404s for unknown URLs/articles
+- `navigation` — desktop nav + aria-current, sticky strip, mobile menu (open / Escape / navigate), theme toggle
+  persistence, theme on notFound() pages, writing pillar filter + URL state
+- `forms` — contact validation, success and failure; newsletter success and failure; resource download + fallback
+  link. API routes are mocked with `page.route()` — no real email is sent
+- `print` — /resume under print media shows only the sheet (with its header)
+- `layout` — no element past the viewport at 320 / 375 / 768 / 1024px on seven key routes. It caught two real
+  bugs on the way in (homepage polaroids and a long uppercase project title at 320px)
+- `e2e/helpers.ts` `gotoHydrated()` waits for React hydration before interacting
 
 ## Ongoing Rules
 

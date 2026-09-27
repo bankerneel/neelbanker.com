@@ -8,8 +8,10 @@ function monthYear(iso: string) {
 
 /**
  * A project as a pinned index card. Projects are list-only (no detail pages),
- * so the card is not a link. `featured` (homepage grid) adds a handwritten
- * "no. 01" and more room; `index` sets the gentle tilt and chain-chip colour.
+ * so the card is not a link. "What shipped" shows the first bullets of the
+ * MDX body's `## Outcome` section (2 on /projects, 3 when featured).
+ * `featured` (homepage grid) adds a handwritten "no. 01" and more room;
+ * `index` sets the gentle tilt and chain-chip colour.
  */
 export function ProjectCard({
   project,
@@ -26,7 +28,7 @@ export function ProjectCard({
       className={cn(
         'tone-panel relative flex h-full flex-col border-2 border-current shadow-hard transition-[rotate] duration-200 hover:rotate-0',
         typeof index === 'number' && pick(softTilts, index),
-        featured ? 'p-7 sm:p-8' : 'p-6',
+        featured ? 'p-5 min-[360px]:p-7 sm:p-8' : 'p-6',
       )}
     >
       <div className="flex items-start justify-between gap-3">
@@ -39,8 +41,10 @@ export function ProjectCard({
       </div>
       <h3
         className={cn(
-          'mt-3 font-black uppercase leading-[1.1] tracking-tight',
-          featured ? 'text-[1.25rem] sm:text-[1.4rem]' : 'text-[1.12rem] sm:text-[1.2rem]',
+          // long uppercase words ("RECOMMENDATION") must never widen the card; the
+          // small-screen sizes below keep them whole, break-words is the backstop
+          'mt-3 font-black uppercase leading-[1.1] tracking-tight hyphens-auto break-words',
+          featured ? 'text-[1.1rem] min-[360px]:text-[1.25rem] sm:text-[1.4rem]' : 'text-[1.12rem] sm:text-[1.2rem]',
         )}
       >
         {project.title}
@@ -51,6 +55,21 @@ export function ProjectCard({
         </span>
       )}
       <p className="mt-4 text-[15px] leading-[1.65] text-dm-ink-soft">{project.excerpt}</p>
+      {project.outcome.length > 0 && (
+        <div className="mt-4 border-t-2 border-dashed border-current/25 pt-3">
+          <p className="hand text-[1.25rem] leading-none text-dm-accent-ink">what shipped</p>
+          <ul className="mt-2 space-y-1.5">
+            {project.outcome.slice(0, featured ? 3 : 2).map((item) => (
+              <li key={item} className="flex gap-2 text-[14px] leading-[1.5]">
+                <span aria-hidden="true" className="font-black text-dm-accent-ink">
+                  ✓
+                </span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
       <ul aria-label="Stack" className="mt-auto flex flex-wrap gap-1.5 pt-5">
         {project.stack.map((s) => (
           <li key={s} className="border border-current/40 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.1em]">

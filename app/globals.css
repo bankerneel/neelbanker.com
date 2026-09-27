@@ -414,6 +414,25 @@
   font-size: 0.84rem;
   line-height: 1.7;
 }
+/* room for the copy button / language label above the first line */
+.prose-bazaar .code-block pre {
+  padding-top: 2.6rem;
+}
+.prose-bazaar .callout-body > * + * {
+  margin-top: 0.6em;
+}
+.prose-bazaar .callout-body a {
+  font-weight: 700;
+  text-decoration-line: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.2em;
+}
+.prose-bazaar .callout-body code {
+  border-radius: 3px;
+  background: color-mix(in oklab, currentColor 12%, transparent);
+  padding: 0.1em 0.3em;
+  font-size: 0.88em;
+}
 .prose-bazaar .table-scroll {
   margin-block: 2em;
   overflow-x: auto;

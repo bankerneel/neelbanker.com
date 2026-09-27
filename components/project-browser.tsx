@@ -149,7 +149,7 @@ export function ProjectBrowser({ projects }: { projects: ProjectMeta[] }) {
 
         <ul key={activeFilter} className="animate-fade-in mt-10 grid gap-8 sm:grid-cols-2 xl:grid-cols-3">
           {visibleProjects.map((project, i) => (
-            <li key={project.slug}>
+            <li key={project.slug} className="min-w-0">
               <ProjectCard project={project} index={i} />
             </li>
           ))}

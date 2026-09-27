@@ -15,6 +15,14 @@ Core routes now feel substantially more consistent, lighter, and more editorial 
 
 ## Completed
 
+- **Backlog pass (2026-09-27, on `dev`):**
+  - Writing: `<Callout>` MDX component, copyable code blocks with language labels, same-pillar "More on …" list, reading-progress bar.
+  - Projects: "what shipped" outcome bullets on every card, parsed from each project's `## Outcome` section; homepage spotlight lists them too.
+  - Homepage: "receipts, not adjectives" proof strip, recruiter lane, conversion-ordered sections ("Start here" removed).
+  - Tests: 32 Playwright e2e tests (routes, nav, forms with mocked APIs, print, layout-overflow guard) + 9 Vitest unit tests; `npm run test:e2e` works on Windows (system Edge), run artifacts gitignored.
+  - Fixed on the way: 320px overflow of homepage polaroids and of a featured project card with a long uppercase word.
+  - Verified: `health-app.neelbanker.com` is live on its own Vercel project. DMARC is still missing (DNS change for Neel).
+
 - **Dream Bazaar redesign — live in production** (PR #10 merged 2026-09-26 19:38 UTC, merge `273162a`; Vercel production deploy succeeded):
   - Foundation: `--dm-*` palette with light + dark values (contrast measured and corrected), `tone-*` surfaces, `.ticket`, `.torn` / `.torn-sheet`, `page-wrap`, `.prose-bazaar`, fixed dream-sky layer; shadcn tokens mapped onto the palette.
   - Fonts: Archivo (variable) + Caveat (static 500) site-wide; Syne + JetBrains Mono now load only inside `/design-lab`.
@@ -88,6 +96,9 @@ Core routes now feel substantially more consistent, lighter, and more editorial 
 
 ## Needs Review
 
+- Per-project **role** for `/projects` cards — no source data exists; Neel to supply one line per project.
+- SoluLab team size: `profile-data/WEBSITE.md` says 10 → 40+, the site and resume say 50+.
+- DMARC TXT record at Squarespace (`_dmarc`: `v=DMARC1; p=none; adkim=r; aspf=r`).
 - Real-device QA: iOS Safari (fixed sky layer, `100lvh`, clip-path), a low-end Android (long article sheet), and the Cal embed on phones.
 - End-to-end form/download behaviour against production Resend: newsletter subscribe, contact form, resource download.
 - Category choice for Project Pulse (`fightout-move-to-earn` → infrastructure + leadership) was a judgement call from its excerpt.
