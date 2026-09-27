@@ -102,8 +102,8 @@ export const PROJECT = {
 export const PROJECTS = [
   { title: 'Project Atlas', sub: 'Multi-chain non-custodial wallet', tag: 'BTC · ETH · EVM' },
   { title: 'Project Ember', sub: 'OP Stack L2 + bridge', tag: 'Ethereum L2' },
-  { title: 'Project Seal', sub: 'Credential verification on Fabric', tag: 'Hyperledger' },
-  { title: 'Project Concierge', sub: 'AI hotel recommendation API', tag: 'NestJS · LLM' },
+  { title: 'CredSeal', sub: 'Credential verification on Fabric', tag: 'Hyperledger' },
+  { title: 'StayWise', sub: 'AI hotel recommendation API', tag: 'NestJS · LLM' },
 ]
 
 // Reading specimen — used by directions that show an article template

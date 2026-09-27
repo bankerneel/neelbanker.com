@@ -42,7 +42,7 @@ Current stack: Next.js 16 App Router · Tailwind v4 · shadcn/ui · MDX · Resen
 - Content authoring instructions live in `docs/content-authoring.md` and are indexed from `docs/README.md`
 - Article slugs are filename-based and resolve under `/writing/[slug]`
 - Standalone pages and article pages include local navigation CTAs; preserve that flow when adding new pages
-- **No real project or client names on the site** (Neel, 2026-09-27) until he approves each one: every project is `Project <Codename> — <description>`, and the codename, filename/slug, excerpt and Outcome bullets must not reveal the real name (slugs ship to the browser). `/resume` is exempt. SoluLab case-study chips use descriptive labels, not client names. See `docs/content-authoring.md`
+- **Project naming** (Neel, 2026-09-27, revised same day): **SoluLab** projects use their real names (no NDA with SoluLab). **Tech Alchemy** projects stay `Project <Codename> — <description>`; the codename, filename/slug, excerpt and Outcome bullets must not reveal the real name (slugs ship to the browser). **Personal** projects use a pseudonym product name (`<Pseudonym> — <description>`), never the original. Unmapped projects stay codenamed. `/resume` is exempt. The group is the `employer` frontmatter (`Tech Alchemy` | `SoluLab` | `Personal`). See `docs/content-authoring.md`
 
 ## Project Tracking Docs
 

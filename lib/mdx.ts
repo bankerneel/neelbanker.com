@@ -118,8 +118,9 @@ export function getAllProjectMeta(): ProjectMeta[] {
       outcome: extractOutcome(content),
       ...(isEmployer(data.employer) ? { employer: data.employer, role: ROLE_BY_EMPLOYER[data.employer] } : {}),
       ...(typeof data.caseStudy === 'string' && data.caseStudy ? { caseStudy: data.caseStudy } : {}),
+      ...(data.highlight === true ? { highlight: true } : {}),
     } satisfies ProjectMeta
-  }).sort((a, b) => (a.date < b.date ? 1 : -1))
+  }).sort((a, b) => Number(Boolean(b.highlight)) - Number(Boolean(a.highlight)) || (a.date < b.date ? 1 : -1))
 }
 
 // getProjectBySlug omitted — individual project pages are not in v1 scope (YAGNI)

@@ -45,9 +45,10 @@ export interface ProjectMeta {
   employer?: Employer   // frontmatter `employer`; sets `role`
   role?: string         // derived from employer (lib/roles.ts)
   caseStudy?: string    // frontmatter `caseStudy`: official external case-study URL
+  highlight?: boolean   // frontmatter `highlight: true`: pinned first on /projects with a "favourite" note
 }
 
-export type Employer = 'Tech Alchemy' | 'SoluLab'
+export type Employer = 'Tech Alchemy' | 'SoluLab' | 'Personal'
 
 export interface Project extends ProjectMeta {
   content: string

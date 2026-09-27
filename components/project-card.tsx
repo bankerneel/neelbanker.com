@@ -11,6 +11,7 @@ function monthYear(iso: string) {
  * so the card is not a link. "What shipped" shows the first bullets of the
  * MDX body's `## Outcome` section (2 on /projects, 3 when featured).
  * `featured` (homepage grid) adds a handwritten "no. 01" and more room;
+ * otherwise a `highlight` project gets a handwritten "a favourite" note.
  * `index` sets the gentle tilt and chain-chip colour.
  */
 export function ProjectCard({
@@ -33,10 +34,12 @@ export function ProjectCard({
     >
       <div className="flex items-start justify-between gap-3">
         <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-dm-ink-soft">{monthYear(project.date)}</p>
-        {featured && typeof index === 'number' && (
+        {featured && typeof index === 'number' ? (
           <span aria-hidden="true" className="hand -mt-1 text-[1.6rem] leading-none text-dm-accent-ink">
             no. {String(index + 1).padStart(2, '0')}
           </span>
+        ) : (
+          project.highlight && <span className="hand -mt-1 text-[1.35rem] leading-none text-dm-accent-ink">a favourite ✦</span>
         )}
       </div>
       <h3

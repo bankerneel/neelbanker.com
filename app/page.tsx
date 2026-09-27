@@ -55,7 +55,7 @@ export default function HomePage() {
   const articles = getAllArticleMeta().slice(0, 3)
   const projects = getAllProjectMeta()
   const featuredResource = getAllResourceMeta()[0]
-  const [spotlight, ...featuredProjects] = ['atlas-multichain-wallet', 'ember-op-stack-l2', 'seal-credential-verification', 'concierge-hotel-recommendations']
+  const [spotlight, ...featuredProjects] = ['doctrace-fabric-documents', 'atlas-multichain-wallet', 'ember-op-stack-l2', 'concierge-hotel-recommendations']
     .map((slug) => projects.find((project) => project.slug === slug))
     .filter((project): project is NonNullable<typeof project> => Boolean(project))
 
@@ -91,6 +91,11 @@ export default function HomePage() {
               <h2 id="selected-work" className="mx-auto mt-4 max-w-2xl text-center text-[clamp(1.5rem,3.6vw,2.4rem)] font-black uppercase leading-[1.1]">
                 {spotlight.title}
               </h2>
+              {spotlight.role && (
+                <p className="mt-3 text-center text-[12px] font-semibold leading-[1.45]">
+                  <span className="font-black uppercase tracking-[0.08em]">{spotlight.employer}</span> · {spotlight.role}
+                </p>
+              )}
               <p className="mx-auto mt-5 max-w-xl text-center text-[15px] font-medium leading-[1.75]">{spotlight.excerpt}</p>
               <dl className="mx-auto mt-8 grid max-w-xl grid-cols-2 gap-5 sm:grid-cols-3">
                 <div className="text-center">
@@ -125,10 +130,20 @@ export default function HomePage() {
                   </li>
                 ))}
               </ul>
-              <div className="mt-10 flex justify-center">
+              <div className="mt-10 flex flex-wrap justify-center gap-4">
                 <Link href="/projects" className={cn(chipLink, 'tone-ink min-h-11 px-6 shadow-hard -rotate-1')}>
                   Browse all projects →
                 </Link>
+                {spotlight.caseStudy && (
+                  <a
+                    href={spotlight.caseStudy}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={cn(chipLink, 'tone-panel min-h-11 px-6 rotate-1')}
+                  >
+                    {spotlight.title.split(' — ')[0]} case study ↗
+                  </a>
+                )}
               </div>
             </div>
           </FadeUp>
