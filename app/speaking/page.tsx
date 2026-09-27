@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { FadeUp } from '@/components/scroll-reveal'
+import { Band } from '@/components/bazaar/band'
+import { MotionStage } from '@/components/motion/motion-stage'
+import { FilmProgress, Scribbled } from '@/components/motion/scribbled'
 import { TALKS } from '@/lib/talks'
 import { PageIntro } from '@/components/bazaar/page-intro'
 import { Scrap } from '@/components/bazaar/scrap'
@@ -44,7 +46,9 @@ const posterTones = ['tone-rose', 'tone-sky', 'tone-sage']
 export default function SpeakingPage() {
   return (
     <>
+      <FilmProgress />
       <PageIntro
+        motion
         crumbs={[
           { href: '/', label: '← Home' },
           { href: '/about', label: 'About' },
@@ -63,7 +67,7 @@ export default function SpeakingPage() {
             </p>
             <p className="hand mt-4 text-[1.5rem] leading-none text-dm-accent-ink">technical sessions, operator context</p>
           </Scrap>
-          <ul className="flex flex-col gap-5 lg:-ml-6 lg:mt-8 lg:w-[340px]">
+          <ul className="hook-deal-any flex flex-col gap-5 lg:-ml-6 lg:mt-8 lg:w-[340px]">
             {speakingProfile.map((item, i) => (
               <li key={item.label} className={cn('border-2 border-current p-4 shadow-hard', item.tone, item.tilt, i > 0 && 'lg:-mt-2')}>
                 <p className="text-[10px] font-bold uppercase tracking-[0.2em]">{item.label}</p>
@@ -75,19 +79,20 @@ export default function SpeakingPage() {
       </PageIntro>
 
       {/* ── Talks ─────────────────────────────────────────────────────── */}
-      <section aria-labelledby="talks" className="page-wrap mt-24">
+      <Band tone="night" edge="torn" bottomEdge="torn" pattern="stars" spotlight className="mt-24">
+      <section aria-labelledby="talks" className="page-wrap py-24 sm:py-28">
         <div className="max-w-3xl">
-          <h2 id="talks" className="text-[clamp(2rem,5vw,3.4rem)] font-black uppercase leading-none tracking-tighter">
-            Recorded <span className="hand text-[1.15em] font-normal lowercase text-dm-accent-ink">talks</span>
+          <h2 id="talks" data-sd className="sd-slam text-[clamp(2rem,5vw,3.4rem)] font-black uppercase leading-none tracking-tighter">
+            Recorded <Scribbled>talks</Scribbled>
           </h2>
-          <p className="mt-4 text-[15px] leading-[1.75] text-dm-ink-soft">
+          <p className="mt-4 text-[15px] leading-[1.75]">
             A small archive of public sessions across developer communities, professional audiences, and internal
             engineering environments.
           </p>
         </div>
         <ol className="mt-12 space-y-14">
           {TALKS.map((talk, i) => (
-            <li key={talk.title}>
+            <li key={talk.title} data-reveal className="rv-rise">
               <Scrap
                 className={i % 2 ? 'rotate-[0.6deg]' : '-rotate-[0.6deg]'}
                 paperClassName="tone-panel grid gap-7 p-5 sm:p-7 md:grid-cols-[minmax(0,260px)_minmax(0,1fr)] md:gap-9"
@@ -145,11 +150,11 @@ export default function SpeakingPage() {
           ))}
         </ol>
       </section>
+      </Band>
 
       {/* ── Invite ────────────────────────────────────────────────────── */}
-      <section aria-labelledby="invite" className="page-wrap mt-24 sm:mt-28">
-        <FadeUp>
-          <div className="surreal-arch dm-longshadow tone-lilac mx-auto max-w-[920px] px-7 pb-12 pt-24 text-center sm:px-14 sm:pt-20">
+      <section aria-labelledby="invite" className="page-wrap mt-24 sm:mt-28" data-sky-window>
+          <div data-sd className="sd-moonrise surreal-arch dm-longshadow tone-lilac mx-auto max-w-[920px] px-7 pb-12 pt-24 text-center sm:px-14 sm:pt-20">
             <p className="text-[11px] font-bold uppercase tracking-[0.24em]">Invite to speak ✦</p>
             <h2 id="invite" className="mx-auto mt-4 max-w-2xl text-[clamp(1.6rem,4vw,2.6rem)] font-black uppercase leading-[1.04] tracking-tight">
               A session that helps people <span className="hand whitespace-nowrap text-[1.15em] font-normal lowercase">think better</span>
@@ -166,7 +171,7 @@ export default function SpeakingPage() {
               ))}
             </ul>
             <div className="mt-8 flex flex-wrap justify-center gap-3">
-              <Link href="/work-with-me" className={cn(chipLink, 'tone-ink min-h-12 px-6 text-xs shadow-hard', pick(tilts, 0))}>
+              <Link href="/work-with-me" data-magnetic className={cn(chipLink, 'magnetic tone-ink min-h-12 px-6 text-xs shadow-hard', pick(tilts, 0))}>
                 Start the conversation →
               </Link>
               <Link href="/about" className={cn(chipLink, 'tone-panel min-h-12 px-6 text-xs', pick(tilts, 1))}>
@@ -174,8 +179,8 @@ export default function SpeakingPage() {
               </Link>
             </div>
           </div>
-        </FadeUp>
       </section>
+      <MotionStage />
     </>
   )
 }

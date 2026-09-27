@@ -28,6 +28,10 @@
 - `app/motion.css` must be imported from `app/layout.tsx`: an `@import` of it inside `globals.css` is dropped by Turbopack in dev (Tailwind compiles it fine on its own).
 - Starting WebGL before first paint can delay FCP on slow phones: the sky starts after `load` + `requestIdleCallback`.
 - Playwright: `test.use({ reducedMotion })` is ignored here; use `page.emulateMedia`. Playwright video needs ffmpeg (not installed); films were made from CDP screencast frames + Pillow.
+- Motion scope (Neel, 2026-09-27): light film on all pages except articles, `/resume` and anything next to a form; the footer end card is site chrome and plays everywhere.
+- Rolling counters caused CLS (centred digits slide as they grow): reserve the final width (`--w` in `ch`, tabular digits), grow from a fixed start, keep suffixes like "+" outside the rolling box.
+- One small photo does not justify `next/image` (~6 KB gz client JS on /about); a pre-sized WebP in a plain `img` is lighter.
+- A client component can hydrate after the header: e2e clicks on it need `waitForHydration(locator)` (e2e/helpers.ts), or they are lost.
 
 ## Content / NDA
 

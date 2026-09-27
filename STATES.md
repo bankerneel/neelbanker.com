@@ -19,7 +19,9 @@ Core routes now feel substantially more consistent, lighter, and more editorial 
   - Section breaks: full-bleed bands with torn / perforated / zig-zag / scalloped edges on `/`, `/about`, `/projects`, `/work-with-me`.
   - Homepage motion: CSS hook (paper strips rip off the headline), scroll-driven sequence (a different technique per section), footer finale at dusk, living WebGL sky (dawn → dusk). Rules and budgets in AGENTS.md "Motion".
   - Bake-off: GSAP hook and Three.js sky built, measured and rejected (TBT and weight); CSS hook + shader sky chosen by Neel.
-  - `/about` polaroid uses Neel's photo (`public/images/neel-banker.jpg`, from his GitHub avatar).
+  - `/about` polaroid uses Neel's photo (`public/images/neel-banker.webp`, 320px, 6.7 KB, from his GitHub avatar; a plain `img` — `next/image` cost more JS than it saved).
+  - Every other page got the light version (Neel's do / don't in AGENTS.md "Motion"): `/about`, `/projects`, `/work-with-me`, `/writing`, `/resources`, `/speaking`, `/newsletter`. Articles, `/resume` and all forms stay still. The old `FadeUp` (content invisible until hydration) is deleted; article footers are now static.
+  - Inner pages measured before → after (375px, CPU 4×, slow 4G): LCP within noise, TBT within +25 ms, JS +1.7–4.7 KB, CLS 0 everywhere (rolling counters reserve their width).
   - Measured (375px, CPU 4×, slow 4G): TBT 86 ms (unchanged), CLS 0, +2.5 KB JS, 3.5 KB gz motion CSS, 0 janky frames. 40 e2e + 9 unit tests pass.
 
 - **Project naming by group + drafts published (2026-09-27, on `dev`, PR #13):**

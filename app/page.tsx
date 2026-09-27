@@ -6,6 +6,7 @@ import { ProjectCard } from '@/components/project-card'
 import { PILLARS, getPillarBySlug } from '@/lib/pillars'
 import { HomeHero } from '@/components/home-hero'
 import { MotionStage } from '@/components/motion/motion-stage'
+import { FilmProgress, Scribbled } from '@/components/motion/scribbled'
 import { Scrap } from '@/components/bazaar/scrap'
 import { Band } from '@/components/bazaar/band'
 import { chipLink, focusRing, pick, tilts } from '@/components/bazaar/styles'
@@ -49,7 +50,6 @@ const principles = [
 ]
 
 const sectionTitle = 'text-[clamp(2rem,6vw,4rem)] font-black uppercase leading-none tracking-tighter'
-const handWord = 'hand hand-ink text-[1.15em] font-normal lowercase'
 const noteTilts = ['-rotate-[2.4deg]', 'rotate-[1.6deg]', '-rotate-[1.2deg]']
 const noteTones = ['tone-butter', 'tone-lilac', 'tone-rose']
 
@@ -63,7 +63,7 @@ export default function HomePage() {
 
   return (
     <>
-      <div aria-hidden="true" className="film-progress" />
+      <FilmProgress />
       <HomeHero />
 
       {/* ── Receipts — proof near the fold ─────────────────────────── */}
@@ -338,18 +338,6 @@ export default function HomePage() {
       </section>
       <MotionStage />
     </>
-  )
-}
-
-/** A hand-lettered word with an underline that draws itself as it scrolls in. */
-function Scribbled({ children }: { children: string }) {
-  return (
-    <span className={cn(handWord, 'relative inline-block')}>
-      {children}
-      <svg aria-hidden="true" viewBox="0 0 200 16" preserveAspectRatio="none" className="sd-draw scribble" fill="none" vectorEffect="non-scaling-stroke">
-        <path pathLength={1} d="M3 11 C 38 3, 74 15, 112 8 S 172 5, 197 10" stroke="currentColor" strokeWidth={3} strokeLinecap="round" vectorEffect="non-scaling-stroke" />
-      </svg>
-    </span>
   )
 }
 

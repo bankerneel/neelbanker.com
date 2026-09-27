@@ -111,6 +111,13 @@
 .hook-deal > li:nth-child(1) { --dx: 58vw; --dy: 14vh; --dr: 26deg; animation-delay: 0.62s; }
 .hook-deal > li:nth-child(2) { --dx: 48vw; --dy: 30vh; --dr: -20deg; animation-delay: 0.7s; }
 .hook-deal > li:nth-child(3) { --dx: 38vw; --dy: 44vh; --dr: 34deg; animation-delay: 0.78s; }
+.hook-deal-any > * {
+  animation: hook-deal 0.62s cubic-bezier(0.2, 1.15, 0.35, 1) both;
+}
+.hook-deal-any > :nth-child(1) { --dx: 46vw; --dy: 12vh; --dr: 22deg; animation-delay: 0.45s; }
+.hook-deal-any > :nth-child(2) { --dx: 40vw; --dy: 26vh; --dr: -18deg; animation-delay: 0.53s; }
+.hook-deal-any > :nth-child(3) { --dx: 34vw; --dy: 38vh; --dr: 28deg; animation-delay: 0.61s; }
+.hook-deal-any > :nth-child(4) { --dx: 30vw; --dy: 44vh; --dr: -24deg; animation-delay: 0.69s; }
 @keyframes hook-deal {
   from { transform: translate(var(--dx), var(--dy)) rotate(var(--dr)); }
   to { transform: none; }
@@ -126,6 +133,17 @@
 }
 @keyframes hook-settle {
   from { transform: translateY(26px); }
+  to { transform: none; }
+}
+
+/* ── Inner pages · PageIntro `motion`: a shorter hook ──────────────────── */
+/* the h1 may be the LCP element here: it only moves, never starts invisible */
+.intro-title {
+  transform-origin: 0 100%;
+  animation: intro-title 0.8s cubic-bezier(0.2, 1.2, 0.35, 1) 0.08s both;
+}
+@keyframes intro-title {
+  from { transform: translateY(0.3em) skewX(-10deg) scaleY(0.82); }
   to { transform: none; }
 }
 
@@ -194,6 +212,15 @@ html.motion-ready .rv-pin {
 }
 .rv-pin:nth-child(2) { animation-delay: 0.12s; }
 .rv-pin:nth-child(3) { animation-delay: 0.24s; }
+html.motion-ready .rv-rise {
+  animation-name: sd-rise;
+  animation-duration: 0.75s;
+  animation-timing-function: cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+@keyframes sd-rise {
+  from { opacity: 0; transform: translateY(70px) rotate(-2.5deg); }
+  to { opacity: 1; transform: none; }
+}
 @keyframes rv-pin {
   0% { opacity: 0; transform: translateY(-150px) rotate(-14deg); }
   50% { opacity: 1; transform: translateY(12px) rotate(3deg); }
@@ -286,6 +313,17 @@ html.motion-ready .rv-pin {
   .sd-node:nth-of-type(4) { animation-range: entry 28% cover 50%; }
   .sd-node:nth-of-type(5) { animation-range: entry 34% cover 55%; }
   .sd-node:nth-of-type(6) { animation-range: entry 40% cover 60%; }
+
+  /* scroll-only entrances (no JS, nothing to mark): safe on lists that React
+     re-renders, e.g. filtered grids. Without scroll timelines they just show. */
+  .sd-scroll {
+    animation-duration: auto;
+    animation-timing-function: cubic-bezier(0.2, 0.7, 0.3, 1);
+    animation-fill-mode: both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 28%;
+  }
+  .sd-scroll.sd-rise { animation-name: sd-rise; }
 
   /* hero pull-back: layers drift up at different speeds as you scroll away */
   .px-scroll {
@@ -464,12 +502,18 @@ html.motion-ready .rv-pin {
   initial-value: 0;
 }
 .count {
+  display: inline-block;
+  min-width: calc(var(--w, 2) * 1ch);
+  font-variant-numeric: tabular-nums;
+  /* reserve the final width and grow from a fixed start: centred digits would
+     slide sideways as they roll, which counts as layout shift */
+  text-align: left;
   --n: var(--to);
   counter-reset: n var(--n);
   animation: count-up 1.15s cubic-bezier(0.2, 0.8, 0.2, 1) 0.75s both;
 }
 .count::after {
-  content: counter(n) '+';
+  content: counter(n);
 }
 @keyframes count-up {
   from { --n: 0; }
@@ -636,7 +680,11 @@ html.motion-ready .rv-pin {
   .ribbon-l,
   .ribbon-r,
   .finale-sun,
-  .scribble path {
+  .scribble path,
+  .intro-motion,
+  .intro-motion *,
+  .sd-scroll,
+  .rv-rise {
     animation: none !important;
   }
   .film-progress,

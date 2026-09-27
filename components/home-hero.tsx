@@ -102,11 +102,14 @@ export function HomeHero() {
                 style={{ zIndex: 20 - i, marginTop: `${i * 22}px` }}
               >
                 <div className={cn('flex h-[78px] items-center justify-center sm:h-[104px]', s.tone)}>
-                  <span
-                    aria-hidden="true"
-                    className="count text-[2rem] font-black leading-none sm:text-[2.5rem]"
-                    style={{ '--to': parseInt(s.value, 10) } as CSSProperties}
-                  />
+                  {/* the digits roll in a fixed-width box; the "+" stays put beside it */}
+                  <span aria-hidden="true" className="text-[2rem] font-black leading-none sm:text-[2.5rem]">
+                    <span
+                      className="count"
+                      style={{ '--to': parseInt(s.value, 10), '--w': String(parseInt(s.value, 10)).length } as CSSProperties}
+                    />
+                    {s.value.replace(/\d+/, '')}
+                  </span>
                   <span className="sr-only">{s.value}</span>
                 </div>
                 <p className="hand mt-2 text-center text-[1rem] leading-tight text-dm-ink sm:text-[1.1rem]">{s.label}</p>

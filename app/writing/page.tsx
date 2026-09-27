@@ -1,10 +1,13 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import type { CSSProperties } from 'react'
 import { getAllArticleMeta } from '@/lib/mdx'
 import { getPillarBySlug, PILLARS } from '@/lib/pillars'
 import { cn } from '@/lib/utils'
 import { PillarFilter } from '@/components/pillar-filter'
-import { FadeUp } from '@/components/scroll-reveal'
+import { Band } from '@/components/bazaar/band'
+import { MotionStage } from '@/components/motion/motion-stage'
+import { FilmProgress, Scribbled } from '@/components/motion/scribbled'
 import { PageIntro } from '@/components/bazaar/page-intro'
 import { Scrap } from '@/components/bazaar/scrap'
 import { focusRing } from '@/components/bazaar/styles'
@@ -108,7 +111,8 @@ export default async function WritingPage({
 
   return (
     <>
-      <PageIntro kicker="The Architect's Brief ✦" title="Writing">
+      <FilmProgress />
+      <PageIntro motion kicker="The Architect's Brief ✦" title="Writing">
         <div className="relative z-10 mt-10 flex flex-col gap-10 lg:mt-12 lg:flex-row lg:items-start">
           <Scrap className="w-full max-w-[520px] -rotate-[1.2deg]" paperClassName="tone-panel px-7 py-9 sm:px-9">
             <p className="text-[1.06rem] font-medium leading-[1.7]">
@@ -118,7 +122,7 @@ export default async function WritingPage({
             <p className="hand mt-4 text-[1.5rem] leading-none text-dm-accent-ink">start anywhere — they stand alone</p>
           </Scrap>
 
-          <div className="flex items-start pl-1 lg:-ml-8 lg:mt-10">
+          <div className="hook-deal-any flex items-start pl-1 lg:-ml-8 lg:mt-10">
             {stats.map((s, i) => (
               <div
                 key={s.label}
@@ -130,7 +134,12 @@ export default async function WritingPage({
                 style={{ zIndex: 20 - i, marginTop: `${i * 18}px` }}
               >
                 <div className={cn('flex h-[78px] items-center justify-center sm:h-[96px]', s.tone)}>
-                  <span className="text-[2rem] font-black leading-none sm:text-[2.4rem]">{s.value}</span>
+                  <span
+                    aria-hidden="true"
+                    className="count text-[2rem] font-black leading-none sm:text-[2.4rem]"
+                    style={{ '--to': s.value, '--w': String(s.value).length } as CSSProperties}
+                  />
+                  <span className="sr-only">{s.value}</span>
                 </div>
                 <p className="hand mt-1.5 text-center text-[1rem] leading-tight text-dm-ink sm:text-[1.1rem]">{s.label}</p>
               </div>
@@ -141,13 +150,12 @@ export default async function WritingPage({
 
       {/* ── Pinned: the newest pieces ─────────────────────────────── */}
       {lead && (
-        <section aria-labelledby="latest" className="page-wrap mt-24">
-          <h2 id="latest" className="text-[clamp(2rem,5vw,3.4rem)] font-black uppercase leading-none tracking-tighter">
-            Fresh off{' '}
-            <span className="hand text-[1.15em] font-normal lowercase text-dm-accent-ink">the desk</span>
+        <section aria-labelledby="latest" className="page-wrap mt-24" data-sky-window>
+          <h2 id="latest" data-sd className="sd-slam text-[clamp(2rem,5vw,3.4rem)] font-black uppercase leading-none tracking-tighter">
+            Fresh off <Scribbled>the desk</Scribbled>
           </h2>
           <div className="mt-10 flex flex-col gap-10 lg:flex-row lg:items-start">
-            <PinnedArticle article={lead} tone="tone-butter" tilt="-rotate-[1.2deg]" size="lead" className="relative z-10 w-full lg:max-w-[640px]" />
+            <PinnedArticle article={lead} tone="tone-butter" tilt="-rotate-[1.2deg]" size="lead" className="sd-scroll sd-rise relative z-10 w-full lg:max-w-[640px]" />
             <div className="flex w-full flex-col gap-10 lg:-ml-10 lg:mt-14 lg:max-w-[440px] lg:gap-0">
               {sideHighlights.map((article, i) => (
                 <PinnedArticle
@@ -156,7 +164,7 @@ export default async function WritingPage({
                   tone={i === 0 ? 'tone-rose' : 'tone-lilac'}
                   tilt={i === 0 ? 'rotate-[1.6deg]' : '-rotate-1'}
                   size="side"
-                  className={cn('relative', i === 0 ? 'z-20' : 'z-30 lg:-mt-4 lg:ml-12')}
+                  className={cn('sd-scroll sd-rise relative', i === 0 ? 'z-20' : 'z-30 lg:-mt-4 lg:ml-12')}
                 />
               ))}
             </div>
@@ -165,17 +173,16 @@ export default async function WritingPage({
       )}
 
       {/* ── Reading lists ─────────────────────────────────────────── */}
-      <section aria-labelledby="reading-lists" className="page-wrap mt-24 sm:mt-28">
-        <FadeUp>
-          <h2 id="reading-lists" className="text-[clamp(2rem,5vw,3.4rem)] font-black uppercase leading-none tracking-tighter">
-            Reading{' '}
-            <span className="hand text-[1.15em] font-normal lowercase text-dm-accent-ink">lists</span>
+      <Band tone="butter" edge="zig" className="mt-24 sm:mt-28">
+      <section aria-labelledby="reading-lists" className="page-wrap py-24 sm:py-28">
+          <h2 id="reading-lists" data-sd className="sd-slam text-[clamp(2rem,5vw,3.4rem)] font-black uppercase leading-none tracking-tighter">
+            Reading <Scribbled>lists</Scribbled>
           </h2>
           <div className="mt-10 grid gap-10 lg:grid-cols-2 lg:gap-12">
             {lists.map((list, li) => (
               <Scrap
                 key={list.label}
-                className={li === 0 ? '-rotate-[0.6deg]' : 'rotate-[0.6deg] lg:mt-10'}
+                className={cn('sd-scroll sd-rise', li === 0 ? '-rotate-[0.6deg]' : 'rotate-[0.6deg] lg:mt-10')}
                 paperClassName="tone-panel px-7 py-10 sm:px-9"
               >
                 <span className={cn('ticket', list.tone)}>{list.label}</span>
@@ -201,13 +208,16 @@ export default async function WritingPage({
               </Scrap>
             ))}
           </div>
-        </FadeUp>
       </section>
+      </Band>
 
-      {/* ── Archive with pillar filters (URL-driven) ─────────────── */}
-      <section aria-labelledby="archive" className="page-wrap mt-24 sm:mt-28">
-        <PillarFilter articles={articles} initialActive={initialActive} />
-      </section>
+      {/* ── Archive with pillar filters (URL-driven): the night set ── */}
+      <Band tone="night" edge="scallop" bottomEdge="torn" pattern="stars" spotlight>
+        <section aria-labelledby="archive" className="page-wrap py-24 sm:py-28">
+          <PillarFilter articles={articles} initialActive={initialActive} />
+        </section>
+      </Band>
+      <MotionStage />
     </>
   )
 }

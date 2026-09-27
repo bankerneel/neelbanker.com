@@ -4,6 +4,8 @@ import { cn } from '@/lib/utils'
 import { ProjectBrowser } from '@/components/project-browser'
 import { PageIntro } from '@/components/bazaar/page-intro'
 import { Scrap } from '@/components/bazaar/scrap'
+import { MotionStage } from '@/components/motion/motion-stage'
+import { FilmProgress } from '@/components/motion/scribbled'
 
 export const metadata: Metadata = {
   title: 'Projects',
@@ -21,7 +23,9 @@ export default function ProjectsPage() {
 
   return (
     <>
+      <FilmProgress />
       <PageIntro
+        motion
         crumbs={[
           { href: '/', label: '← Home' },
           { href: '/work-with-me', label: 'Work with me' },
@@ -38,7 +42,7 @@ export default function ProjectsPage() {
             <p className="hand mt-4 text-[1.5rem] leading-none text-dm-accent-ink">codenames where NDAs apply</p>
           </Scrap>
 
-          <ul className="flex flex-col gap-5 lg:-ml-6 lg:mt-8 lg:w-[340px]">
+          <ul className="hook-deal-any flex flex-col gap-5 lg:-ml-6 lg:mt-8 lg:w-[340px]">
             {signals.map((signal, i) => (
               <li
                 key={signal.label}
@@ -55,6 +59,7 @@ export default function ProjectsPage() {
       <div className="mt-24">
         <ProjectBrowser projects={projects} />
       </div>
+      <MotionStage />
     </>
   )
 }

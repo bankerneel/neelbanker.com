@@ -3,6 +3,9 @@ import { ResourceCard } from '@/components/resource-card'
 import { getAllResourceMeta } from '@/lib/mdx'
 import { PageIntro } from '@/components/bazaar/page-intro'
 import { Scrap } from '@/components/bazaar/scrap'
+import { Band } from '@/components/bazaar/band'
+import { MotionStage } from '@/components/motion/motion-stage'
+import { FilmProgress, Scribbled } from '@/components/motion/scribbled'
 import { pick, tones } from '@/components/bazaar/styles'
 import { cn } from '@/lib/utils'
 
@@ -37,7 +40,9 @@ export default function ResourcesPage() {
 
   return (
     <>
+      <FilmProgress />
       <PageIntro
+        motion
         crumbs={[
           { href: '/', label: '← Home' },
           { href: '/newsletter', label: 'Newsletter' },
@@ -57,7 +62,7 @@ export default function ResourcesPage() {
             </p>
             <p className="hand mt-4 text-[1.5rem] leading-none text-dm-accent-ink">focused downloads for teams in motion</p>
           </Scrap>
-          <ul className="flex flex-col gap-5 lg:-ml-6 lg:mt-8 lg:w-[340px]">
+          <ul className="hook-deal-any flex flex-col gap-5 lg:-ml-6 lg:mt-8 lg:w-[340px]">
             {signals.map((signal, i) => (
               <li
                 key={signal.label}
@@ -71,10 +76,11 @@ export default function ResourcesPage() {
         </div>
       </PageIntro>
 
-      <section aria-labelledby="available" className="page-wrap mt-24">
+      <Band tone="panel" edge="perf" bottomEdge="torn" pattern="ruled" className="mt-24">
+      <section aria-labelledby="available" className="page-wrap py-24 sm:py-28">
         <div className="max-w-3xl">
-          <h2 id="available" className="text-[clamp(2rem,5vw,3.4rem)] font-black uppercase leading-none tracking-tighter">
-            Grab a <span className="hand text-[1.15em] font-normal lowercase text-dm-accent-ink">guide</span>
+          <h2 id="available" data-sd className="sd-slam text-[clamp(2rem,5vw,3.4rem)] font-black uppercase leading-none tracking-tighter">
+            Grab a <Scribbled>guide</Scribbled>
           </h2>
           <p className="mt-4 text-[15px] leading-[1.75] text-dm-ink-soft">
             Each download opens immediately after submission and also sends a copy to the inbox, so teams can share it
@@ -89,6 +95,8 @@ export default function ResourcesPage() {
           ))}
         </ul>
       </section>
+      </Band>
+      <MotionStage />
     </>
   )
 }

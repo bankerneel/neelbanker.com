@@ -41,11 +41,13 @@ for (const width of WIDTHS) {
 // With motion on, animated pieces may travel past the edge, but <main> and the
 // footer clip them: the page itself must never scroll sideways.
 test.describe('motion never widens the page', () => {
+  const MOVING = ['/', '/about', '/projects', '/work-with-me', '/writing', '/resources', '/speaking', '/newsletter']
+  for (const route of MOVING)
   for (const width of [320, 1280]) {
-    test(`homepage at ${width}px`, async ({ page }) => {
+    test(`${route} at ${width}px`, async ({ page }) => {
       await page.setViewportSize({ width, height: 800 })
       await page.emulateMedia({ reducedMotion: 'no-preference' })
-      await gotoHydrated(page, '/')
+      await gotoHydrated(page, route)
       const widths = await page.evaluate(async () => {
         const out: number[] = []
         const total = document.documentElement.scrollHeight

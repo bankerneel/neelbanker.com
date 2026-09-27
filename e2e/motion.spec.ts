@@ -73,3 +73,29 @@ test('stat counters keep their real values for screen readers', async ({ page })
   await expect(stats).toContainText('50+')
   await expect(stats).toContainText('15+')
 })
+
+// Neel's do / don't (AGENTS.md "Motion"): reading surfaces stay still.
+for (const route of ['/writing/cross-chain-credential-verification', '/resume']) {
+  test(`${route} stays still`, async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'no-preference' })
+    await gotoHydrated(page, route)
+    await page.waitForTimeout(3000)
+    const found = await page.evaluate(() => ({
+      // the footer's end card is site chrome and plays everywhere; the page itself must not move
+      film: document.querySelectorAll('main :is(.film-progress, .intro-motion, [data-sd], [data-reveal])').length,
+      sky: document.querySelectorAll('canvas.sky-canvas').length,
+      hidden: [...document.querySelectorAll('main *')].filter((el) => getComputedStyle(el).opacity === '0').length,
+    }))
+    expect(found).toEqual({ film: 0, sky: 0, hidden: 0 })
+  })
+}
+
+test('the inner pages play the light version of the film', async ({ page }) => {
+  test.setTimeout(120_000) // seven routes, each compiled on demand by the dev server
+  await page.emulateMedia({ reducedMotion: 'no-preference' })
+  for (const route of ['/about', '/projects', '/work-with-me', '/writing', '/resources', '/speaking', '/newsletter']) {
+    await gotoHydrated(page, route)
+    await expect(page.locator('header.intro-motion'), route).toHaveCount(1)
+    await expect(page.locator('.film-progress'), route).toHaveCount(1)
+  }
+})

@@ -2,7 +2,8 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { CalBookingEmbed } from '@/components/cal-booking-embed'
 import { ContactForm } from '@/components/contact-form'
-import { FadeUp } from '@/components/scroll-reveal'
+import { MotionStage } from '@/components/motion/motion-stage'
+import { FilmProgress, Scribbled } from '@/components/motion/scribbled'
 import { PageIntro } from '@/components/bazaar/page-intro'
 import { Scrap } from '@/components/bazaar/scrap'
 import { Band } from '@/components/bazaar/band'
@@ -55,7 +56,9 @@ const handWord = 'hand hand-ink text-[1.15em] font-normal lowercase'
 export default function WorkWithMePage() {
   return (
     <>
+      <FilmProgress />
       <PageIntro
+        motion
         crumbs={[
           { href: '/', label: '← Home' },
           { href: '/about', label: 'About' },
@@ -79,7 +82,7 @@ export default function WorkWithMePage() {
             </p>
             <p className="hand mt-4 text-[1.5rem] leading-none text-dm-accent-ink">replies within 2 business days</p>
           </Scrap>
-          <ul className="flex flex-wrap gap-3 lg:-ml-4 lg:mt-12 lg:max-w-[300px] lg:flex-col lg:items-start">
+          <ul className="hook-deal-any flex flex-wrap gap-3 lg:-ml-4 lg:mt-12 lg:max-w-[300px] lg:flex-col lg:items-start">
             {['Small roster', 'Blockchain + AI + distributed systems', 'Async + live advisory'].map((item, i) => (
               <li key={item} className={cn('ticket shadow-hard', pick(tones, i + 1), pick(tilts, i))}>
                 {item}
@@ -90,10 +93,10 @@ export default function WorkWithMePage() {
       </PageIntro>
 
       {/* ── Services ────────────────────────────────────────────────── */}
-      <section aria-labelledby="services" className="page-wrap mt-24">
+      <section aria-labelledby="services" className="page-wrap mt-24" data-sky-window>
         <div className="max-w-3xl">
-          <h2 id="services" className={sectionTitle}>
-            Choose the <span className={handWord}>depth</span>
+          <h2 id="services" data-sd className={cn(sectionTitle, 'sd-slam')}>
+            Choose the <Scribbled>depth</Scribbled>
           </h2>
           <p className="mt-4 text-[15px] leading-[1.75] text-dm-ink-soft">
             Some work is best handled as a sharp one-off review. Other situations need a longer operating relationship.
@@ -101,7 +104,7 @@ export default function WorkWithMePage() {
         </div>
         <ul className="mt-12 grid gap-10 md:grid-cols-2 md:gap-12">
           {services.map((s, i) => (
-            <li key={s.title} className={cn(i % 2 === 1 && 'md:mt-10')}>
+            <li key={s.title} data-reveal className={cn('rv-pin', i % 2 === 1 && 'md:mt-10')}>
               <Scrap
                 className={['-rotate-[1.2deg]', 'rotate-1', 'rotate-[0.8deg]', '-rotate-[1.4deg]'][i]}
                 paperClassName={cn(s.tone, 'px-7 py-10 sm:px-9')}
@@ -129,10 +132,9 @@ export default function WorkWithMePage() {
       </section>
 
       {/* ── Recruiter lane ─────────────────────────────────────────── */}
-      <Band tone="night" edge="torn" bottomEdge="torn" pattern="stars" className="mt-24 sm:mt-28">
+      <Band tone="night" edge="torn" bottomEdge="torn" pattern="stars" spotlight className="mt-24 sm:mt-28">
       <section aria-labelledby="recruiters" className="page-wrap py-24 sm:py-28">
-        <FadeUp>
-          <div className="surreal-arch arch-halo tone-lilac mx-auto max-w-[980px] px-7 pb-12 pt-24 text-center sm:px-14 sm:pt-20">
+          <div data-sd className="sd-moonrise surreal-arch arch-halo tone-lilac mx-auto max-w-[980px] px-7 pb-12 pt-24 text-center sm:px-14 sm:pt-20">
             <p className="text-[11px] font-bold uppercase tracking-[0.24em]">Hiring? ✦ For recruiters</p>
             <h2 id="recruiters" className="mx-auto mt-4 max-w-2xl text-[clamp(1.6rem,4vw,2.6rem)] font-black uppercase leading-[1.04] tracking-tight">
               Leadership roles, principal architecture, and long-horizon builds
@@ -157,18 +159,22 @@ export default function WorkWithMePage() {
                 { href: '/projects', label: 'Case studies' },
                 { href: '/writing', label: 'Writing' },
               ].map((link, i) => (
-                <Link key={link.href} href={link.href} className={cn(chipLink, i === 0 ? 'tone-ink' : 'tone-panel', pick(tilts, i))}>
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  data-magnetic={i === 0 || undefined}
+                  className={cn(chipLink, i === 0 ? 'magnetic tone-ink' : 'tone-panel', pick(tilts, i))}
+                >
                   {link.label} →
                 </Link>
               ))}
             </div>
           </div>
-        </FadeUp>
       </section>
       </Band>
 
       {/* ── Book or write ──────────────────────────────────────────── */}
-      <div className="page-wrap mt-24 grid gap-16 sm:mt-28 xl:grid-cols-[1.05fr_0.95fr] xl:gap-14">
+      <div className="page-wrap mt-24 grid gap-16 sm:mt-28 xl:grid-cols-[1.05fr_0.95fr] xl:gap-14" data-sky-window>
         <section aria-labelledby="book">
           <h2 id="book" className={sectionTitle}>
             Book a <span className={handWord}>1:1</span>
@@ -216,6 +222,7 @@ export default function WorkWithMePage() {
           </div>
         </section>
       </div>
+      <MotionStage />
     </>
   )
 }

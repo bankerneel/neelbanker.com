@@ -198,9 +198,21 @@ mono-label + h1 pattern.
 
 ### Motion
 
-`app/globals.css` has a `prefers-reduced-motion: reduce` guard; new `@keyframes` must respect it. Motion is CSS +
-IntersectionObserver (`components/scroll-reveal.tsx`); framer-motion was removed — don't reintroduce it. Don't
-wrap above-the-fold content in `FadeUp`: it stays invisible until hydration and delays LCP.
+`app/globals.css` and `app/motion.css` have `prefers-reduced-motion: reduce` guards; new `@keyframes` must respect
+them. framer-motion was removed — don't reintroduce it. The old `FadeUp` / `components/scroll-reveal.tsx` is gone
+(2026-09-27): it hid content until hydration. Use the film's vocabulary below instead.
+
+**Where motion goes (Neel's do / don't, 2026-09-27):**
+- **Do** — `/` (the full film) and a lighter set on `/about`, `/projects`, `/work-with-me`, `/writing`, `/resources`,
+  `/speaking`, `/newsletter`: `PageIntro motion` (arch rises, sun drops, kicker pops, h1 slams in, wall settles,
+  `hook-deal-any` lists are dealt), `FilmProgress`, title `sd-slam` + `Scribbled` underlines, night bands with
+  `spotlight`, `rv-*` / `sd-*` card entrances, the living sky (`data-sky-window` sections), `<MotionStage />`.
+- **Don't** — article pages and `/resume` (reading surfaces stay still; articles keep their reading-progress
+  bar, the resume must print), and anything next to a form (contact form, Cal embed, subscribe and download
+  forms): those blocks stay static even when the page around them moves. The footer's end card (shapes
+  reassemble, sunset, reverse ticker) is site chrome below the content and plays on every page.
+- Lists that React re-renders (filtered grids) use `sd-scroll` entrances — pure CSS, nothing for JS to mark —
+  never `data-reveal` / `data-sd`.
 
 **The homepage film** (`app/motion.css`, imported from `app/layout.tsx` — an `@import` inside `globals.css` is
 silently dropped by Turbopack in dev):

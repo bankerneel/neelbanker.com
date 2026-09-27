@@ -217,7 +217,7 @@
    colour that passes contrast on it. Borders use currentColor, so they
    always match the text of the surface they sit on. */
 @layer components {
-  .tone-panel { background-color: var(--dm-panel); color: var(--dm-ink); }
+  .tone-panel { background-color: var(--dm-panel); color: var(--dm-ink); --band-hand: var(--dm-accent-ink); }
   .tone-ink { background-color: var(--dm-ink); color: var(--dm-panel); }
   .tone-night { background-color: var(--dm-night); color: var(--dm-night-ink); }
   .tone-rose { background-color: var(--dm-rose); color: var(--dm-on-accent); }
@@ -583,48 +583,6 @@
   }
 }
 
-/* ── Scroll reveal (CSS-only, replaces framer-motion) ── */
-.reveal {
-  opacity: 0;
-  transition:
-    opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: opacity, transform;
-}
-.reveal-up {
-  transform: translateY(32px);
-}
-.reveal-left {
-  transform: translateX(-40px);
-}
-.reveal-right {
-  transform: translateX(40px);
-}
-.reveal.is-visible {
-  opacity: 1;
-  transform: none;
-}
-
-.stagger-item {
-  opacity: 0;
-  transform: translateY(24px);
-  transition:
-    opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.stagger.is-visible .stagger-item {
-  opacity: 1;
-  transform: none;
-}
-.stagger.is-visible .stagger-item:nth-child(1) { transition-delay: 0s; }
-.stagger.is-visible .stagger-item:nth-child(2) { transition-delay: 0.08s; }
-.stagger.is-visible .stagger-item:nth-child(3) { transition-delay: 0.16s; }
-.stagger.is-visible .stagger-item:nth-child(4) { transition-delay: 0.24s; }
-.stagger.is-visible .stagger-item:nth-child(5) { transition-delay: 0.32s; }
-.stagger.is-visible .stagger-item:nth-child(6) { transition-delay: 0.4s; }
-.stagger.is-visible .stagger-item:nth-child(7) { transition-delay: 0.48s; }
-.stagger.is-visible .stagger-item:nth-child(n + 8) { transition-delay: 0.55s; }
-
 @keyframes fade-in {
   from {
     opacity: 0;
@@ -641,13 +599,6 @@
 
 /* Reduced motion: show everything immediately, no transforms/animations */
 @media (prefers-reduced-motion: reduce) {
-  .reveal,
-  .stagger-item {
-    opacity: 1 !important;
-    transform: none !important;
-    animation: none !important;
-    transition: none !important;
-  }
   .animate-marquee {
     animation: none !important;
   }

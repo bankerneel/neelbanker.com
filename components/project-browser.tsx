@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { ProjectCard } from '@/components/project-card'
 import { Scrap } from '@/components/bazaar/scrap'
 import { Band } from '@/components/bazaar/band'
+import { Scribbled } from '@/components/motion/scribbled'
 import { focusRing, pick, softTilts, tilts, tones } from '@/components/bazaar/styles'
 import { cn } from '@/lib/utils'
 import type { ProjectMeta } from '@/types/content'
@@ -103,16 +104,16 @@ export function ProjectBrowser({ projects }: { projects: ProjectMeta[] }) {
   return (
     <div>
       {/* ── Through-lines ─────────────────────────────────────────── */}
-      <section aria-labelledby="through-lines" className="page-wrap">
-        <h2 id="through-lines" className={sectionTitle}>
-          The <span className={handWord}>through</span>-lines
+      <section aria-labelledby="through-lines" className="page-wrap" data-sky-window>
+        <h2 id="through-lines" data-sd className={cn(sectionTitle, 'sd-slam')}>
+          The <Scribbled>through</Scribbled>-lines
         </h2>
         <div className="mt-10 flex flex-col gap-10 lg:flex-row lg:items-start">
           {FEATURED_SPOTLIGHTS.map((spotlight, i) => (
             <Scrap
               key={spotlight.label}
               className={cn(
-                'relative w-full lg:flex-1',
+                'sd-scroll sd-rise relative w-full lg:flex-1',
                 ['-rotate-[1.4deg]', 'rotate-[1.2deg] lg:-ml-6 lg:mt-10', '-rotate-[0.8deg] lg:-ml-6 lg:mt-3'][i],
               )}
               paperClassName={cn(spotlight.tone, 'px-7 py-9')}
@@ -126,11 +127,11 @@ export function ProjectBrowser({ projects }: { projects: ProjectMeta[] }) {
       </section>
 
       {/* ── Filterable archive ────────────────────────────────────── */}
-      <Band tone="night" edge="torn" pattern="stars" className="mt-24 sm:mt-28">
+      <Band tone="night" edge="torn" pattern="stars" spotlight className="mt-24 sm:mt-28">
       <section aria-labelledby="all-projects" className="page-wrap py-24 sm:py-28">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-xl">
-            <h2 id="all-projects" className={sectionTitle}>
+            <h2 id="all-projects" data-sd className={cn(sectionTitle, 'sd-slam')}>
               {activeMeta.label}
             </h2>
             <p className="mt-3 text-[15px] leading-[1.7]">{activeMeta.description}</p>
@@ -162,7 +163,7 @@ export function ProjectBrowser({ projects }: { projects: ProjectMeta[] }) {
 
         <ul key={activeFilter} className="animate-fade-in mt-10 grid gap-8 sm:grid-cols-2 xl:grid-cols-3">
           {visibleProjects.map((project, i) => (
-            <li key={project.slug} className="min-w-0">
+            <li key={project.slug} className="sd-scroll sd-flip min-w-0">
               <ProjectCard project={project} index={i} />
             </li>
           ))}
@@ -184,7 +185,7 @@ export function ProjectBrowser({ projects }: { projects: ProjectMeta[] }) {
           </p>
           <ul className="mt-8 grid gap-4 min-[480px]:grid-cols-2 lg:grid-cols-4">
             {SOLULAB_CASE_STUDIES.map((study, i) => (
-              <li key={study.path} className="min-w-0">
+              <li key={study.path} className="sd-scroll sd-flip min-w-0">
                 <a
                   href={`${CASE_STUDY_BASE}${study.path}/`}
                   target="_blank"

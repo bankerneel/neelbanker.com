@@ -81,8 +81,9 @@ export function AboutTechStack() {
         {categories.map((cat, i) => (
           <li
             key={cat.label}
+            data-sd
             className={cn(
-              'tone-panel flex flex-col border-2 border-current shadow-hard transition-[rotate] duration-200 hover:rotate-0',
+              'sd-flip tone-panel flex flex-col border-2 border-current shadow-hard transition-[rotate] duration-200 hover:rotate-0',
               pick(softTilts, i),
             )}
           >
