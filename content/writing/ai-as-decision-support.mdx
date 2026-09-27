@@ -1,0 +1,47 @@
+---
+title: "AI as Decision Support, Not Decision-Maker: Lessons From Building a Mentoring Platform"
+date: "2026-08-20"
+pillar: "ai"
+excerpt: "Matching mentors to learners looked like an AI problem. It turned out to be an architecture problem: keep a boring transactional core, put the AI beside it, and make every recommendation explain itself."
+---
+
+## The Brief
+
+Mentoring products usually fail at the matching layer. Either they rely on static profile tags ("blockchain", "leadership") that match everyone with everyone, or they push the real work onto mentors, who end up triaging requests by hand.
+
+The brief on this project was to match learners with the right mentors, and to capture enough from each interaction to make the next match better.
+
+The tempting design is to put a model at the centre and let it drive. We did the opposite.
+
+## A Boring Core and an AI Layer Beside It
+
+The system is split in two.
+
+**The transactional core** handles everything that must be correct every time: identity, roles, mentor availability, bookings and session history. It's a NestJS API inside an Nx monorepo, with Angular apps on top and PostgreSQL underneath, and role-based access for learners, mentors, operators and admins.
+
+**The AI layer** handles everything that can be probabilistic: a Python (Flask) service for profile enrichment and mentor-fit scoring, and a prompt pipeline that turns sessions into summaries and follow-up actions.
+
+The rule between them: **the AI layer can suggest, the core decides.** A recommendation never books a session, changes availability or overrides a user's choice.
+
+That boundary paid off in a way I didn't fully expect. The product team could iterate on ranking logic as often as they liked without ever destabilising the booking system.
+
+## Make the Recommendation Explain Itself
+
+The first version ranked mentors by a single confidence score. It was accurate enough and nobody trusted it.
+
+Things improved once the scoring was designed to answer **"why this mentor?"** and those reasons were shown to learners and operators — shared domain, relevant session history, availability overlap — instead of a number.
+
+Explainable matching changed behaviour on both sides. Learners picked with more confidence. Operators could see *why* a match was wrong and fix the inputs, instead of arguing with a black box.
+
+## Keep the Inputs Fresh
+
+Recommendations are only as good as their inputs, and in a mentoring product the most valuable inputs arrive after each session. We made recommendation updates event-driven: every completed interaction feeds back into the next ranking, instead of waiting for a nightly batch.
+
+## What I'd Tell Another Team
+
+- Draw the line between "must be correct" and "can be probabilistic" before you pick a model.
+- Let AI recommend; keep decisions in the transactional core.
+- Show the reasons, not the score.
+- Design the feedback loop on day one; retrofitting it is painful.
+
+AI works best here as decision support. The moment it becomes the decision-maker, you inherit its mistakes as product bugs.
