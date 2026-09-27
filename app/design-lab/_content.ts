@@ -81,7 +81,7 @@ export const ARTICLES: LabArticle[] = [
     title: 'L2 Chains Are Not Hard to Deploy — The Hard Part Comes After',
     excerpt:
       'Deploying an OP Stack L2 takes a week. Running one in production takes ongoing engineering. The sequencer, bridge, and oracle design are where the real work begins.',
-    note: 'Based on the Pepe Unchained L2 deployment and the year that followed.',
+    note: 'Based on a production OP Stack L2 deployment and the year that followed.',
   },
 ]
 
@@ -102,8 +102,8 @@ export const PROJECT = {
 export const PROJECTS = [
   { title: 'Project Atlas', sub: 'Multi-chain non-custodial wallet', tag: 'BTC · ETH · EVM' },
   { title: 'Project Ember', sub: 'OP Stack L2 + bridge', tag: 'Ethereum L2' },
-  { title: 'VeriOnce', sub: 'Credential verification on Fabric', tag: 'Hyperledger' },
-  { title: 'RoomQuery', sub: 'AI hotel recommendation API', tag: 'NestJS · LLM' },
+  { title: 'Project Seal', sub: 'Credential verification on Fabric', tag: 'Hyperledger' },
+  { title: 'Project Concierge', sub: 'AI hotel recommendation API', tag: 'NestJS · LLM' },
 ]
 
 // Reading specimen — used by directions that show an article template

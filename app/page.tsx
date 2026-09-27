@@ -55,7 +55,7 @@ export default function HomePage() {
   const articles = getAllArticleMeta().slice(0, 3)
   const projects = getAllProjectMeta()
   const featuredResource = getAllResourceMeta()[0]
-  const [spotlight, ...featuredProjects] = ['cryptsync-ncw', 'pepe-unchained-l2', 'verionce', 'roomquery']
+  const [spotlight, ...featuredProjects] = ['atlas-multichain-wallet', 'ember-op-stack-l2', 'seal-credential-verification', 'concierge-hotel-recommendations']
     .map((slug) => projects.find((project) => project.slug === slug))
     .filter((project): project is NonNullable<typeof project> => Boolean(project))
 

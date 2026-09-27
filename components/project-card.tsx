@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils'
-import { pick, softTilts, tones } from '@/components/bazaar/styles'
+import { chipLink, pick, softTilts, tones } from '@/components/bazaar/styles'
 import type { ProjectMeta } from '@/types/content'
 
 function monthYear(iso: string) {
@@ -49,6 +49,11 @@ export function ProjectCard({
       >
         {project.title}
       </h3>
+      {project.role && (
+        <p className="mt-2 text-[12px] font-semibold leading-[1.45] text-dm-ink-soft">
+          <span className="font-black uppercase tracking-[0.08em] text-dm-ink">{project.employer}</span> · {project.role}
+        </p>
+      )}
       {project.chain && (
         <span className={cn('ticket mt-4 w-fit max-w-full whitespace-normal leading-tight', pick(tones, i))}>
           {project.chain}
@@ -69,6 +74,16 @@ export function ProjectCard({
             ))}
           </ul>
         </div>
+      )}
+      {project.caseStudy && (
+        <a
+          href={project.caseStudy}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={cn(chipLink, 'tone-panel mt-5 w-fit')}
+        >
+          Case study<span className="sr-only">: {project.title}</span> ↗
+        </a>
       )}
       <ul aria-label="Stack" className="mt-auto flex flex-wrap gap-1.5 pt-5">
         {project.stack.map((s) => (

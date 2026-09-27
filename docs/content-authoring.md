@@ -110,7 +110,17 @@ Optional frontmatter:
 
 ```mdx
 chain: "Ethereum mainnet"
+employer: "Tech Alchemy"   # or "SoluLab" — shows Neel's role for that employer (lib/roles.ts)
+caseStudy: "https://www.solulab.com/case-study/…"   # official external case study, shown as a link
 ```
+
+**Naming rule (2026-09-27): no real project or client names on the site** until Neel approves each one.
+- Title every project `Project <Codename> — <what it is>`, with a codename that fits the description
+  (e.g. "Project Seal — Blockchain Credential Verification"). Never derive the codename from the real name.
+- The filename is the slug, and slugs are sent to the browser (page data and the client JS on `/projects`), so
+  **the filename must not contain the real name either** (`seal-credential-verification.mdx`, not `verionce.mdx`).
+- Keep real names out of the excerpt and the `## Outcome` bullets too — both render on the card.
+- `/resume` is exempt: it is Neel's CV and stays as written.
 
 Example:
 

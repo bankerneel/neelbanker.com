@@ -23,6 +23,9 @@
 
 ## Content / NDA
 
+- **All 20 projects are codenamed (2026-09-27, Neel's instruction):** real names removed from titles, filenames/slugs (they ship in the `/projects` page data and client JS), excerpts and outcomes; spotlight copy, homepage featured list and `/design-lab` content updated too. New codenames: Herald, Scales, Quill, Keystone, Ignite, Coffer, Canopy, Enclave, Concierge, Sentinel, Seal, and Harbor (replaced "Project Tiger", which echoed the real name). Kept: Atlas, Orbit, Ember, Pulse, Forge, Relay, Vector, Beacon. Verified by scanning rendered HTML and every JS chunk for real names. A name comes back only when Neel explicitly approves it. `/resume` keeps real names by his choice.
+- Roles come from `employer` frontmatter via `lib/roles.ts`: Tech Alchemy → "Blockchain | Technical Architect | Pseudo Lead" (his wording; "Psuedo" typo fixed), SoluLab → "Tech Lead | Senior Blockchain Developer". Pre-filled from `profile-data/WEBSITE.md` (10 TA, 1 SoluLab); personal projects and the two unlisted ones (Scales, Coffer) have none until Neel says.
+- SoluLab team growth is **10 → 50+** (Neel confirmed 2026-09-27; `profile-data/WEBSITE.md` corrected from 40+).
 - Several Tech Alchemy-specific project names were intentionally anonymized in public content.
 - Preserve pseudo/codename references unless the user explicitly asks otherwise.
 - Public-facing content should avoid directly exposing NDA-sensitive client/project names.

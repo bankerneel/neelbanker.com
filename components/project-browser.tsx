@@ -20,59 +20,58 @@ const FILTERS: Array<{ key: ProjectFilter; label: string; description: string; t
 // Keyed by content/projects/<slug>.mdx — keep in sync when adding a project,
 // or it only ever shows under "All work".
 const PROJECT_CATEGORIES: Record<string, ProjectFilter[]> = {
-  'cryptsync-ncw': ['wallets', 'infrastructure', 'leadership'],
-  'truetiger-non-custodial-wallet': ['wallets', 'leadership'],
-  'fireblocks-bitgo-custody': ['wallets', 'leadership'],
-  'best-wallet-ecosystem': ['wallets', 'leadership'],
-  'w3p-presale-dapps-platform': ['wallets'],
-  'fabric-polygon-interop': ['infrastructure'],
-  'verionce': ['infrastructure', 'leadership'],
-  'doctrace-fabric-documents': ['infrastructure', 'leadership'],
-  'pepe-unchained-l2': ['infrastructure', 'leadership'],
-  'ncog-earth-chain': ['infrastructure'],
-  'memevault': ['infrastructure'],
-  'smart-contract-audit-suite': ['infrastructure', 'leadership'],
-  'fightout-move-to-earn': ['infrastructure', 'leadership'],
-  'roomquery': ['ai'],
-  'ai-social-media-agent': ['ai'],
-  'privatgpt-offline': ['ai'],
-  'keytu-ai-mentoring-platform': ['ai', 'leadership'],
-  'hashira-product-system': ['leadership'],
-  'splint-marketplace-platform': ['leadership'],
-  'idosy-ido-platform': ['wallets', 'leadership'],
+  'atlas-multichain-wallet': ['wallets', 'infrastructure', 'leadership'],
+  'harbor-embedded-wallet': ['wallets', 'leadership'],
+  'scales-custody-evaluation': ['wallets', 'leadership'],
+  'orbit-presale-crm-dapps': ['wallets', 'leadership'],
+  'vector-presale-dapps': ['wallets'],
+  'keystone-fabric-polygon-bridge': ['infrastructure'],
+  'seal-credential-verification': ['infrastructure', 'leadership'],
+  'quill-fabric-documents': ['infrastructure', 'leadership'],
+  'ember-op-stack-l2': ['infrastructure', 'leadership'],
+  'canopy-custom-evm-chain': ['infrastructure'],
+  'coffer-token-vault': ['infrastructure'],
+  'sentinel-contract-audit': ['infrastructure', 'leadership'],
+  'pulse-move-to-earn': ['infrastructure', 'leadership'],
+  'concierge-hotel-recommendations': ['ai'],
+  'herald-social-post-agent': ['ai'],
+  'enclave-offline-doc-qa': ['ai'],
+  'beacon-ai-mentoring': ['ai', 'leadership'],
+  'forge-product-system': ['leadership'],
+  'relay-marketplace-platform': ['leadership'],
+  'ignite-ido-platform': ['wallets', 'leadership'],
 }
 
 const FEATURED_SPOTLIGHTS = [
   {
     label: 'Wallet systems',
     tone: 'tone-butter',
-    title: 'Project Atlas, Project Tiger, Project Orbit, Fireblocks vs BitGo',
+    title: 'Project Atlas, Project Harbor, Project Orbit, Project Scales',
     body: 'A through-line across non-custodial wallets, custody choices, key-management UX, and production transaction orchestration.',
   },
   {
     label: 'Infrastructure',
     tone: 'tone-sage',
-    title: 'Project Ember, VeriOnce, Fabric–Polygon, NCOG Earth Chain',
+    title: 'Project Ember, Project Seal, Project Keystone, Project Canopy',
     body: 'L2 operations, Fabric architectures, cross-chain verification, and the trade-offs behind custom or specialised blockchain infrastructure.',
   },
   {
     label: 'AI delivery',
     tone: 'tone-sky',
-    title: 'RoomQuery, Project Beacon, PrivateGPT, AI Social Media Agent',
+    title: 'Project Concierge, Project Beacon, Project Enclave, Project Herald',
     body: 'Applied AI systems focused on ranking, retrieval, orchestration, and practical workflow leverage instead of generic demo-layer novelty.',
   },
 ]
 
+// Client names stay off the site until Neel approves them (2026-09-27), so each
+// case study is labelled by what was built. Four older links 404 on solulab.com
+// and are left out until Neel sends the official replacements.
 const SOLULAB_CASE_STUDIES = [
-  { label: 'HighVibe Network', href: 'https://www.solulab.com/case-study/highvibe-network/' },
-  { label: 'Morpheus Network', href: 'https://www.solulab.com/case-studies/morpheus-network/' },
-  { label: 'NFT Gallery', href: 'https://www.solulab.com/case-study/nft-gallery-reinventing-the-dynamics-of-the-art-market/' },
-  { label: 'Krypto Kiddies', href: 'https://www.solulab.com/case-study/krypto-kiddies-a-crypto-landscape-where-learning-is-fun/' },
-  { label: 'NFT Blockchain', href: 'https://www.solulab.com/case-study/nft-blockchain-blockchain-built-exclusively-for-nfts-case-study/' },
-  { label: 'MultiVAC NFT Marketplace', href: 'https://www.solulab.com/case-study/multivac-a-next-gen-nft-marketplace-for-crypto-trading/' },
-  { label: 'AnrKeyX', href: 'https://www.solulab.com/case-study/anrkeyx-first-game-studio-for-defi-gaming/' },
-  { label: 'Alacrity Blockchain', href: 'https://www.solulab.com/case-study/alacrity-your-next-generation-user-friendly-blockchain/' },
-  { label: 'NFTY Token', href: 'https://www.solulab.com/case-study/nfty-a-token-for-promoting-quality-in-nft-marketplaces/' },
+  { label: 'Supply-chain logistics SaaS', href: 'https://www.solulab.com/case-studies/morpheus-network/' },
+  { label: 'NFT art marketplace', href: 'https://www.solulab.com/case-study/nft-gallery-reinventing-the-dynamics-of-the-art-market/' },
+  { label: 'NFT marketplace for crypto trading', href: 'https://www.solulab.com/case-study/multivac-a-next-gen-nft-marketplace-for-crypto-trading/' },
+  { label: 'User-friendly next-gen blockchain', href: 'https://www.solulab.com/case-study/alacrity-your-next-generation-user-friendly-blockchain/' },
+  { label: 'Token for NFT-marketplace quality', href: 'https://www.solulab.com/case-study/nfty-a-token-for-promoting-quality-in-nft-marketplaces/' },
 ]
 
 function includesFilter(project: ProjectMeta, filter: ProjectFilter) {

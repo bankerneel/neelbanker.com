@@ -41,7 +41,12 @@ export interface ProjectMeta {
   stack: string[]       // e.g. ['Solidity', 'Fireblocks', 'Node.js']
   date: string
   outcome: string[]     // bullets from the MDX body's "## Outcome" section (may be empty)
+  employer?: Employer   // frontmatter `employer`; sets `role`
+  role?: string         // derived from employer (lib/roles.ts)
+  caseStudy?: string    // frontmatter `caseStudy`: official external case-study URL
 }
+
+export type Employer = 'Tech Alchemy' | 'SoluLab'
 
 export interface Project extends ProjectMeta {
   content: string

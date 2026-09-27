@@ -2,6 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import matter from 'gray-matter'
 import type { ArticleMeta, Article, ResourceMeta, ProjectMeta } from '@/types/content'
+import { isEmployer, ROLE_BY_EMPLOYER } from '@/lib/roles'
 export { parseDate } from '@/lib/utils-date'
 
 const CONTENT_DIR = path.join(process.cwd(), 'content')
@@ -103,6 +104,8 @@ export function getAllProjectMeta(): ProjectMeta[] {
       stack: data.stack ?? [],
       date: data.date,
       outcome: extractOutcome(content),
+      ...(isEmployer(data.employer) ? { employer: data.employer, role: ROLE_BY_EMPLOYER[data.employer] } : {}),
+      ...(typeof data.caseStudy === 'string' && data.caseStudy ? { caseStudy: data.caseStudy } : {}),
     } satisfies ProjectMeta
   }).sort((a, b) => (a.date < b.date ? 1 : -1))
 }
