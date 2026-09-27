@@ -27,7 +27,7 @@ Core routes now feel substantially more consistent, lighter, and more editorial 
   - Homepage: "receipts, not adjectives" proof strip, recruiter lane, conversion-ordered sections ("Start here" removed).
   - Tests: 32 Playwright e2e tests (routes, nav, forms with mocked APIs, print, layout-overflow guard) + 9 Vitest unit tests; `npm run test:e2e` works on Windows (system Edge), run artifacts gitignored.
   - Fixed on the way: 320px overflow of homepage polaroids and of a featured project card with a long uppercase word.
-  - Verified: `health-app.neelbanker.com` is live on its own Vercel project. DMARC is still missing (DNS change for Neel).
+  - Verified: `health-app.neelbanker.com` is live on its own Vercel project. DMARC was added by Neel on 2026-09-27 and verified on public DNS (`p=none`; tighten to `p=quarantine` after a few weeks of clean sending).
 
 - **Dream Bazaar redesign — live in production** (PR #10 merged 2026-09-26 19:38 UTC, merge `273162a`; Vercel production deploy succeeded):
   - Foundation: `--dm-*` palette with light + dark values (contrast measured and corrected), `tone-*` surfaces, `.ticket`, `.torn` / `.torn-sheet`, `page-wrap`, `.prose-bazaar`, fixed dream-sky layer; shadcn tokens mapped onto the palette.
@@ -103,7 +103,6 @@ Core routes now feel substantially more consistent, lighter, and more editorial 
 ## Needs Review
 
 - `skale-appchains` draft is an outline of questions for Neel; it stays in gitignored `content/drafts/`.
-- DMARC TXT record at Squarespace (`_dmarc`: `v=DMARC1; p=none; adkim=r; aspf=r`).
 - Real-device QA: iOS Safari (fixed sky layer, `100lvh`, clip-path), a low-end Android (long article sheet), and the Cal embed on phones.
 - End-to-end form/download behaviour against production Resend: newsletter subscribe, contact form, resource download.
 - Category choice for Project Pulse (`fightout-move-to-earn` → infrastructure + leadership) was a judgement call from its excerpt.
