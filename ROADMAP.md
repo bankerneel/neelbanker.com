@@ -93,11 +93,15 @@ further, the lever is `preload: false` on Caveat (accents only, not the LCP elem
 
 ## Next
 
-### 3. Homepage proof refinement
+### 3. Homepage proof refinement ✅ (2026-09-27)
 
-- Add or refine one stronger trust/proof strip near the fold
-- Sharpen recruiter/employer proof messaging
-- Reassess section ordering based on what should convert best
+- "Receipts, not adjectives" strip right after the hero: current role, SoluLab lead path (10 → 50+), Best Team
+  Lead 2021 + 2022, talks. Facts only from /about and /resume.
+- Recruiter lane: resume, the /work-with-me recruiter section, LinkedIn.
+- Order: hero → receipts → selected work → writing → themes → hiring → how I work → services. "Start here" was
+  dropped (it repeated the nav and the sections below it).
+- **To confirm:** `profile-data/WEBSITE.md` says the SoluLab team grew 10 → **40+**; the site and resume say
+  **50+**. The site keeps 50+.
 
 ### 4. `/projects` depth upgrade ✅ (2026-09-27, partly)
 
