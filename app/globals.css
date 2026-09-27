@@ -108,6 +108,8 @@
   --dm-code: #3a2f3d;
   --dm-code-fg: #fbefe0;
   --dm-danger: #a3261d;
+  --dm-night: #3a2f3d;
+  --dm-night-ink: #fffaf2;
   color-scheme: light;
 
   --background: var(--dm-panel);
@@ -176,6 +178,8 @@
   --dm-code: #16111b;
   --dm-code-fg: #f2e9dc;
   --dm-danger: #f09a8f;
+  --dm-night: #15101a; /* darker than the ground, so the night set stays night */
+  --dm-night-ink: #f2e9dc;
   color-scheme: dark;
 }
 
@@ -215,6 +219,7 @@
 @layer components {
   .tone-panel { background-color: var(--dm-panel); color: var(--dm-ink); }
   .tone-ink { background-color: var(--dm-ink); color: var(--dm-panel); }
+  .tone-night { background-color: var(--dm-night); color: var(--dm-night-ink); }
   .tone-rose { background-color: var(--dm-rose); color: var(--dm-on-accent); }
   .tone-butter { background-color: var(--dm-butter); color: var(--dm-on-accent); }
   .tone-sky { background-color: var(--dm-sky); color: var(--dm-on-accent); }
@@ -296,6 +301,12 @@
   .dm-longshadow {
     box-shadow: 40px 40px 0 var(--dm-longshadow);
   }
+  /* moon halo for the arch on the night band */
+  .arch-halo {
+    box-shadow:
+      0 0 0 14px color-mix(in oklab, var(--dm-lilac) 24%, transparent),
+      0 0 0 32px color-mix(in oklab, var(--dm-lilac) 10%, transparent);
+  }
 
   .pat-stripes {
     background-image: repeating-linear-gradient(
@@ -315,6 +326,90 @@
       linear-gradient(135deg, currentColor 25%, transparent 25%),
       linear-gradient(225deg, currentColor 25%, transparent 25%);
     background-size: 18px 18px;
+  }
+
+  /* ── Bands: full-bleed "sets" (components/bazaar/band.tsx) ──
+     Edges are small strips that overlap the neighbouring section, so the
+     band itself is never clipped or masked (cheap to scroll). */
+  .band {
+    --band-hand: currentColor;
+  }
+  .band[data-band='panel'] {
+    --band-hand: var(--dm-accent-ink);
+  }
+  .hand-ink {
+    color: var(--band-hand, var(--dm-accent-ink));
+  }
+  .band-edge {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 18px;
+    pointer-events: none;
+  }
+  .band-edge-top {
+    bottom: calc(100% - 1px);
+  }
+  .band-edge-bottom {
+    top: calc(100% - 1px);
+    scale: 1 -1;
+  }
+  .band-edge-torn {
+    clip-path: polygon(
+      0% 100%, 0% 52%, 2% 30%, 4.5% 58%, 7% 22%, 9% 44%, 11.5% 12%, 14% 50%, 16.5% 28%, 19% 62%,
+      21.5% 18%, 24% 40%, 26.5% 6%, 29% 48%, 31.5% 26%, 34% 64%, 36.5% 20%, 39% 46%, 41.5% 10%,
+      44% 54%, 46.5% 30%, 49% 60%, 51.5% 14%, 54% 42%, 56.5% 4%, 59% 50%, 61.5% 24%, 64% 58%,
+      66.5% 16%, 69% 44%, 71.5% 8%, 74% 52%, 76.5% 28%, 79% 60%, 81.5% 18%, 84% 46%, 86.5% 12%,
+      89% 56%, 91.5% 26%, 94% 50%, 96.5% 16%, 98.5% 40%, 100% 22%, 100% 100%
+    );
+  }
+  /* spiral-notebook perforations: holes show the section above */
+  .band-edge-perf {
+    height: 26px;
+    -webkit-mask: radial-gradient(circle at 16px 13px, transparent 5px, #000 5.6px) 0 0 / 32px 100% repeat-x;
+    mask: radial-gradient(circle at 16px 13px, transparent 5px, #000 5.6px) 0 0 / 32px 100% repeat-x;
+  }
+  /* pinking-shear teeth */
+  .band-edge-zig {
+    height: 14px;
+    -webkit-mask: conic-gradient(from 135deg at 50% 0, #000 90deg, #0000 0) 0 0 / 28px 100% repeat-x;
+    mask: conic-gradient(from 135deg at 50% 0, #000 90deg, #0000 0) 0 0 / 28px 100% repeat-x;
+  }
+  /* ticket-stub scallops */
+  .band-edge-scallop {
+    height: 12px;
+    -webkit-mask: radial-gradient(12px at 50% 100%, #000 98%, #0000) 0 0 / 24px 100% repeat-x;
+    mask: radial-gradient(12px at 50% 100%, #000 98%, #0000) 0 0 / 24px 100% repeat-x;
+  }
+  .band-pattern {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .band-pattern-ruled {
+    --margin: 14px;
+    background:
+      linear-gradient(
+        90deg,
+        transparent calc(var(--margin) - 1px),
+        color-mix(in oklab, var(--dm-terra) 60%, transparent) calc(var(--margin) - 1px) calc(var(--margin) + 1px),
+        transparent calc(var(--margin) + 1px)
+      ),
+      repeating-linear-gradient(180deg, transparent 0 35px, color-mix(in oklab, currentColor 13%, transparent) 35px 36px);
+    @media (width >= 40rem) {
+      --margin: 4%;
+    }
+  }
+  .band-pattern-blueprint {
+    --major: color-mix(in oklab, var(--dm-panel) 40%, transparent);
+    --minor: color-mix(in oklab, var(--dm-panel) 18%, transparent);
+    background:
+      linear-gradient(var(--major) 1px, transparent 1px) 0 0 / 120px 120px,
+      linear-gradient(90deg, var(--major) 1px, transparent 1px) 0 0 / 120px 120px,
+      linear-gradient(var(--minor) 1px, transparent 1px) 0 0 / 24px 24px,
+      linear-gradient(90deg, var(--minor) 1px, transparent 1px) 0 0 / 24px 24px;
   }
 
   /* highlighter swipe behind a heading's text */

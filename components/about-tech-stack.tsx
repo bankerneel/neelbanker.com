@@ -67,7 +67,7 @@ export function AboutTechStack() {
           <li
             key={label}
             className={cn(
-              'flex items-baseline gap-2 border-2 border-current bg-dm-panel px-4 py-2.5 shadow-hard',
+              'tone-panel flex items-baseline gap-2 border-2 border-current px-4 py-2.5 shadow-hard',
               i ? 'rotate-[1.5deg]' : '-rotate-2',
             )}
           >

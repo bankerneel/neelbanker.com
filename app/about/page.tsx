@@ -1,9 +1,11 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import { FadeUp } from '@/components/scroll-reveal'
 import { AboutTechStack } from '@/components/about-tech-stack'
 import { PageIntro } from '@/components/bazaar/page-intro'
 import { Scrap } from '@/components/bazaar/scrap'
+import { Band } from '@/components/bazaar/band'
 import { chipLink, focusRing, pick, softTilts, tilts, tones } from '@/components/bazaar/styles'
 import { cn } from '@/lib/utils'
 
@@ -113,7 +115,7 @@ const stats = [
 ]
 
 const sectionTitle = 'text-[clamp(2rem,5vw,3.4rem)] font-black uppercase leading-none tracking-tighter'
-const handWord = 'hand text-[1.15em] font-normal lowercase text-dm-accent-ink'
+const handWord = 'hand hand-ink text-[1.15em] font-normal lowercase'
 
 export default function AboutPage() {
   return (
@@ -145,9 +147,16 @@ export default function AboutPage() {
           </Scrap>
 
           <div className="flex items-start pl-1 lg:-ml-8 lg:mt-6">
-            <div className="relative z-30 w-[124px] -rotate-6 bg-dm-panel p-2.5 pb-3 shadow-hard-lg sm:w-[150px] sm:p-3">
-              <div className="tone-lilac flex h-[112px] items-center justify-center sm:h-[136px]">
-                <span className="text-[3rem] font-black leading-none tracking-tighter sm:text-[3.6rem]">NB</span>
+            <div className="relative z-30 w-[136px] -rotate-6 bg-dm-panel p-2.5 pb-3 shadow-hard-lg sm:w-[172px] sm:p-3">
+              <div className="tone-lilac relative h-[124px] overflow-hidden sm:h-[156px]">
+                <Image
+                  src="/images/neel-banker.jpg"
+                  alt="Neel Banker"
+                  fill
+                  sizes="(min-width: 640px) 148px, 116px"
+                  loading="eager"
+                  className="object-cover object-[50%_28%]"
+                />
               </div>
               <p className="hand mt-1.5 text-center text-[1.1rem] leading-tight text-dm-ink">hi, I&apos;m Neel</p>
             </div>
@@ -277,7 +286,8 @@ export default function AboutPage() {
       </section>
 
       {/* ── Experience ───────────────────────────────────────────────── */}
-      <section aria-labelledby="experience" className="page-wrap mt-24 sm:mt-28">
+      <Band tone="night" edge="torn" pattern="stars" className="mt-24 sm:mt-28">
+      <section aria-labelledby="experience" className="page-wrap py-24 sm:py-28">
         <h2 id="experience" className={sectionTitle}>
           Where I&apos;ve <span className={handWord}>worked</span>
         </h2>
@@ -321,14 +331,16 @@ export default function AboutPage() {
           ))}
         </ol>
       </section>
+      </Band>
 
       {/* ── Recognition ──────────────────────────────────────────────── */}
-      <section aria-labelledby="recognition" className="page-wrap mt-24 sm:mt-28">
+      <Band tone="butter" edge="zig">
+      <section aria-labelledby="recognition" className="page-wrap py-24 sm:py-28">
         <div className="max-w-3xl">
           <h2 id="recognition" className={sectionTitle}>
             Signals of <span className={handWord}>trust</span>
           </h2>
-          <p className="mt-4 text-[15px] leading-[1.75] text-dm-ink-soft">
+          <p className="mt-4 text-[15px] leading-[1.75]">
             A few selected proof points that show the range of the work: leadership, academic rigor, and delivery across
             high-stakes systems.
           </p>
@@ -355,14 +367,16 @@ export default function AboutPage() {
           </li>
         </ul>
       </section>
+      </Band>
 
       {/* ── Capability map ───────────────────────────────────────────── */}
-      <section aria-labelledby="capabilities" className="page-wrap mt-24 sm:mt-28">
+      <Band tone="sky" edge="scallop" bottomEdge="torn" pattern="blueprint">
+      <section aria-labelledby="capabilities" className="page-wrap py-24 sm:py-28">
         <div className="max-w-3xl">
           <h2 id="capabilities" className={sectionTitle}>
             Capability <span className={handWord}>map</span>
           </h2>
-          <p className="mt-4 text-[15px] leading-[1.75] text-dm-ink-soft">
+          <p className="mt-4 text-[15px] leading-[1.75]">
             The work spans protocol architecture, custody systems, backend delivery, cloud operations, and AI-assisted
             engineering — grouped so it shows breadth without turning into a resume wall.
           </p>
@@ -371,6 +385,7 @@ export default function AboutPage() {
           <AboutTechStack />
         </div>
       </section>
+      </Band>
 
       {/* ── Speaking ─────────────────────────────────────────────────── */}
       <section aria-labelledby="talks" className="page-wrap mt-24 sm:mt-28">

@@ -5,6 +5,7 @@ import { ContactForm } from '@/components/contact-form'
 import { FadeUp } from '@/components/scroll-reveal'
 import { PageIntro } from '@/components/bazaar/page-intro'
 import { Scrap } from '@/components/bazaar/scrap'
+import { Band } from '@/components/bazaar/band'
 import { chipLink, pick, tilts, tones } from '@/components/bazaar/styles'
 import { cn } from '@/lib/utils'
 
@@ -49,7 +50,7 @@ const services = [
 ]
 
 const sectionTitle = 'text-[clamp(2rem,5vw,3.4rem)] font-black uppercase leading-none tracking-tighter'
-const handWord = 'hand text-[1.15em] font-normal lowercase text-dm-accent-ink'
+const handWord = 'hand hand-ink text-[1.15em] font-normal lowercase'
 
 export default function WorkWithMePage() {
   return (
@@ -128,9 +129,10 @@ export default function WorkWithMePage() {
       </section>
 
       {/* ── Recruiter lane ─────────────────────────────────────────── */}
-      <section aria-labelledby="recruiters" className="page-wrap mt-24 sm:mt-28">
+      <Band tone="night" edge="torn" bottomEdge="torn" pattern="stars" className="mt-24 sm:mt-28">
+      <section aria-labelledby="recruiters" className="page-wrap py-24 sm:py-28">
         <FadeUp>
-          <div className="surreal-arch dm-longshadow tone-lilac mx-auto max-w-[980px] px-7 pb-12 pt-24 text-center sm:px-14 sm:pt-20">
+          <div className="surreal-arch arch-halo tone-lilac mx-auto max-w-[980px] px-7 pb-12 pt-24 text-center sm:px-14 sm:pt-20">
             <p className="text-[11px] font-bold uppercase tracking-[0.24em]">Hiring? ✦ For recruiters</p>
             <h2 id="recruiters" className="mx-auto mt-4 max-w-2xl text-[clamp(1.6rem,4vw,2.6rem)] font-black uppercase leading-[1.04] tracking-tight">
               Leadership roles, principal architecture, and long-horizon builds
@@ -163,6 +165,7 @@ export default function WorkWithMePage() {
           </div>
         </FadeUp>
       </section>
+      </Band>
 
       {/* ── Book or write ──────────────────────────────────────────── */}
       <div className="page-wrap mt-24 grid gap-16 sm:mt-28 xl:grid-cols-[1.05fr_0.95fr] xl:gap-14">

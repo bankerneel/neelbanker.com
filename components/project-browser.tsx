@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { ProjectCard } from '@/components/project-card'
 import { Scrap } from '@/components/bazaar/scrap'
+import { Band } from '@/components/bazaar/band'
 import { focusRing, pick, softTilts, tilts, tones } from '@/components/bazaar/styles'
 import { cn } from '@/lib/utils'
 import type { ProjectMeta } from '@/types/content'
@@ -92,7 +93,7 @@ function includesFilter(project: ProjectMeta, filter: ProjectFilter) {
 }
 
 const sectionTitle = 'text-[clamp(2rem,5vw,3.4rem)] font-black uppercase leading-none tracking-tighter'
-const handWord = 'hand text-[1.15em] font-normal lowercase text-dm-accent-ink'
+const handWord = 'hand hand-ink text-[1.15em] font-normal lowercase'
 
 export function ProjectBrowser({ projects }: { projects: ProjectMeta[] }) {
   const [activeFilter, setActiveFilter] = useState<ProjectFilter>('all')
@@ -102,7 +103,7 @@ export function ProjectBrowser({ projects }: { projects: ProjectMeta[] }) {
   return (
     <div>
       {/* ── Through-lines ─────────────────────────────────────────── */}
-      <section aria-labelledby="through-lines">
+      <section aria-labelledby="through-lines" className="page-wrap">
         <h2 id="through-lines" className={sectionTitle}>
           The <span className={handWord}>through</span>-lines
         </h2>
@@ -125,13 +126,14 @@ export function ProjectBrowser({ projects }: { projects: ProjectMeta[] }) {
       </section>
 
       {/* ── Filterable archive ────────────────────────────────────── */}
-      <section aria-labelledby="all-projects" className="mt-24 sm:mt-28">
+      <Band tone="night" edge="torn" pattern="stars" className="mt-24 sm:mt-28">
+      <section aria-labelledby="all-projects" className="page-wrap py-24 sm:py-28">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-xl">
             <h2 id="all-projects" className={sectionTitle}>
               {activeMeta.label}
             </h2>
-            <p className="mt-3 text-[15px] leading-[1.7] text-dm-ink-soft">{activeMeta.description}</p>
+            <p className="mt-3 text-[15px] leading-[1.7]">{activeMeta.description}</p>
             <p className="mt-2 text-[13px] font-bold uppercase tracking-[0.14em]" aria-live="polite">
               {visibleProjects.length} {visibleProjects.length === 1 ? 'project' : 'projects'} in view
             </p>
@@ -166,9 +168,11 @@ export function ProjectBrowser({ projects }: { projects: ProjectMeta[] }) {
           ))}
         </ul>
       </section>
+      </Band>
 
       {/* ── External case studies ─────────────────────────────────── */}
-      <section aria-labelledby="client-delivery" className="mt-24 sm:mt-28">
+      <Band tone="butter" edge="zig" bottomEdge="torn">
+      <section aria-labelledby="client-delivery" className="page-wrap py-24 sm:py-28">
         <Scrap className="-rotate-[0.6deg]" paperClassName="tone-panel px-7 py-10 sm:px-12 sm:py-14">
           <h2 id="client-delivery" className="text-[clamp(1.7rem,4vw,2.6rem)] font-black uppercase leading-[1.02] tracking-tight">
             Client delivery, <span className={handWord}>as proof</span>
@@ -207,6 +211,7 @@ export function ProjectBrowser({ projects }: { projects: ProjectMeta[] }) {
           </ul>
         </Scrap>
       </section>
+      </Band>
     </div>
   )
 }

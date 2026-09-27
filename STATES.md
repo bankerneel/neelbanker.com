@@ -15,6 +15,13 @@ Core routes now feel substantially more consistent, lighter, and more editorial 
 
 ## Completed
 
+- **Bands + the homepage film (2026-09-27, local branch `feat/motion-film`, not pushed):**
+  - Section breaks: full-bleed bands with torn / perforated / zig-zag / scalloped edges on `/`, `/about`, `/projects`, `/work-with-me`.
+  - Homepage motion: CSS hook (paper strips rip off the headline), scroll-driven sequence (a different technique per section), footer finale at dusk, living WebGL sky (dawn → dusk). Rules and budgets in AGENTS.md "Motion".
+  - Bake-off: GSAP hook and Three.js sky built, measured and rejected (TBT and weight); CSS hook + shader sky chosen by Neel.
+  - `/about` polaroid uses Neel's photo (`public/images/neel-banker.jpg`, from his GitHub avatar).
+  - Measured (375px, CPU 4×, slow 4G): TBT 86 ms (unchanged), CLS 0, +2.5 KB JS, 3.5 KB gz motion CSS, 0 janky frames. 40 e2e + 9 unit tests pass.
+
 - **Project naming by group + drafts published (2026-09-27, on `dev`, PR #13):**
   - SoluLab projects use real names; Tech Alchemy keeps codenames; personal projects get pseudonym product names (groups confirmed by Neel: 14 TA, 1 SoluLab, 5 Personal). `employer` now accepts `Personal`.
   - DocTrace restored (`doctrace-fabric-documents`), rewritten from Neel's notes + SoluLab's case study, pinned first on `/projects` and leading the homepage arch.

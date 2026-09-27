@@ -15,4 +15,4 @@ export const softTilts = ['-rotate-[0.6deg]', 'rotate-[0.5deg]', '-rotate-[0.3de
 export const pick = <T,>(list: readonly T[], i: number) => list[i % list.length]
 
 /** A ticket chip that straightens on hover. Add a tone-* and a tilt. */
-export const chipLink = `ticket min-h-10 cursor-pointer transition-[rotate,background-color,color] duration-200 hover:rotate-0 ${focusRing}`
+export const chipLink = `ticket min-h-10 cursor-pointer transition-[rotate,scale,background-color,color] duration-200 hover:rotate-0 active:scale-[0.96] ${focusRing}`

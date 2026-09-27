@@ -52,7 +52,7 @@ export default function ProjectsPage() {
         </div>
       </PageIntro>
 
-      <div className="page-wrap mt-24">
+      <div className="mt-24">
         <ProjectBrowser projects={projects} />
       </div>
     </>

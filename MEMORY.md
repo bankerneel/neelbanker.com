@@ -21,6 +21,14 @@
 - `lib/mdx.ts` is server-only because it uses `fs`.
 - Use `apply_patch` for manual file edits.
 
+## Motion (2026-09-27)
+
+- Neel asked for section breaks and "world-class" motion, feather-light and mobile-friendly. Built as the homepage "film" (see AGENTS.md "Motion"). He picked the CSS paper-strip hook + the shader sky after a live bake-off.
+- Rejected with numbers: GSAP hook (+141 ms TBT, headline ~1s late on slow phones), Three.js sky (+133 KB, TBT +168 ms, scroll fps −27%). The first shader was too subtle to notice; it was boosted (orbiting, colour-shifting glows) and later given a dawn → dusk scroll journey.
+- `app/motion.css` must be imported from `app/layout.tsx`: an `@import` of it inside `globals.css` is dropped by Turbopack in dev (Tailwind compiles it fine on its own).
+- Starting WebGL before first paint can delay FCP on slow phones: the sky starts after `load` + `requestIdleCallback`.
+- Playwright: `test.use({ reducedMotion })` is ignored here; use `page.emulateMedia`. Playwright video needs ffmpeg (not installed); films were made from CDP screencast frames + Pillow.
+
 ## Content / NDA
 
 - **Naming by group (Neel, 2026-09-27, revised the same day):** SoluLab → real names (he is not under NDA with SoluLab); Tech Alchemy → `Project <Codename>` (real names never on the site); Personal → pseudonym product names (CredSeal, Keystone Bridge, Canopy Chain, StayWise, Sentinel Audit — confirmed by Neel). Scales and Coffer are Tech Alchemy (confirmed). Slugs ship to the browser, so Tech Alchemy slugs must stay neutral; DocTrace's slug went back to `doctrace-fabric-documents`. `/resume` keeps real names by his choice.

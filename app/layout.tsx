@@ -6,6 +6,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Nav } from '@/components/nav'
 import { Footer } from '@/components/footer'
 import './globals.css'
+import './motion.css'
 
 // Archivo is variable: one file (35 KB) covers every weight.
 const archivo = Archivo({

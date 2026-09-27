@@ -1,0 +1,664 @@
+/* ─────────────────────────────────────────────────────────────────────────
+   The homepage film — motion for the Dream Bazaar homepage.
+
+   Act 0  hook      CSS keyframes on load (~1.3s). Nothing starts invisible
+                    that is needed for LCP: the headline sits under paper
+                    strips that rip away, the hero paragraph only moves.
+   Act 1  build     scroll-driven (animation-timeline) where supported,
+                    time-based reveals (data-reveal, set by MotionStage).
+   Act 2  finale    the footer reassembles the hero's shapes.
+   Ambient          hero shapes breathe, tickers roll; paused off-screen.
+
+   Rules: only transform / opacity / translate / scale / rotate animate
+   (plus one clip-path word and one small SVG stroke). Everything falls back
+   to the final frame under prefers-reduced-motion, and nothing is hidden
+   unless JS (html.motion-ready) or scroll timelines can bring it back.
+   ───────────────────────────────────────────────────────────────────────── */
+
+/* ── Act 0 · the hook ───────────────────────────────────────────────────── */
+
+.hero-stage {
+  transform-origin: 50% 20%;
+  animation: hook-dolly 1.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes hook-dolly {
+  from { transform: scale(1.06); }
+  to { transform: none; }
+}
+
+/* paper strips over each headline line, ripped off one by one */
+.hook-line {
+  position: relative;
+}
+.hook-strip {
+  position: absolute;
+  inset: 4% -3vw 0 -3vw;
+  z-index: 1;
+  pointer-events: none;
+  transform-origin: 0 50%;
+  animation: hook-rip 0.46s cubic-bezier(0.7, 0, 0.25, 1) both;
+}
+.hook-line:nth-child(1) .hook-strip { animation-delay: 0.08s; }
+.hook-line:nth-child(2) .hook-strip { animation-delay: 0.18s; }
+.hook-line:nth-child(3) .hook-strip { animation-delay: 0.28s; }
+@keyframes hook-rip {
+  0% { transform: none; }
+  22% { transform: translateX(-1.2%) rotate(-0.8deg); }
+  100% { transform: translateX(112%) rotate(7deg); visibility: hidden; }
+}
+
+/* "what's" writes itself on once its strip is gone */
+.hook-write {
+  display: inline-block;
+  padding: 0.1em 0.14em;
+  margin: -0.1em -0.14em;
+  animation: hook-write 0.5s cubic-bezier(0.55, 0.1, 0.35, 1) 0.36s both;
+}
+@keyframes hook-write {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+
+/* "NEXT." floods with ink, then drains back to its outline */
+.hook-flood {
+  transform-origin: 0 60%;
+  animation: hook-flood 0.7s cubic-bezier(0.3, 0, 0.3, 1) 0.52s both;
+}
+@keyframes hook-flood {
+  0%, 100% { color: transparent; scale: 1; }
+  40%, 62% { color: var(--stroke, var(--dm-ink)); scale: 1.035; }
+}
+
+.hook-pop {
+  animation: hook-pop 0.5s cubic-bezier(0.3, 1.5, 0.5, 1) 0.04s both;
+}
+@keyframes hook-pop {
+  from { transform: scale(0.4) rotate(-10deg); }
+  to { transform: none; }
+}
+
+/* the lilac arch rises like a moon; the butter sun drops and bounces */
+.hook-rise {
+  animation: hook-rise 0.85s cubic-bezier(0.2, 1.25, 0.35, 1) 0.14s both;
+}
+@keyframes hook-rise {
+  from { transform: translateY(70vh) scale(0.85); }
+  to { transform: none; }
+}
+.hook-drop {
+  animation: hook-drop 1s linear 0.22s both;
+}
+@keyframes hook-drop {
+  0% { transform: translateY(-85vh); animation-timing-function: cubic-bezier(0.5, 0, 1, 0.6); }
+  52% { transform: none; animation-timing-function: cubic-bezier(0, 0.4, 0.5, 1); }
+  68% { transform: translateY(-16%); animation-timing-function: cubic-bezier(0.5, 0, 1, 0.6); }
+  82% { transform: none; animation-timing-function: cubic-bezier(0, 0.4, 0.5, 1); }
+  91% { transform: translateY(-4%); animation-timing-function: cubic-bezier(0.5, 0, 1, 0.6); }
+  100% { transform: none; }
+}
+.hook-swing {
+  animation: hook-swing 0.8s cubic-bezier(0.2, 1.3, 0.4, 1) 0.62s both;
+}
+@keyframes hook-swing {
+  from { transform: translate(30vw, -12vh) rotate(-40deg); }
+  to { transform: none; }
+}
+
+/* stat polaroids dealt onto the table like cards */
+.hook-deal > li {
+  animation: hook-deal 0.62s cubic-bezier(0.2, 1.15, 0.35, 1) both;
+}
+.hook-deal > li:nth-child(1) { --dx: 58vw; --dy: 14vh; --dr: 26deg; animation-delay: 0.62s; }
+.hook-deal > li:nth-child(2) { --dx: 48vw; --dy: 30vh; --dr: -20deg; animation-delay: 0.7s; }
+.hook-deal > li:nth-child(3) { --dx: 38vw; --dy: 44vh; --dr: 34deg; animation-delay: 0.78s; }
+@keyframes hook-deal {
+  from { transform: translate(var(--dx), var(--dy)) rotate(var(--dr)); }
+  to { transform: none; }
+}
+
+/* the copy scrap and the subscribe strip settle last (transform only:
+   the hero paragraph is the LCP element and must never start invisible) */
+.hook-settle {
+  animation: hook-settle 0.7s cubic-bezier(0.2, 1, 0.3, 1) 0.8s both;
+}
+.hook-settle-late {
+  animation: hook-settle 0.7s cubic-bezier(0.2, 1, 0.3, 1) 0.92s both;
+}
+@keyframes hook-settle {
+  from { transform: translateY(26px); }
+  to { transform: none; }
+}
+
+/* ── Ambient · hero shapes breathe; paused off-screen ──────────────────── */
+
+.amb-float {
+  animation: amb-float 6s ease-in-out 1.2s infinite alternate;
+}
+.amb-drift {
+  animation: amb-drift 9s ease-in-out 1.3s infinite alternate;
+}
+.amb-sway {
+  animation: amb-sway 7s ease-in-out 1.4s infinite alternate;
+}
+@keyframes amb-float { to { translate: 0 -10px; } }
+@keyframes amb-drift { 50% { translate: -10px 8px; } to { translate: 8px -6px; } }
+@keyframes amb-sway { to { rotate: 1.6deg; } }
+/* hook and ambient share an element: keep both, pause only the loop */
+.hook-rise.amb-float {
+  animation: hook-rise 0.85s cubic-bezier(0.2, 1.25, 0.35, 1) 0.14s both, amb-float 6s ease-in-out 1.2s infinite alternate;
+}
+.hook-drop.amb-drift {
+  animation: hook-drop 1s linear 0.22s both, amb-drift 9s ease-in-out 1.3s infinite alternate;
+}
+.hook-swing.amb-sway {
+  animation: hook-swing 0.8s cubic-bezier(0.2, 1.3, 0.4, 1) 0.62s both, amb-sway 7s ease-in-out 1.4s infinite alternate;
+}
+[data-inview='false'] .amb-float,
+[data-inview='false'] .amb-drift,
+[data-inview='false'] .amb-sway {
+  animation-play-state: running, paused;
+}
+
+/* pointer parallax (desktop, set by MotionStage as --mx / --my in -1..1) */
+.px-layer {
+  transform: translate3d(calc(var(--mx, 0) * var(--depth, 0px)), calc(var(--my, 0) * var(--depth, 0px)), 0);
+  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* ── Act 1 · time-based reveals (JS: MotionStage sets data-shown) ──────── */
+
+html.motion-ready [data-reveal] {
+  animation-fill-mode: both;
+  animation-play-state: paused;
+}
+html.motion-ready [data-reveal][data-shown] {
+  animation-play-state: running;
+}
+html.motion-ready .rv-stamp {
+  animation-name: rv-stamp;
+  animation-duration: 0.55s;
+  animation-timing-function: cubic-bezier(0.3, 1.3, 0.5, 1);
+}
+.rv-stamp:nth-child(2) { animation-delay: 0.09s; }
+.rv-stamp:nth-child(3) { animation-delay: 0.18s; }
+.rv-stamp:nth-child(4) { animation-delay: 0.27s; }
+@keyframes rv-stamp {
+  0% { opacity: 0; transform: scale(1.7) rotate(12deg); }
+  55% { opacity: 1; transform: scale(0.95); }
+  100% { opacity: 1; transform: none; }
+}
+html.motion-ready .rv-pin {
+  animation-name: rv-pin;
+  animation-duration: 0.85s;
+  animation-timing-function: cubic-bezier(0.25, 1, 0.4, 1);
+}
+.rv-pin:nth-child(2) { animation-delay: 0.12s; }
+.rv-pin:nth-child(3) { animation-delay: 0.24s; }
+@keyframes rv-pin {
+  0% { opacity: 0; transform: translateY(-150px) rotate(-14deg); }
+  50% { opacity: 1; transform: translateY(12px) rotate(3deg); }
+  74% { transform: translateY(-5px) rotate(-1deg); }
+  100% { opacity: 1; transform: none; }
+}
+
+/* ── Act 1 · scroll-driven build ───────────────────────────────────────── */
+/* data-sd elements name their keyframes here; the timing lives in the
+   @supports blocks below (scrubbed by scroll, or a one-shot fallback). */
+.sd-flip { animation-name: sd-flip; }
+.sd-pan { animation-name: sd-pan; }
+.sd-seal { animation-name: sd-seal; }
+.sd-moonrise { animation-name: sd-moonrise; }
+.sd-assemble { animation-name: sd-assemble; }
+.sd-write { animation-name: sd-write; }
+.sd-draw path,
+.sd-draw line { animation-name: sd-draw; }
+.sd-node { animation-name: sd-node; }
+
+@keyframes sd-flip {
+  from { opacity: 0; transform: perspective(1000px) rotateX(46deg) translateY(90px); }
+  45% { opacity: 1; }
+  to { opacity: 1; transform: none; }
+}
+@keyframes sd-pan {
+  from { transform: translateX(var(--pan, -45vw)) rotate(var(--pan-r, -8deg)); }
+  to { transform: none; }
+}
+@keyframes sd-seal {
+  from { transform: translate(-70vw, -18vh) rotate(-60deg); }
+  to { transform: none; }
+}
+@keyframes sd-moonrise {
+  from { transform: translateY(14%) scale(0.92); }
+  to { transform: none; }
+}
+@keyframes sd-assemble {
+  from { transform: translate(var(--ax, 0), var(--ay, 40vh)) rotate(var(--ar, 0deg)) scale(0.6); }
+  to { transform: none; }
+}
+@keyframes sd-write {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+@keyframes sd-draw {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+@keyframes sd-node {
+  from { opacity: 0; transform: scale(0.2); }
+  to { opacity: 1; transform: none; }
+}
+
+.pan-l { --pan: -45vw; --pan-r: -8deg; }
+.pan-r { --pan: 45vw; --pan-r: 8deg; }
+
+.sd-draw path,
+.sd-draw line {
+  stroke-dasharray: 1;
+}
+.sd-node {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@supports (animation-timeline: view()) {
+  [data-sd],
+  .sd-draw path,
+  .sd-draw line,
+  .sd-node {
+    animation-duration: auto;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+    animation-timeline: view();
+  }
+  .sd-flip { animation-range: entry 0% cover 34%; animation-timing-function: cubic-bezier(0.2, 0.7, 0.3, 1); }
+  .sd-flip:nth-child(2) { animation-range: entry 8% cover 40%; }
+  .sd-flip:nth-child(3) { animation-range: entry 16% cover 46%; }
+  .sd-pan { animation-range: entry 0% cover 42%; animation-timing-function: cubic-bezier(0.2, 0.7, 0.3, 1); }
+  .sd-seal { animation-range: entry 30% cover 55%; animation-timing-function: cubic-bezier(0.2, 0.8, 0.3, 1); }
+  .sd-moonrise { animation-range: entry 0% entry 70%; }
+  .sd-assemble { animation-range: entry 0% cover 45%; animation-timing-function: cubic-bezier(0.2, 0.8, 0.3, 1.1); }
+  .sd-write { animation-range: entry 40% cover 50%; }
+  .sd-draw path,
+  .sd-draw line { animation-range: entry 20% cover 55%; }
+  .sd-node { animation-range: entry 10% cover 35%; }
+  .sd-node:nth-of-type(2) { animation-range: entry 16% cover 40%; }
+  .sd-node:nth-of-type(3) { animation-range: entry 22% cover 45%; }
+  .sd-node:nth-of-type(4) { animation-range: entry 28% cover 50%; }
+  .sd-node:nth-of-type(5) { animation-range: entry 34% cover 55%; }
+  .sd-node:nth-of-type(6) { animation-range: entry 40% cover 60%; }
+
+  /* hero pull-back: layers drift up at different speeds as you scroll away */
+  .px-scroll {
+    animation: px-up linear both;
+    animation-timeline: scroll(root);
+    animation-range: 0 100vh;
+  }
+  @keyframes px-up {
+    to { translate: 0 var(--px, -80px); }
+  }
+  .px-head {
+    animation: px-head linear both;
+    animation-timeline: scroll(root);
+    animation-range: 0 90vh;
+  }
+  @keyframes px-head {
+    to { translate: 0 -70px; scale: 0.96; }
+  }
+
+  /* bands expose their own timeline to effects inside them */
+  .band {
+    view-timeline: --band block;
+  }
+  /* night set: a lilac glow rises as you scroll through it */
+  .band-dusk {
+    animation: band-dusk linear both;
+    animation-timeline: --band;
+    animation-range: entry 10% cover 70%;
+  }
+  @keyframes band-dusk {
+    from { opacity: 0; transform: translateY(20%); }
+    to { opacity: 1; transform: none; }
+  }
+  /* notebook: the ruled lines draw across the page */
+  .band-pattern-ruled {
+    transform-origin: 0 0;
+    animation: draw-x linear both;
+    animation-timeline: --band;
+    animation-range: entry 0% entry 60%;
+  }
+  @keyframes draw-x {
+    from { transform: scaleX(0); }
+    to { transform: none; }
+  }
+  /* blueprint: a scan line sweeps the grid */
+  .bp-scan {
+    animation: bp-scan linear both;
+    animation-timeline: --band;
+    animation-range: entry 40% exit 30%;
+  }
+  @keyframes bp-scan {
+    from { translate: 0 -100%; }
+    to { translate: 0 360%; }
+  }
+
+  /* services: each card sticks; the one beneath shrinks as the next lands */
+  .stack {
+    timeline-scope: --s1, --s2, --s3, --s4;
+  }
+  .stack-item:nth-child(1) { view-timeline: --s1 block; }
+  .stack-item:nth-child(2) { view-timeline: --s2 block; }
+  .stack-item:nth-child(3) { view-timeline: --s3 block; }
+  .stack-item:nth-child(4) { view-timeline: --s4 block; }
+  .stack-item:nth-child(-n + 3) > * {
+    animation: stack-shrink linear both;
+    animation-range: cover 5% cover 62%;
+  }
+  .stack-item:nth-child(1) > * { animation-timeline: --s2; }
+  .stack-item:nth-child(2) > * { animation-timeline: --s3; }
+  .stack-item:nth-child(3) > * { animation-timeline: --s4; }
+  /* opaque, shrinking from the top edge: earlier cards read as a deck of
+     edges above the newest one, never as overlapping text */
+  .stack-item > * {
+    transform-origin: 50% 0;
+  }
+  @keyframes stack-shrink {
+    to { transform: scale(0.94); }
+  }
+}
+
+/* No scroll timelines (e.g. Firefox): the same keyframes play once, time-based,
+   when MotionStage marks the element as shown. Without JS they sit at their
+   final frame (duration 0), so nothing is ever stuck hidden. */
+@supports not (animation-timeline: view()) {
+  html.motion-ready [data-sd] {
+    animation-duration: 0.9s;
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.3, 1);
+    animation-fill-mode: both;
+    animation-play-state: paused;
+  }
+  html.motion-ready [data-sd][data-shown] {
+    animation-play-state: running;
+  }
+  .sd-draw path,
+  .sd-draw line {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* services stack (sticky works everywhere; the shrink needs timelines) */
+.stack-item {
+  position: sticky;
+  top: calc(6rem + var(--i, 0) * 14px);
+}
+
+/* blueprint scan line */
+.bp-scan {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 28%;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    color-mix(in oklab, var(--dm-panel) 22%, transparent) 85%,
+    color-mix(in oklab, var(--dm-panel) 75%, transparent) 99%,
+    transparent 100%
+  );
+  translate: 0 -100%;
+}
+
+/* night-set glow */
+.band-dusk {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.8;
+  background: radial-gradient(90% 55% at 50% 100%, color-mix(in oklab, var(--dm-lilac) 38%, transparent), transparent 70%);
+}
+
+/* the seal tape on the hiring card */
+.seal-tape {
+  position: absolute;
+  top: -16px;
+  left: -26px;
+  z-index: 2;
+  width: 150px;
+  height: 32px;
+  rotate: -28deg;
+  background: color-mix(in oklab, var(--dm-rose) 82%, transparent);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.14);
+  pointer-events: none;
+}
+
+/* The living sky (components/motion/sky-shader.ts) — one fixed canvas over the CSS sky. */
+.sky-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  width: 100vw;
+  height: 100lvh;
+  pointer-events: none;
+}
+
+/* ── The director's cut: more beats, each a different technique ─────────── */
+
+/* film-strip progress: a sprocketed strip of film fills along the top edge */
+.film-progress {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 60;
+  height: 7px;
+  pointer-events: none;
+  background: var(--dm-terra);
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+  -webkit-mask: radial-gradient(circle at 5px 3.5px, transparent 1.6px, #000 2.1px) 0 0 / 10px 100% repeat-x;
+  mask: radial-gradient(circle at 5px 3.5px, transparent 1.6px, #000 2.1px) 0 0 / 10px 100% repeat-x;
+  display: none;
+}
+
+/* counters roll up on the stat polaroids (typography beat inside the hook) */
+@property --n {
+  syntax: '<integer>';
+  inherits: false;
+  initial-value: 0;
+}
+.count {
+  --n: var(--to);
+  counter-reset: n var(--n);
+  animation: count-up 1.15s cubic-bezier(0.2, 0.8, 0.2, 1) 0.75s both;
+}
+.count::after {
+  content: counter(n) '+';
+}
+@keyframes count-up {
+  from { --n: 0; }
+}
+
+/* section titles slam in: squash, stretch, settle */
+.sd-slam { animation-name: sd-slam; transform-origin: 0 100%; }
+@keyframes sd-slam {
+  from { opacity: 0; transform: translateY(55%) scaleY(0.15) skewX(-16deg); }
+  55% { opacity: 1; transform: translateY(-4%) scaleY(1.12) skewX(3deg); }
+  to { opacity: 1; transform: none; }
+}
+
+/* hand-drawn underline beneath a hand-lettered word */
+.scribble {
+  position: absolute;
+  left: -2%;
+  bottom: -0.12em;
+  width: 104%;
+  height: 0.32em;
+  overflow: visible;
+  pointer-events: none;
+}
+
+/* night set: two star layers at different depths + a pointer spotlight */
+.stars {
+  position: absolute;
+  inset: 0 0 -220px 0;
+}
+.stars-far {
+  opacity: 0.28;
+  background: radial-gradient(currentColor 0.8px, transparent 1.4px) 17px 11px / 53px 47px;
+}
+.stars-near {
+  opacity: 0.4;
+  background: radial-gradient(currentColor 1.2px, transparent 1.9px) 0 0 / 71px 67px;
+}
+.band-spot {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 560px;
+  height: 560px;
+  margin: -280px 0 0 -280px;
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in oklab, var(--dm-lilac) 34%, transparent), transparent 66%);
+  transform: translate(var(--sx, 50vw), var(--sy, 40vh));
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
+[data-lit] .band-spot {
+  opacity: 1;
+}
+
+/* giant kinetic type ribbon, sliding across the themes band with scroll */
+.type-ribbon {
+  overflow: clip;
+  padding-block: 4.5rem 0;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.04em;
+  line-height: 0.9;
+  white-space: nowrap;
+  font-size: clamp(3.4rem, 12vw, 10.5rem);
+  pointer-events: none;
+  user-select: none;
+}
+.type-ribbon p {
+  width: max-content;
+}
+.ribbon-r {
+  --stroke: var(--dm-on-accent);
+  translate: -38% 0;
+}
+
+/* magnetic calls to action (MotionStage sets --gx / --gy) */
+.magnetic {
+  translate: var(--gx, 0) var(--gy, 0);
+  transition-property: rotate, scale, translate, background-color, color;
+}
+
+@supports (animation-timeline: view()) {
+  .film-progress {
+    display: block;
+    animation: film-fill linear both;
+    animation-timeline: scroll(root);
+  }
+  @keyframes film-fill {
+    to { transform: none; }
+  }
+
+  .sd-slam { animation-range: entry 5% cover 28%; }
+  .scribble path { animation-range: entry 40% cover 40%; }
+
+  /* hero exit: the camera flies through the full stop of "NEXT." */
+  .hook-flood {
+    transform-origin: 92% 78%;
+    animation:
+      hook-flood 0.7s cubic-bezier(0.3, 0, 0.3, 1) 0.52s both,
+      zoom-through linear both;
+    animation-timeline: auto, scroll(root);
+    animation-range: normal, 8vh 75vh;
+  }
+  @keyframes zoom-through {
+    60% { opacity: 1; }
+    to { transform: scale(3.4); opacity: 0; }
+  }
+
+  .stars {
+    animation: star-drift linear both;
+    animation-timeline: --band;
+  }
+  .stars-far { --drift: -70px; }
+  .stars-near { --drift: -200px; }
+  @keyframes star-drift {
+    to { translate: 0 var(--drift); }
+  }
+
+  .ribbon-l,
+  .ribbon-r {
+    animation: ribbon linear both;
+    animation-timeline: view();
+    animation-range: cover 0% cover 100%;
+  }
+  .ribbon-l { --from: 0%; --to-x: -38%; }
+  .ribbon-r { --from: -38%; --to-x: 0%; }
+  @keyframes ribbon {
+    from { translate: var(--from) 0; }
+    to { translate: var(--to-x) 0; }
+  }
+
+  /* the final frame: the sun sets as the page reaches its last pixels */
+  /* keeps its assemble (transform, view timeline) and adds the sunset
+     (translate, page scroll) — two properties, two timelines */
+  .finale-sun {
+    animation-name: sd-assemble, sunset;
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.3, 1.1), linear;
+    animation-timeline: view(), scroll(root);
+    animation-range: entry 0% cover 45%, 90% 100%;
+  }
+  @keyframes sunset {
+    to { translate: 0 38%; }
+  }
+}
+
+/* ── Reduced motion: every element rests on its final frame ─────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .hero-stage,
+  .hero-stage *,
+  [data-reveal],
+  [data-sd],
+  .sd-draw path,
+  .sd-draw line,
+  .sd-node,
+  .px-scroll,
+  .px-head,
+  .band-dusk,
+  .band-pattern-ruled,
+  .bp-scan,
+  .stack-item > *,
+  .count,
+  .stars,
+  .ribbon-l,
+  .ribbon-r,
+  .finale-sun,
+  .scribble path {
+    animation: none !important;
+  }
+  .film-progress,
+  .band-spot {
+    display: none !important;
+  }
+  .magnetic {
+    translate: none !important;
+  }
+  .hook-strip,
+  .bp-scan {
+    display: none !important;
+  }
+  .sd-draw path,
+  .sd-draw line {
+    stroke-dashoffset: 0;
+  }
+  .stack-item {
+    position: static;
+  }
+  .px-layer {
+    transform: none !important;
+    transition: none !important;
+  }
+}
