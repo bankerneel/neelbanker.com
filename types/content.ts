@@ -40,6 +40,7 @@ export interface ProjectMeta {
   chain?: string        // e.g. 'Ethereum mainnet'
   stack: string[]       // e.g. ['Solidity', 'Fireblocks', 'Node.js']
   date: string
+  outcome: string[]     // bullets from the MDX body's "## Outcome" section (may be empty)
 }
 
 export interface Project extends ProjectMeta {

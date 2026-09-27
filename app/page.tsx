@@ -159,6 +159,15 @@ export default function HomePage() {
                   <dd className="hand mt-1 text-[1.4rem] leading-none">{spotlight.stack.slice(0, 3).join(' · ')}</dd>
                 </div>
               </dl>
+              {spotlight.outcome.length > 0 && (
+                <ul aria-label="What shipped" className="mx-auto mt-8 flex max-w-3xl flex-wrap justify-center gap-2.5">
+                  {spotlight.outcome.slice(0, 3).map((item) => (
+                    <li key={item} className="ticket tone-panel text-[12.5px] font-semibold normal-case tracking-normal">
+                      ✓ {item}
+                    </li>
+                  ))}
+                </ul>
+              )}
 
               <ul className="mt-12 grid gap-8 md:grid-cols-3">
                 {featuredProjects.map((project, i) => (

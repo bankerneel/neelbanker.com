@@ -99,11 +99,13 @@ further, the lever is `preload: false` on Caveat (accents only, not the LCP elem
 - Sharpen recruiter/employer proof messaging
 - Reassess section ordering based on what should convert best
 
-### 4. `/projects` depth upgrade
+### 4. `/projects` depth upgrade ✅ (2026-09-27, partly)
 
-- Add stronger role/stack/outcome summaries per featured project
-- Improve spotlight/category transitions if needed
-- Consider richer featured-by-category interaction
+- Outcome: "what shipped" bullets on every card, parsed from each project's `## Outcome` section (17 of 20 have
+  one; Fireblocks vs BitGo, Project Ember and PrivateGPT don't). Stack was already shown.
+- **Role is not done:** no per-project role data exists anywhere in the content. Needs Neel to supply one line
+  per project (e.g. "Architect + delivery lead") — then add a `role` frontmatter field.
+- Category transitions / richer interaction: current fade-in filter is fine; not pursued.
 
 ### 5. Writing system polish ✅ (2026-09-27)
 

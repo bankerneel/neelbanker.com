@@ -137,6 +137,10 @@ Notes:
 - The slug comes from the filename.
 - Projects are list-only right now; there is no individual project page helper.
 - Projects are sorted by `date` descending.
+- Write a `## Outcome` section as a bullet list of concrete results (numbers beat adjectives). The first two
+  bullets show on the project card as "what shipped" (three on the homepage). Projects without one simply
+  show no outcome block.
+- Add the new slug to `PROJECT_CATEGORIES` in `components/project-browser.tsx`, or it only appears under "All work".
 
 ## Callouts And Code In Articles
 
