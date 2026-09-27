@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { ProjectCard } from '@/components/project-card'
 import { Scrap } from '@/components/bazaar/scrap'
-import { chipLink, focusRing, pick, tilts, tones } from '@/components/bazaar/styles'
+import { focusRing, pick, softTilts, tilts, tones } from '@/components/bazaar/styles'
 import { cn } from '@/lib/utils'
 import type { ProjectMeta } from '@/types/content'
 
@@ -20,59 +20,70 @@ const FILTERS: Array<{ key: ProjectFilter; label: string; description: string; t
 // Keyed by content/projects/<slug>.mdx — keep in sync when adding a project,
 // or it only ever shows under "All work".
 const PROJECT_CATEGORIES: Record<string, ProjectFilter[]> = {
-  'cryptsync-ncw': ['wallets', 'infrastructure', 'leadership'],
-  'truetiger-non-custodial-wallet': ['wallets', 'leadership'],
-  'fireblocks-bitgo-custody': ['wallets', 'leadership'],
-  'best-wallet-ecosystem': ['wallets', 'leadership'],
-  'w3p-presale-dapps-platform': ['wallets'],
-  'fabric-polygon-interop': ['infrastructure'],
-  'verionce': ['infrastructure', 'leadership'],
+  'atlas-multichain-wallet': ['wallets', 'infrastructure', 'leadership'],
+  'harbor-embedded-wallet': ['wallets', 'leadership'],
+  'scales-custody-evaluation': ['wallets', 'leadership'],
+  'orbit-presale-crm-dapps': ['wallets', 'leadership'],
+  'vector-presale-dapps': ['wallets'],
+  'keystone-fabric-polygon-bridge': ['infrastructure'],
+  'credseal-credential-verification': ['infrastructure', 'leadership'],
   'doctrace-fabric-documents': ['infrastructure', 'leadership'],
-  'pepe-unchained-l2': ['infrastructure', 'leadership'],
-  'ncog-earth-chain': ['infrastructure'],
-  'memevault': ['infrastructure'],
-  'smart-contract-audit-suite': ['infrastructure', 'leadership'],
-  'fightout-move-to-earn': ['infrastructure', 'leadership'],
-  'roomquery': ['ai'],
-  'ai-social-media-agent': ['ai'],
-  'privatgpt-offline': ['ai'],
-  'keytu-ai-mentoring-platform': ['ai', 'leadership'],
-  'hashira-product-system': ['leadership'],
-  'splint-marketplace-platform': ['leadership'],
-  'idosy-ido-platform': ['wallets', 'leadership'],
+  'ember-op-stack-l2': ['infrastructure', 'leadership'],
+  'canopy-custom-evm-chain': ['infrastructure'],
+  'coffer-token-vault': ['infrastructure'],
+  'sentinel-contract-audit': ['infrastructure', 'leadership'],
+  'pulse-move-to-earn': ['infrastructure', 'leadership'],
+  'staywise-hotel-recommendations': ['ai'],
+  'herald-social-post-agent': ['ai'],
+  'enclave-offline-doc-qa': ['ai'],
+  'beacon-ai-mentoring': ['ai', 'leadership'],
+  'forge-product-system': ['leadership'],
+  'relay-marketplace-platform': ['leadership'],
+  'ignite-ido-platform': ['wallets', 'leadership'],
 }
 
 const FEATURED_SPOTLIGHTS = [
   {
     label: 'Wallet systems',
     tone: 'tone-butter',
-    title: 'Project Atlas, Project Tiger, Project Orbit, Fireblocks vs BitGo',
+    title: 'Project Atlas, Project Harbor, Project Orbit, Project Scales',
     body: 'A through-line across non-custodial wallets, custody choices, key-management UX, and production transaction orchestration.',
   },
   {
     label: 'Infrastructure',
     tone: 'tone-sage',
-    title: 'Project Ember, VeriOnce, Fabric–Polygon, NCOG Earth Chain',
+    title: 'DocTrace, Project Ember, CredSeal, Keystone Bridge, Canopy Chain',
     body: 'L2 operations, Fabric architectures, cross-chain verification, and the trade-offs behind custom or specialised blockchain infrastructure.',
   },
   {
     label: 'AI delivery',
     tone: 'tone-sky',
-    title: 'RoomQuery, Project Beacon, PrivateGPT, AI Social Media Agent',
+    title: 'StayWise, Project Beacon, Project Enclave, Project Herald',
     body: 'Applied AI systems focused on ranking, retrieval, orchestration, and practical workflow leverage instead of generic demo-layer novelty.',
   },
 ]
 
+// SoluLab publishes these case studies; Neel is not under NDA with SoluLab, so
+// they carry the real product names (2026-09-27). DocTrace leads: Neel rates it
+// among his best work. Every href returned 200 on 2026-09-27.
+const CASE_STUDY_BASE = 'https://www.solulab.com/case-study/'
 const SOLULAB_CASE_STUDIES = [
-  { label: 'HighVibe Network', href: 'https://www.solulab.com/case-study/highvibe-network/' },
-  { label: 'Morpheus Network', href: 'https://www.solulab.com/case-studies/morpheus-network/' },
-  { label: 'NFT Gallery', href: 'https://www.solulab.com/case-study/nft-gallery-reinventing-the-dynamics-of-the-art-market/' },
-  { label: 'Krypto Kiddies', href: 'https://www.solulab.com/case-study/krypto-kiddies-a-crypto-landscape-where-learning-is-fun/' },
-  { label: 'NFT Blockchain', href: 'https://www.solulab.com/case-study/nft-blockchain-blockchain-built-exclusively-for-nfts-case-study/' },
-  { label: 'MultiVAC NFT Marketplace', href: 'https://www.solulab.com/case-study/multivac-a-next-gen-nft-marketplace-for-crypto-trading/' },
-  { label: 'AnrKeyX', href: 'https://www.solulab.com/case-study/anrkeyx-first-game-studio-for-defi-gaming/' },
-  { label: 'Alacrity Blockchain', href: 'https://www.solulab.com/case-study/alacrity-your-next-generation-user-friendly-blockchain/' },
-  { label: 'NFTY Token', href: 'https://www.solulab.com/case-study/nfty-a-token-for-promoting-quality-in-nft-marketplaces/' },
+  { name: 'DocTrace', what: 'File-less records on Hyperledger Fabric', path: 'doctrace-blockchain-document-management', favourite: true },
+  { name: 'Aladin', what: 'DPoS blockchain and dApp marketplace', path: 'aladin' },
+  { name: 'XinFin', what: 'Virtual-reality NFT marketplace', path: 'xinfin-nft-marketplace' },
+  { name: 'Sosh', what: 'Hyperledger group wallet', path: 'blockchainwallet' },
+  { name: 'AnRKeyX', what: 'DeFi gaming studio', path: 'anrkeyx' },
+  { name: 'Tangible Gold', what: 'Gold and silver tokens redeemable for delivery', path: 'tangible-gold' },
+  { name: 'MultiVAC', what: 'NFT marketplace for crypto trading', path: 'multivac-a-next-gen-nft-marketplace-for-crypto-trading' },
+  { name: 'Alacrity', what: 'User-friendly next-gen blockchain', path: 'alacrity-your-next-generation-user-friendly-blockchain' },
+  { name: 'Cloud 9', what: 'Crowdfunding and ICO marketplace', path: 'cloud-9-remodeling-the-way-of-crowdfunding' },
+  { name: 'NFTY', what: 'Reputation token for NFT marketplaces', path: 'nfty-a-token-for-promoting-quality-in-nft-marketplaces' },
+  { name: 'Liquid Craft', what: 'NFT marketplace for craft spirits', path: 'an-nft-marketplace-revolutionizing-the-beverage-industry' },
+  { name: 'SportVerse', what: 'Cross-chain sports metaverse', path: 'sportverse-a-cross-chain-metaverse-revolutionizing-the-gaming-space' },
+  { name: 'EnverX', what: 'Carbon-credit marketplace', path: 'enverxug' },
+  { name: 'Morpheus.Network', what: 'Supply-chain compliance SaaS', path: 'morpheus-network' },
+  { name: 'Borrowland', what: 'Crypto lending and borrowing', path: 'borrowland' },
+  { name: 'Mogul', what: 'Fractional real-estate investing', path: 'mogul' },
 ]
 
 function includesFilter(project: ProjectMeta, filter: ProjectFilter) {
@@ -163,20 +174,33 @@ export function ProjectBrowser({ projects }: { projects: ProjectMeta[] }) {
             Client delivery, <span className={handWord}>as proof</span>
           </h2>
           <p className="mt-4 max-w-2xl text-[15px] leading-[1.75] text-dm-ink-soft">
-            Not every client system belongs in a public deep-dive. These SoluLab case studies give a representative view
-            of the platforms delivered across NFT marketplaces, gaming, supply-chain, token systems, and broader
-            blockchain product builds.
+            {SOLULAB_CASE_STUDIES.length} platforms I worked on at SoluLab as Tech Lead and Senior Blockchain Developer,
+            written up by SoluLab: enterprise Fabric, wallets, DeFi, NFT marketplaces, tokenisation, gaming and supply
+            chain.
           </p>
-          <ul className="mt-8 flex flex-wrap gap-3">
+          <ul className="mt-8 grid gap-4 min-[480px]:grid-cols-2 lg:grid-cols-4">
             {SOLULAB_CASE_STUDIES.map((study, i) => (
-              <li key={study.label}>
+              <li key={study.path} className="min-w-0">
                 <a
-                  href={study.href}
+                  href={`${CASE_STUDY_BASE}${study.path}/`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={cn(chipLink, pick(tones, i), pick(tilts, i))}
+                  className={cn(
+                    'relative flex h-full cursor-pointer flex-col border-2 border-current p-4 transition-[rotate,background-color,color] duration-200 hover:rotate-0',
+                    study.favourite ? 'tone-ink shadow-hard' : pick(tones, i),
+                    pick(softTilts, i),
+                    focusRing,
+                  )}
                 >
-                  {study.label} ↗
+                  {study.favourite && (
+                    <span className="hand -mt-1 mb-1 text-[1.3rem] leading-none">a favourite ✦</span>
+                  )}
+                  <span className="text-[1rem] font-black uppercase leading-[1.1] tracking-tight break-words">
+                    {study.name}
+                    <span aria-hidden="true"> ↗</span>
+                  </span>
+                  <span className="mt-1.5 text-[13px] font-semibold leading-[1.45]">{study.what}</span>
+                  <span className="sr-only"> (SoluLab case study, opens in a new tab)</span>
                 </a>
               </li>
             ))}

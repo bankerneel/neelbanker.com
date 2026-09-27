@@ -1,0 +1,80 @@
+---
+title: "Hyperledger Fabric Is Not a Database: What Changes When You Think About It as a Network"
+date: "2026-04-30"
+pillar: "blockchain"
+excerpt: "Most Fabric projects that struggle make the same mistake: they treat the ledger like Postgres with signatures. The design gets easier once you model it as what it is — a network of organisations agreeing on shared rules."
+---
+
+## The Mistake Everyone Makes First
+
+Engineers who come to Hyperledger Fabric from Web2 usually arrive with a database in their head. There is a key-value store, there are queries, so it must be a database with extra steps.
+
+That mental model works for about a week. Then the questions start: why does a write need endorsements from other organisations? Why can't I just change this record? Why does adding a field mean a chaincode upgrade that three parties have to approve?
+
+Those aren't Fabric being awkward. They are Fabric telling you what it actually is: **a network of organisations that have agreed to share a set of rules**. The ledger is the by-product of that agreement, not the point of it.
+
+On DocTrace, a document platform I worked on at SoluLab, this was the whole lesson. Fabric helped the moment multiple parties needed shared trust rules. It became painful every time someone treated it like a drop-in database and ignored the network model.
+
+## Peers, Orderers, Channels — the Model That Actually Matters
+
+A Fabric transaction is not "write a row". It moves through three stages:
+
+1. **Endorsement.** The client sends a proposal to peers of the organisations the endorsement policy names. Each peer runs the chaincode and signs the result. Nothing is committed yet.
+2. **Ordering.** The ordering service puts endorsed transactions into blocks. It doesn't judge business logic; it agrees on order.
+3. **Validation and commit.** Every peer checks the endorsements against policy and checks for conflicting reads before updating its copy of the world state.
+
+Once you see it this way, most "why is this so hard" moments turn into design questions: *who* has to agree to this change, and *who* is allowed to see it?
+
+## Channels Are Trust Boundaries, Not Tables
+
+The most useful design decision on a credential-verification system I built was separating channels by **institution type**: government, university, employer. Not because the data looked different, but because the trust relationships were different.
+
+A channel is a separate ledger with its own membership. If you find yourself creating a channel per entity type the way you would create a table, stop. Create one where a different group of organisations needs to agree.
+
+## Chaincode Is Business Rules, Not a Data Layer
+
+The chaincode for that system had three core functions:
+
+- `IssueCredential(hash, metadata)` — stores the hash and the issuer's identity, and emits an event
+- `VerifyCredential(hash)` — returns the verification status and the audit trail
+- `RevokeCredential(hash, reason)` — appends a revocation; it never deletes history
+
+Notice what is missing: there is no generic "update document" function. Chaincode encodes what the network has agreed is *allowed to happen*. Revocation is a new fact, not an edit. That is the difference between a shared rulebook and a shared database.
+
+## Immutable Is Not the Same as Versioned
+
+An append-only ledger has no native idea of "the current version". DocTrace made that concrete: records there get corrected and reissued, so we modelled the lineage in chaincode. Each correction is a child node that points to its parent and marks it obsolete. Nothing is overwritten, the full amendment history stays on the ledger, and the application always resolves exactly one current version.
+
+If your records can change, design the version chain before you design anything else. Retrofitting lineage onto an immutable ledger is far harder than starting with it.
+
+## World State vs Ledger
+
+Fabric keeps two things:
+
+- the **ledger**, an append-only history of every committed transaction
+- the **world state**, the current value of each key
+
+Rich queries — "all credentials from this issuer, of this type, after this date" — run against the world state, which is why a CouchDB state database is worth it when you need JSON queries. The audit story comes from the ledger. Web2 instincts tend to merge the two and then wonder why history queries are awkward.
+
+## Private Data Collections: Right Tool, Real Cost
+
+In regulated environments, private data collections are the right tool. They let a subset of organisations share data while everyone else only sees a hash of it.
+
+The cost is that **the collection policy is defined when the chaincode is deployed and can't change without a new chaincode version**. That is easy to underestimate. Plan the access model up front, with every organisation in the room, before you write the first function.
+
+## Keep Raw Data Off the Ledger
+
+The rule that made the whole design defensible was simple: the ledger stores cryptographic hashes and pointers, never raw personal data. Verification is a hash comparison. Raw documents stay inside the issuing organisation's infrastructure.
+
+That one constraint answered most compliance questions before they were asked.
+
+## A Checklist Before You Design Anything
+
+- Who are the organisations, and what do they need to agree on?
+- Where does trust change? That's where channel boundaries go.
+- What is *allowed to happen* to each record? That's your chaincode API.
+- Which queries need current state, and which need history?
+- Who can see which data, and can that change later? If yes, design for it now.
+- What must never touch the ledger?
+
+Fabric rewards teams that answer these first. It punishes teams that start with a schema.

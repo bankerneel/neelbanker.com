@@ -110,7 +110,22 @@ Optional frontmatter:
 
 ```mdx
 chain: "Ethereum mainnet"
+employer: "Tech Alchemy"   # or "SoluLab" or "Personal" — the group; shows Neel's role for it (lib/roles.ts)
+caseStudy: "https://www.solulab.com/case-study/…"   # official external case study, shown as a link
+highlight: true   # pins the project first on /projects with a handwritten "a favourite" note
 ```
+
+**Naming rule (2026-09-27): the name depends on the group** (`employer`).
+- **SoluLab:** the real product name (Neel is not under NDA with SoluLab), e.g. "DocTrace — File-less Records on
+  Hyperledger Fabric".
+- **Tech Alchemy** (and any project not yet mapped): `Project <Codename> — <what it is>`, with a codename that fits
+  the description. Never derive the codename from the real name. The filename is the slug, and slugs are sent to the
+  browser (page data and the client JS on `/projects`), so **the filename must not contain the real name either**
+  (`atlas-multichain-wallet.mdx`, not the product's name).
+- **Personal:** a pseudonym product name, never the original (in the title or the filename), e.g. "CredSeal —
+  Blockchain Credential Verification".
+- For Tech Alchemy and Personal projects, keep real names out of the excerpt and the `## Outcome` bullets too — both render on the card.
+- `/resume` is exempt: it is Neel's CV and stays as written.
 
 Example:
 
@@ -141,6 +156,13 @@ Notes:
   bullets show on the project card as "what shipped" (three on the homepage). Projects without one simply
   show no outcome block.
 - Add the new slug to `PROJECT_CATEGORIES` in `components/project-browser.tsx`, or it only appears under "All work".
+
+## Drafts
+
+Put unreviewed articles in `content/drafts/` (same frontmatter as `content/writing/`). The folder is gitignored
+and only `next dev` reads it: drafts appear in the archive and at `/writing/<slug>` with a "Draft — not published"
+marker, and never reach a production build. To publish, move the file to `content/writing/`, set the real
+`date`, and delete the review-notes callout at the top.
 
 ## Callouts And Code In Articles
 

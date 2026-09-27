@@ -23,6 +23,11 @@
 
 ## Content / NDA
 
+- **Naming by group (Neel, 2026-09-27, revised the same day):** SoluLab → real names (he is not under NDA with SoluLab); Tech Alchemy → `Project <Codename>` (real names never on the site); Personal → pseudonym product names (CredSeal, Keystone Bridge, Canopy Chain, StayWise, Sentinel Audit — confirmed by Neel). Scales and Coffer are Tech Alchemy (confirmed). Slugs ship to the browser, so Tech Alchemy slugs must stay neutral; DocTrace's slug went back to `doctrace-fabric-documents`. `/resume` keeps real names by his choice.
+- Group comes from `employer` frontmatter and sets the role via `lib/roles.ts`: Tech Alchemy → "Blockchain | Technical Architect" (Neel shortened it to this, 2026-09-27), SoluLab → "Tech Lead | Senior Blockchain Developer", Personal → "Independent build" (confirmed). Enclave (PrivateGPT) and Herald (post agent) are Tech Alchemy: `profile-data/ta-work-related-project-details.md` lists them as TA POCs.
+- DocTrace is Neel's favourite build ("one of the best projects I've worked on"): `highlight: true` pins it first on `/projects` with a "a favourite" note, and it leads the homepage "Selected work" arch. Its architecture bullets (private channels, ABAC, ACLs, chaincode parent–child version history) are his words; the rest comes from SoluLab's official case study.
+- SoluLab case studies on `/projects`: 16 official links with real names (list from Neel, 2026-09-27; all returned 200 that day). Old `/case-studies/…` routes moved to `/case-study/…`.
+- SoluLab team growth is **10 → 50+** (Neel confirmed 2026-09-27; `profile-data/WEBSITE.md` corrected from 40+).
 - Several Tech Alchemy-specific project names were intentionally anonymized in public content.
 - Preserve pseudo/codename references unless the user explicitly asks otherwise.
 - Public-facing content should avoid directly exposing NDA-sensitive client/project names.

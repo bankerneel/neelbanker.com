@@ -1,0 +1,59 @@
+---
+title: "Bitcoin's UTXO Model vs Account-Based Chains: Why It Matters for Wallet Design"
+date: "2026-07-09"
+pillar: "blockchain"
+excerpt: "Engineers who know Ethereum usually underestimate Bitcoin. It isn't a different API — it's a different mental model, and coin selection quietly decides both your users' fees and their privacy."
+---
+
+## Two Ways to Keep a Balance
+
+Ethereum keeps balances the way a bank does. Every address is an **account** with a number next to it. Sending funds decrements one number and increments another.
+
+Bitcoin doesn't have balances at all. It has **unspent transaction outputs (UTXOs)**: discrete chunks of value, each created by a previous transaction and each spendable exactly once. A "balance" is just the sum of the UTXOs your keys can spend.
+
+Spending means choosing which UTXOs to consume, then creating new outputs: one for the recipient and usually one back to yourself as **change**, because a UTXO is spent whole.
+
+That sounds like an implementation detail. For wallet design it changes almost everything.
+
+## What Changes When You Build the Wallet
+
+**Coin selection becomes a product decision.** Which UTXOs you pick determines the transaction size, and therefore the fee. Pick many small ones and the user pays for the bytes.
+
+**Privacy depends on it too.** Spending several UTXOs together links them publicly as belonging to the same owner. Change outputs can be traced. An account-model engineer rarely has to think about this; a Bitcoin wallet engineer can't avoid it.
+
+**Fees are a function of history.** A wallet that received many small payments carries a hidden cost until those outputs are consolidated.
+
+**Transactions are built, not called.** You assemble inputs and outputs, then sign. Partially Signed Bitcoin Transactions (PSBTs) make that workflow composable across devices and signers.
+
+## How We Handled It in a Multi-Chain Wallet
+
+On a non-custodial wallet I architected that supports Bitcoin alongside Ethereum and other EVM chains, the rule was simple: **don't hand-roll Bitcoin**. We used the Bitcoin Dev Kit (BDK) for everything UTXO-related: descriptor wallets, coin selection, change outputs, fee estimation and PSBT construction.
+
+Illustratively, the flow looks like this:
+
+```text
+descriptor = wpkh([fingerprint/84h/0h/0h]xpub...)
+wallet     = Wallet(descriptor, network = bitcoin)
+
+psbt = wallet.build_tx()
+         .add_recipient(address, amount_sats)
+         .fee_rate(fee_rate)
+         .finish()          # BDK picks inputs, adds change, estimates the fee
+```
+
+The client presents one wallet experience across chains, but underneath, the Bitcoin path and the EVM path are deliberately different code.
+
+## The Trick That Saved Real Money: Consolidate When Fees Are Low
+
+The single most valuable behaviour we added was **UTXO consolidation on a schedule**. The backend watches mempool fee levels; when fees drop below a configurable threshold, it merges small outputs into larger ones.
+
+Users pay a little when block space is cheap, so they don't pay a lot later when they need to send in a hurry. It's invisible when it works — which is exactly how wallet infrastructure should feel.
+
+## What Ethereum Engineers Should Unlearn
+
+- "Balance" is derived, not stored.
+- A send is a construction problem, not a function call.
+- Fee cost depends on the wallet's history, not just the amount sent.
+- Every input you add says something public about the owner.
+
+BDK abstracts the mechanics well. But you still need to understand what you're asking it to do — otherwise you'll ship a wallet that works in testing and quietly costs your users money and privacy in production.

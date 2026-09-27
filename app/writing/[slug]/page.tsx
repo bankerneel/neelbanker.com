@@ -93,6 +93,11 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
           </Link>
         </nav>
 
+        {article.draft && (
+          <p className="ticket tone-ink relative z-20 mt-6 -rotate-1 shadow-hard">
+            Draft — not published · visible only in local dev
+          </p>
+        )}
         <p className="hand relative z-20 mt-10 -rotate-2 text-[1.75rem] leading-none text-dm-accent-ink sm:text-[2.1rem]">
           from the notebook ✦
         </p>

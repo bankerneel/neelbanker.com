@@ -15,6 +15,12 @@ Core routes now feel substantially more consistent, lighter, and more editorial 
 
 ## Completed
 
+- **Project naming by group + drafts published (2026-09-27, on `dev`, PR #13):**
+  - SoluLab projects use real names; Tech Alchemy keeps codenames; personal projects get pseudonym product names (groups confirmed by Neel: 14 TA, 1 SoluLab, 5 Personal). `employer` now accepts `Personal`.
+  - DocTrace restored (`doctrace-fabric-documents`), rewritten from Neel's notes + SoluLab's case study, pinned first on `/projects` and leading the homepage arch.
+  - `/projects` case-study section: 16 SoluLab case studies by name (updated routes + new ones), all links checked (200).
+  - Five drafts published to `content/writing` with dates spread 30 Apr → 27 Sep 2026 (Neel's choice); `skale-appchains` stays a local outline.
+
 - **Backlog pass (2026-09-27, on `dev`):**
   - Writing: `<Callout>` MDX component, copyable code blocks with language labels, same-pillar "More on …" list, reading-progress bar.
   - Projects: "what shipped" outcome bullets on every card, parsed from each project's `## Outcome` section; homepage spotlight lists them too.
@@ -96,8 +102,7 @@ Core routes now feel substantially more consistent, lighter, and more editorial 
 
 ## Needs Review
 
-- Per-project **role** for `/projects` cards — no source data exists; Neel to supply one line per project.
-- SoluLab team size: `profile-data/WEBSITE.md` says 10 → 40+, the site and resume say 50+.
+- `skale-appchains` draft is an outline of questions for Neel; it stays in gitignored `content/drafts/`.
 - DMARC TXT record at Squarespace (`_dmarc`: `v=DMARC1; p=none; adkim=r; aspf=r`).
 - Real-device QA: iOS Safari (fixed sky layer, `100lvh`, clip-path), a low-end Android (long article sheet), and the Cal embed on phones.
 - End-to-end form/download behaviour against production Resend: newsletter subscribe, contact form, resource download.

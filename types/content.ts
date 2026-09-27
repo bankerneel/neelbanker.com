@@ -19,6 +19,7 @@ export interface ArticleMeta {
   pillar: PillarSlug
   excerpt: string
   readingTime: number   // minutes, computed
+  draft?: boolean       // from content/drafts/ — only ever present under `next dev`
 }
 
 export interface Article extends ArticleMeta {
@@ -41,7 +42,13 @@ export interface ProjectMeta {
   stack: string[]       // e.g. ['Solidity', 'Fireblocks', 'Node.js']
   date: string
   outcome: string[]     // bullets from the MDX body's "## Outcome" section (may be empty)
+  employer?: Employer   // frontmatter `employer`; sets `role`
+  role?: string         // derived from employer (lib/roles.ts)
+  caseStudy?: string    // frontmatter `caseStudy`: official external case-study URL
+  highlight?: boolean   // frontmatter `highlight: true`: pinned first on /projects with a "favourite" note
 }
+
+export type Employer = 'Tech Alchemy' | 'SoluLab' | 'Personal'
 
 export interface Project extends ProjectMeta {
   content: string

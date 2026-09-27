@@ -1,32 +1,37 @@
 ---
-title: "DocTrace — Document Handling on Hyperledger Fabric"
-excerpt: "Decentralised document-handling platform on Hyperledger Fabric for controlled verification, auditability, and data-sensitive workflows."
+title: "DocTrace — File-less Records on Hyperledger Fabric"
+excerpt: "Record-issuing platform for an Austin records company. Certificates, licences and permits live as structured data on a permissioned Fabric network, so anyone can verify one without calling the issuer."
 chain: "Hyperledger Fabric"
-stack: ["Hyperledger Fabric", "Go (Chaincode)", "Node.js", "CouchDB", "Docker"]
+stack: ["Hyperledger Fabric", "Go (Chaincode)", "Fabric CA", "CouchDB", "IPFS", "Node.js", "MongoDB", "React"]
 date: "2023-06-01"
+employer: "SoluLab"
+caseStudy: "https://www.solulab.com/case-study/doctrace-blockchain-document-management/"
+highlight: true
 ---
 
 ## Problem
 
-Document-heavy workflows in regulated environments need auditability and trust, but they also need strict control over who can access what. Traditional CRUD systems handle access reasonably well, yet they provide weak guarantees around tamper evidence and verification history.
+Diplomas, licences, permits and inspection reports flow from an issuer to a holder, then have to be trusted by someone who was never part of that exchange. A PDF with a signature image is as easy to forge as paper, and the only real check is calling the issuer, which almost nobody does.
 
 ## Approach
 
-Use Hyperledger Fabric as a permissioned trust layer rather than as a general-purpose database. Store state transitions and verification events on-chain while keeping sensitive raw data outside the ledger boundary.
+Stop protecting the file and remove it. Each record exists as structured data inside a permissioned Hyperledger Fabric network; a PDF, image or QR code is only a rendering of that data. There is no canonical file to intercept, alter or forward.
 
 ## Architecture
 
-- Fabric network segmented by participant role and organisation
-- Chaincode for document registration, verification requests, and revocation state
-- CouchDB-backed world state for rich query support
-- Node.js gateway exposing controlled APIs to web clients and operators
+- Private channels and a certificate authority per organisation, so universities, agencies and enterprises share one network without handing identity control to a shared operator
+- Attribute-based access control (ABAC) in chaincode plus ACLs on channel resources, backed by per-record key pairs, so access is decided per record rather than per organisation
+- Parent–child record nodes in chaincode for version history: a correction attaches to its predecessor and marks it obsolete, nothing is overwritten, and the app always resolves one current version
+- Receiver-controlled sharing: the holder shares with named people or a revocable public link, and a guest can verify a record without an account
+- Attachments stored in IPFS, with only the content identifier written on-chain
+- CouchDB world state for rich queries; Node.js APIs, including a public issuance and verification API
 
 ## Outcome
 
-- Verification trail became tamper-evident
-- Access remained organisation-aware without exposing sensitive data broadly
-- Teams could reason about document state transitions with much more confidence
+- DocTrace became an authorised Texas DIR vendor and won a CIO Review award
+- Anyone can verify a record without an account and without contacting the issuer
+- Corrections keep the full amendment history while the app always shows one current version
 
 ## Lessons
 
-Fabric helps when multiple parties need shared trust rules. It becomes painful when teams treat it like a drop-in database and ignore the network model.
+Immutability and correctness are different things. An append-only ledger has no native "current version", so version lineage has to be modelled in chaincode, not assumed. And Fabric only pays off when you design for the network: who has to agree, and who is allowed to see what.

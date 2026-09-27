@@ -1,0 +1,54 @@
+---
+title: "Three Ways to Add Blockchain to Government Infrastructure"
+date: "2026-09-27"
+pillar: "blockchain"
+excerpt: "When a state service network wants tamper-evident credentials, the architecture question is not 'which chain?' It's 'where does the network live?' — and each answer costs an order of magnitude more than the last."
+---
+
+## The Question Behind the Question
+
+I spent time researching how a credential-verification system could plug into a state government's citizen-services network: the kind of platform that issues certificates and handles well over 100,000 transactions a day.
+
+The first question everyone asks is which blockchain. The question that actually decides the project is **where the network lives**, and who is responsible for it. That choice drives cost, timeline, compliance and politics far more than the choice of ledger.
+
+The core design was fixed regardless: a permissioned Hyperledger Fabric network that stores only credential hashes and never raw personal data. What changed was where it runs. I ended up with three deployment tiers.
+
+## Tier 1: API Gateway
+
+**Model:** the network runs in the cloud; the government system calls a verification API over HTTPS.
+**Rough cost:** about $5–10K a month.
+
+This is the fastest way to prove value. Nothing is installed inside government infrastructure, and the integration surface is a handful of API calls: issue, verify, revoke.
+
+The trade-off is control. The government is trusting an external operator with the network, so this tier works best for a pilot, a single department, or credentials where verification speed matters more than institutional ownership.
+
+## Tier 2: Hybrid
+
+**Model:** shared infrastructure, with state held inside the government's own cloud network (VPC).
+**Rough cost:** about $25–50K a month.
+
+The ledger state lives where the government's data-residency rules say it must, while the operational burden is shared with the vendor. It's the most common landing zone for serious programmes: enough control to satisfy audit, without asking a department to run a blockchain network on day one.
+
+The complexity moves into governance: who operates which peers, who approves chaincode changes, and what happens when the two sides disagree.
+
+## Tier 3: On-Premise
+
+**Model:** the full Fabric network inside the government data centre.
+**Rough cost:** $100K+ to set up, before running costs.
+
+Maximum sovereignty: every node, key and byte sits inside government walls. It is the right answer when the law or the threat model demands it, and a heavy one otherwise. You are now asking a government IT team to operate peers, orderers and certificate authorities, upgrade chaincode, and monitor all of it.
+
+## How I'd Choose
+
+- **Start at Tier 1** unless a regulation rules it out. Prove the verification flow and the demand first.
+- **Move to Tier 2** when data residency or audit requirements become concrete, not hypothetical.
+- **Go to Tier 3** only when sovereignty is non-negotiable and the organisation is ready to own the operational load.
+
+Two design choices make that path possible without a rewrite:
+
+1. **Hashes, not data.** Because the ledger never holds personal data, moving between tiers is an infrastructure migration, not a compliance renegotiation.
+2. **Plan the access model up front.** Fabric's private data collection policies are fixed at chaincode deployment. Decide who can see what before tier one, so tier three doesn't force a new chaincode version.
+
+## The Takeaway
+
+For government infrastructure, the blockchain is rarely the hard part. Ownership is. Pick the tier that matches how much ownership the institution is ready to take today, and design so the next tier is a move rather than a rebuild.

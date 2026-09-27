@@ -113,9 +113,11 @@ _Original checklist:_
 ### 4. `/projects` depth upgrade ✅ (2026-09-27, partly)
 
 - Outcome: "what shipped" bullets on every card, parsed from each project's `## Outcome` section (17 of 20 have
-  one; Fireblocks vs BitGo, Project Ember and PrivateGPT don't). Stack was already shown.
-- **Role is not done:** no per-project role data exists anywhere in the content. Needs Neel to supply one line
-  per project (e.g. "Architect + delivery lead") — then add a `role` frontmatter field.
+  one; Projects Scales, Ember and Enclave don't). Stack was already shown.
+- Role: `employer` frontmatter → role via `lib/roles.ts` (2026-09-27): 14 Tech Alchemy, 1 SoluLab, 5 Personal
+  (groups and pseudonyms confirmed by Neel).
+- Case-study links ✅: `caseStudy` frontmatter renders an external link on the card (DocTrace). The SoluLab section lists
+  16 official case studies by name (Neel's list, 2026-09-27).
 - Category transitions / richer interaction: current fade-in filter is fine; not pursued.
 
 ### 5. Writing system polish ✅ (2026-09-27)
