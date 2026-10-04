@@ -1,6 +1,6 @@
 # States
 
-Last updated: 2026-09-27 (redesign live)
+Last updated: 2026-10-04 (README refreshed)
 
 ## File Purpose
 
@@ -14,6 +14,8 @@ The main site surfaces have gone through a broad UX/content refinement pass.
 Core routes now feel substantially more consistent, lighter, and more editorial than the earlier baseline.
 
 ## Completed
+
+- **README refreshed (2026-10-04):** brought `README.md` in line with the live site — Archivo + Caveat fonts (was Syne + JetBrains Mono), the Dream Bazaar design summary (replaced the retired mono-label / hairline-grid rules), full route list and structure (`/resume`, `/speaking`, `components/bazaar`, `components/motion`, `app/motion.css`), Node version note, all scripts, links to the tracking docs, and relative links (the old ones pointed at a local `/home/dexter/...` path). Flags that the `public/resources/` PDFs are still 0-byte placeholders.
 
 - **Bands + the homepage film (2026-09-27, local branch `feat/motion-film`, not pushed):**
   - Section breaks: full-bleed bands with torn / perforated / zig-zag / scalloped edges on `/`, `/about`, `/projects`, `/work-with-me`.
