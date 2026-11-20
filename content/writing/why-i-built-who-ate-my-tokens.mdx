@@ -12,7 +12,7 @@ I run my work from one pinned thread I call HQ. It plans and hands batches to le
 
 ## A Night and a Day
 
-I built Who Ate My Tokens in a night and a day. I started by writing down what the dashboard could read. It could open the local sources in read-only mode and pull out metadata such as timestamps, models and token counts. Message content stayed out of the dashboard. The server would listen only on loopback, and I wanted the build tested in Docker before I ran it locally. It came together as one Rust binary serving one page.
+I built Who Ate My Tokens (wamt for short) in a night and a day. I started by writing down what the dashboard could read. It could open the local sources in read-only mode and pull out metadata such as timestamps, models and token counts. Message content stayed out of the dashboard. The server would listen only on loopback, and I wanted the build tested in Docker before I ran it locally. It came together as one Rust binary serving one page.
 
 I split the work the way I describe in [Running T3 Code Like a Kitchen Brigade](/writing/running-t3-code-like-a-kitchen-brigade). Claude wrote the briefs and reviewed the changes. OpenCode with Hy4 Flash Free built features in separate worktrees. Codex made the logo and banner art.
 
@@ -38,11 +38,11 @@ The dashboard makes no requests to outside hosts. Demo mode serves synthetic dat
 
 ## The Other Cockpits
 
-I watched several videos of Orca and Herdr before I chose T3 Code as my GUI. I haven't used either of the others hands-on. I still envy the Orca task board I kept calling "like Jira" while watching. Orca runs agents in worktrees, and its docs show that its Tasks drawer can browse and update Jira issues and create a worktree from an issue. [Orca's README](https://github.com/stablyai/orca/blob/8e0c267e4bf5c47f8f8dda0e9daae4590fad326f/README.md#L35-L51) · [Orca's Jira docs](https://github.com/stablyai/orca/blob/8e0c267e4bf5c47f8f8dda0e9daae4590fad326f/docs/site/content/docs/review/jira.mdx#L8-L14)
+I watched several videos of Orca and Herdr before I chose T3 Code as my GUI. I haven't used either of the others hands-on. I still envy the Orca task board I kept calling "like Jira" while watching. [Orca](https://github.com/stablyai/orca/blob/8e0c267e4bf5c47f8f8dda0e9daae4590fad326f/README.md#L35-L51) runs agents in worktrees, and [its docs](https://github.com/stablyai/orca/blob/8e0c267e4bf5c47f8f8dda0e9daae4590fad326f/docs/site/content/docs/review/jira.mdx#L8-L14) show that its Tasks drawer can browse and update Jira issues and create a worktree from an issue.
 
-I think of Orca and Herdr as cockpits and wamt as a fuel gauge. Orca already does some of that gauge work. It shows account-level plan usage and reset windows, and estimates model costs. Its Stats view also shows Claude input and output tokens by model and project, along with recent sessions. [Orca's usage docs](https://github.com/stablyai/orca/blob/8e0c267e4bf5c47f8f8dda0e9daae4590fad326f/docs/site/content/docs/agents/usage-tracking.mdx#L34-L55) · [Orca's Claude Stats view](https://github.com/stablyai/orca/blob/8e0c267e4bf5c47f8f8dda0e9daae4590fad326f/src/renderer/src/components/stats/ClaudeUsageDetails.tsx#L28-L84)
+I think of Orca and Herdr as cockpits and wamt as a fuel gauge. Orca already does some of that gauge work. [Its usage tracking](https://github.com/stablyai/orca/blob/8e0c267e4bf5c47f8f8dda0e9daae4590fad326f/docs/site/content/docs/agents/usage-tracking.mdx#L34-L55) shows account-level plan usage and reset windows, and estimates model costs. Its [Claude Stats view](https://github.com/stablyai/orca/blob/8e0c267e4bf5c47f8f8dda0e9daae4590fad326f/src/renderer/src/components/stats/ClaudeUsageDetails.tsx#L28-L84) also shows input and output tokens by model and project, along with recent sessions.
 
-What stood out to me about Herdr was how it keeps terminal panes alive when the client disconnects. I can see the appeal of coming back to the same panes and seeing which agents are working, blocked or idle. [Herdr's README](https://github.com/herdrdev/herdr/blob/e8d7d9705a7a2c89cef4dd42079379f05685af87/README.md#L29-L38)
+What stood out to me about [Herdr](https://github.com/herdrdev/herdr/blob/e8d7d9705a7a2c89cef4dd42079379f05685af87/README.md#L29-L38) was how it keeps terminal panes alive when the client disconnects. I can see the appeal of coming back to the same panes and seeing which agents are working, blocked or idle.
 
 I keep wamt open beside T3 Code for a live view of my threads and subagents. I'd use the same setup with whichever cockpit I preferred, with wamt alongside it for the usage it can see in local T3 Code, Claude Code and Codex records.
 
