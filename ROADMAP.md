@@ -133,6 +133,7 @@ _Original checklist:_
 - Tables: `remark-gfm` + scroll box (redesign). Callouts: `<Callout>` MDX component. Code blocks: copy button + language label.
 - Related reading: same-pillar "More on …" list after the newer/earlier cards.
 - Reading progress: thin accent-ink bar tracking the article sheet.
+- Review the two articles about agent orchestration and token tracking, then publish on merge. Update the Who Ate My Tokens landing link when its custom domain is live.
 
 ## Later
 

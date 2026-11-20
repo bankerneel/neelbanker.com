@@ -1,0 +1,49 @@
+---
+title: "Why I Built Who Ate My Tokens"
+date: "2026-11-20"
+pillar: "ai"
+excerpt: "I hit Claude's 5-hour limit at 18:26 with 21 threads in T3 Code. I built a local dashboard to see which threads were using it."
+cover: "/images/writing/why-i-built-who-ate-my-tokens.webp"
+---
+
+At 18:26, I hit Claude's 5-hour limit. The message said it would reset at 23:30. I'd run 21 threads in T3 Code that day and couldn't tell which one had used the most. Claude's `/usage` showed me the account total. To work out what to change the next day, I needed to see the work behind that number.
+
+I run my work from one pinned thread I call HQ. It plans and hands batches to lead threads, which break them into tasks and start subagents. I wanted to see HQ, the threads it launched and the subagents under each one. Which model was each running? What had they used today, and how did it compare with yesterday?
+
+## A Night and a Day
+
+I built Who Ate My Tokens in a night and a day. I started by writing down what the dashboard could read. It could open the local sources in read-only mode and pull out metadata such as timestamps, models and token counts. Message content stayed out of the dashboard. The server would listen only on loopback, and I wanted the build tested in Docker before I ran it locally. It came together as one Rust binary serving one page.
+
+I split the work the way I describe in [Running T3 Code Like a Kitchen Brigade](/writing/running-t3-code-like-a-kitchen-brigade). Claude wrote the briefs and reviewed the changes. OpenCode with Hy4 Flash Free built features in separate worktrees. Codex made the logo and banner art.
+
+One review caught a gap in the project totals. The view showed $501 out of $1,293, both API-equivalent estimates at list prices. It had silently dropped my two biggest days. I use that view to see where the work is concentrated, and it has to include the heaviest days for that comparison to hold up.
+
+## Why the Numbers Differed
+
+While I was building it, the dashboard's local estimate showed 58%. Claude's `/usage` showed 72%. Usage on the web or on another device counts against the same account, and the local records cover the work seen on that machine. I wrote the remaining features into a backlog with two instructions. Check the plate before starting each item. Stop at 97%.
+
+The dashboard can now use Claude Code's own 5-hour and weekly percentages and reset times when its status line reports them. I keep the local estimate alongside the reported figures. I use the account numbers to decide how much work to start and the local breakdown to decide which thread to look into.
+
+## What I Check During the Day
+
+The live board shows my active T3 Code threads and their subagents, with the model, current step, context fill and tokens so far. I can open a thread to see its runs and a 10-minute token timeline. Claude Code and Codex sessions outside T3 Code show up in their own lanes.
+
+I look at the 5-hour meter before I start a batch. Its forecast uses the last 30 minutes of activity, so I read it in light of what I'm about to start. I check the weekly meter too. If the short window has room and the week is already tight, that changes what I take on.
+
+By the end of the day I'm more interested in the history. I can compare today with yesterday, look across the week and see a 30-day history grouped by model family, with a separate rollup by project. I've started opening fresh threads when I switch tasks, especially when the old thread is carrying a long context for a job I've already finished.
+
+I also pay more attention to threads that are waiting on me. If I leave one long enough for its cache to expire, the next request can end up rebuilding that cache. For a thread I plan to keep working in, I try to answer while the cache is still warm.
+
+The dashboard makes no requests to outside hosts. Demo mode serves synthetic data, so I can show the page without putting my own thread titles on screen.
+
+## The Other Cockpits
+
+I watched several videos of Orca and Herdr before I chose T3 Code as my GUI. I haven't used either of the others hands-on. I still envy the Orca task board I kept calling "like Jira" while watching. Orca runs agents in worktrees, and its docs show that its Tasks drawer can browse and update Jira issues and create a worktree from an issue. [Orca's README](https://github.com/stablyai/orca/blob/8e0c267e4bf5c47f8f8dda0e9daae4590fad326f/README.md#L35-L51) · [Orca's Jira docs](https://github.com/stablyai/orca/blob/8e0c267e4bf5c47f8f8dda0e9daae4590fad326f/docs/site/content/docs/review/jira.mdx#L8-L14)
+
+I think of Orca and Herdr as cockpits and wamt as a fuel gauge. Orca already does some of that gauge work. It shows account-level plan usage and reset windows, and estimates model costs. Its Stats view also shows Claude input and output tokens by model and project, along with recent sessions. [Orca's usage docs](https://github.com/stablyai/orca/blob/8e0c267e4bf5c47f8f8dda0e9daae4590fad326f/docs/site/content/docs/agents/usage-tracking.mdx#L34-L55) · [Orca's Claude Stats view](https://github.com/stablyai/orca/blob/8e0c267e4bf5c47f8f8dda0e9daae4590fad326f/src/renderer/src/components/stats/ClaudeUsageDetails.tsx#L28-L84)
+
+What stood out to me about Herdr was how it keeps terminal panes alive when the client disconnects. I can see the appeal of coming back to the same panes and seeing which agents are working, blocked or idle. [Herdr's README](https://github.com/herdrdev/herdr/blob/e8d7d9705a7a2c89cef4dd42079379f05685af87/README.md#L29-L38)
+
+I keep wamt open beside T3 Code for a live view of my threads and subagents. I'd use the same setup with whichever cockpit I preferred, with wamt alongside it for the usage it can see in local T3 Code, Claude Code and Codex records.
+
+You can see what I built on the [Who Ate My Tokens landing page](https://whoatemytokens.vercel.app){/* Swap to https://whoatemytokens.neelbanker.com once that domain is live. */} or get the code from the [GitHub repo](https://github.com/bankerneel/wamt).

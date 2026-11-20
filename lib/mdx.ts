@@ -43,6 +43,7 @@ function readArticle(dir: 'writing' | 'drafts', file: string): Article {
     pillar: data.pillar,
     excerpt: data.excerpt,
     readingTime: computeReadingTime(content),
+    ...(typeof data.cover === 'string' && data.cover ? { cover: data.cover } : {}),
     ...(dir === 'drafts' ? { draft: true } : {}),
     content, // raw MDX string — next-mdx-remote/rsc accepts this directly
   }

@@ -1,6 +1,6 @@
 # States
 
-Last updated: 2026-09-27 (redesign live)
+Last updated: 2026-11-20 (writing update)
 
 ## File Purpose
 
@@ -111,6 +111,8 @@ Core routes now feel substantially more consistent, lighter, and more editorial 
 
 ## Needs Review
 
+- The two new AI-pillar articles cover the T3 Code kitchen brigade and Why I Built Who Ate My Tokens. Both publish on merge to `main`.
+- The articles introduce optional static WebP covers at the top of the reading area. Older articles continue to render without covers.
 - `skale-appchains` draft is an outline of questions for Neel; it stays in gitignored `content/drafts/`.
 - Real-device QA: iOS Safari (fixed sky layer, `100lvh`, clip-path), a low-end Android (long article sheet), and the Cal embed on phones.
 - End-to-end form/download behaviour against production Resend: newsletter subscribe, contact form, resource download.
