@@ -6,6 +6,8 @@
  * subset to the exact text drawn. Keep these hexes in sync with the light
  * :root tokens in app/globals.css.
  */
+import { readFileSync } from 'node:fs'
+import { join } from 'node:path'
 import type { ReactNode } from 'react'
 
 export const OG_SIZE = { width: 1200, height: 630 }
@@ -105,12 +107,16 @@ export function Backdrop({ children }: { children: ReactNode }) {
   )
 }
 
+const markDataUrl = `data:image/svg+xml;base64,${readFileSync(join(process.cwd(), 'public', 'favicon.svg')).toString('base64')}`
+
 export function NameTag() {
   return (
     <div
       style={{
         display: 'flex',
         alignSelf: 'flex-start',
+        alignItems: 'center',
+        gap: 8,
         border: `4px solid ${P.ink}`,
         background: P.panel,
         padding: '8px 18px',
@@ -121,7 +127,9 @@ export function NameTag() {
         transform: 'rotate(-1.4deg)',
       }}
     >
-      Neel Banker
+      {/* eslint-disable-next-line @next/next/no-img-element -- ImageResponse needs an inline image source. */}
+      <img src={markDataUrl} width={34} height={34} alt="" />
+      <span>Neel Banker</span>
     </div>
   )
 }

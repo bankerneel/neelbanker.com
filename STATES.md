@@ -1,6 +1,6 @@
 # States
 
-Last updated: 2026-09-27 (redesign live)
+Last updated: 2026-11-20 (Folded Scrap brand refresh)
 
 ## File Purpose
 
@@ -14,6 +14,8 @@ The main site surfaces have gone through a broad UX/content refinement pass.
 Core routes now feel substantially more consistent, lighter, and more editorial than the earlier baseline.
 
 ## Completed
+
+- **Folded Scrap brand refresh (2026-11-20):** A hand-cut N on butter paper now appears in the favicon, app icons, nav, footer, and both social cards. The [brand evidence](design/brand-refresh/README.md) includes the 16 px colour comparison and both site themes.
 
 - **Bands + the homepage film (2026-09-27, local branch `feat/motion-film`, not pushed):**
   - Section breaks: full-bleed bands with torn / perforated / zig-zag / scalloped edges on `/`, `/about`, `/projects`, `/work-with-me`.

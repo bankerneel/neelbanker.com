@@ -8,6 +8,8 @@
 
 ## Now
 
+- **Folded Scrap brand refresh (2026-11-20):** Implementation and local review captured in [brand evidence](design/brand-refresh/README.md). PR targets `main` for Neel's review and merge.
+
 ### 0. Redesign — build out Dream Bazaar (Direction P)
 
 The site was judged to have become generic (its near-black + lime palette and Syne/mono

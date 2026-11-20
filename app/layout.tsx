@@ -33,9 +33,13 @@ export const metadata: Metadata = {
   title: { default: 'Neel Banker — Blockchain Architect', template: '%s | Neel Banker' },
   description: 'Senior Blockchain Architect writing on Web3, AI, and engineering leadership.',
   icons: {
-    icon: [{ url: '/favicon.svg', type: 'image/svg+xml' }],
-    shortcut: '/favicon.svg',
+    icon: [
+      { url: '/favicon-32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/favicon.svg', sizes: 'any', type: 'image/svg+xml' },
+    ],
+    apple: [{ url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
   },
+  manifest: '/site.webmanifest',
   openGraph: {
     type: 'website',
     locale: 'en_US',
