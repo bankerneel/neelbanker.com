@@ -20,6 +20,7 @@
 - Next.js 16 async request APIs must be respected.
 - Tailwind v4 is CSS-first; do not create `tailwind.config.ts`.
 - `lib/mdx.ts` is server-only because it uses `fs`.
+- Optional writing covers are decorative 1200 by 630 WebP files in `public/images/writing/`. They render unrotated as plain images on article pages.
 - Use `apply_patch` for manual file edits.
 
 ## Motion (2026-09-27)

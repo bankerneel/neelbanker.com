@@ -1,0 +1,63 @@
+---
+title: "Running T3 Code Like a Kitchen Brigade"
+date: "2026-11-19"
+pillar: "ai"
+excerpt: "I use one pinned thread to plan, a lead to run each batch, and a separate worktree for each build. Here's how I brief, review and merge the work."
+cover: "/images/writing/running-t3-code-like-a-kitchen-brigade.webp"
+---
+
+The first CLI deploy of a new Vercel project landed in production even though I passed `--environment preview`. The project's default address went public. Since then, I treat the first CLI deploy of a new project as a production action and check where it actually landed before I share the address.
+
+I use the same discipline when I run agents in T3 Code. When a child reports that a pull request is ready, I have a separate thread check the actual head before I merge. I set up the work so there's room in the usage budget and the context window for that check.
+
+## Who Does What
+
+I keep one pinned thread as HQ. Claude is the head chef. It helps me decide what to build and in what order, writes the brief for each lead and verifies the work before it reaches me. It also coordinates shared resources, such as when a lead can run a heavy test suite.
+
+I save the strongest model for deciding what goes on the menu and tasting what comes off the pass. A smaller model can do the legwork once I've written down what needs to happen and how I'll check it.
+
+Codex takes a batch as the lead. It knows the repo, splits the batch into tasks, briefs the children and reviews their work. A lead can make a small review fix. If a finding needs a substantial change, the lead briefs a child with the finding and the current branch.
+
+OpenCode with Hy4 Flash Free does most of the building. I use Codex for harder implementation and for art and assets. When my Claude usage was running low, a Codex lead ran its own review fleet with Hy4 Flash. Codex checked the findings from that pass, and Claude still did the final verification. I approved the branches and made the merge decisions.
+
+For build work, I use one task, one child, one branch and one pull request. Each child gets its own worktree. It runs the checks, pushes its branch, opens the pull request and reports back to the lead. I can review or revert one change at a time, even if the batch started as one large design.
+
+## Inventory Before the Build
+
+Before the build, I sent a child to do a read-only inventory of the repo. I asked for the current trunk head, open pull requests and work already in flight. A short table gives me enough to keep two briefs from claiming the same file. The lead then proposes the branch names together so I can approve the batch in one message.
+
+I do the same for a long log or a file sweep. One child reads the source and returns a table or file and line references. The rest of the threads can use the result and open the source when they need to verify something specific.
+
+## Give the Child a Complete Brief
+
+A new child starts without the planning conversation. The brief needs the goal, the base branch, the files in scope, the rules and what counts as done. I include the model and why I picked it, how to commit, which actions are authorised and when the child should stop for a decision. If a check needs the machine to itself, I say so up front.
+
+I spell out the return format too. For a build, I want the pull request URL, the head SHA and the lines of output that show the acceptance checks passed. I ask the child to distinguish what it verified from what it inferred. That gives the lead somewhere to start without reading a transcript full of tool output.
+
+I run children in parallel when the tasks are independent and the time matters. If a Hy4 task fails the lead's review twice, I move it to a Codex child and carry over the review findings in the brief.
+
+## Check the Head You Plan to Merge
+
+The lead reads the diff and checks it against the brief. On UI work, that includes screenshots at the sizes I asked for. Claude then checks the pull request independently. It confirms the head, base, file list and checks, reads the risky parts of the diff and checks findings against the code. I merge once both reviews are in.
+
+I plant a control in every audit. Suppose the rule forbids the marker `EXAMPLE-PLANT-001` in added source lines. I'd run the same scan on a scratch diff with the marker on an added line and check that it flags that line. If the marker goes undetected, I fix the scan before trusting a clean result on the pull request.
+
+I also check related pull requests as a pair. If one changes a response and the other consumes it, I review the consumer against the producer's PR head. I check what happens if either lands first and agree on a merge order before either goes in. Two green checks against trunk tell me very little about that handoff.
+
+## Keep the Lead's Context Usable
+
+I keep decisions, branch names and review findings in the long-lived threads. When I need to know how full a thread is, I measure from the usage recorded in the transcript. The estimates I got by asking the threads were far enough off to change when I would compact them.
+
+At about 70%, I have the lead write a short handoff with the current heads, decisions and open work. I compact between tasks so a review or a test can finish with its context intact. A build child that passes 80% hands back its pushed branch and notes. The lead can brief a fresh child from there.
+
+If I see a child reading the same files or repeating the same failed command, I stop and check the brief. Sometimes the missing piece is a base branch or an acceptance check I assumed everyone understood. I put that in the next brief.
+
+## My Checklist
+
+- Start with a read-only inventory and approve the branch names together.
+- Give each build task one child, one worktree, one branch and one pull request.
+- Write the acceptance checks and report format into the brief.
+- Review the diff, run an independent check with a planted control, and pair related heads.
+- Hand off and compact leads between tasks.
+- Verify where a first Vercel CLI deploy landed before sharing the address.
+- Keep the merge decision with the owner.

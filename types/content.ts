@@ -19,6 +19,7 @@ export interface ArticleMeta {
   pillar: PillarSlug
   excerpt: string
   readingTime: number   // minutes, computed
+  cover?: string        // optional local cover WebP, e.g. '/images/writing/your-slug.webp'
   draft?: boolean       // from content/drafts/ — only ever present under `next dev`
 }
 

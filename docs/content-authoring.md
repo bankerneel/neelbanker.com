@@ -55,6 +55,16 @@ Notes:
 - Reading time is computed automatically from the body content.
 - Articles are sorted by `date` descending.
 
+Add the optional `cover` field to show editorial art at the top of the article.
+
+```mdx
+cover: "/images/writing/your-slug.webp"
+```
+
+- Save the file in `public/images/writing/` and reference it as a local path starting with `/images/writing/`.
+- Use a 1200 by 630 pixel WebP under about 120 KB. The page scales it to fit and reserves space at that aspect ratio.
+- Covers use empty alt text. Keep information readers need in the article itself.
+
 ## Add A Resource
 
 Create a new file in `content/resources/your-slug.mdx`.
@@ -208,7 +218,8 @@ Before committing content:
 1. Confirm the frontmatter keys match the examples above.
 2. Confirm the pillar is one of `blockchain`, `ai`, or `leadership` when required.
 3. Confirm any `fileUrl` points to a file that exists in `public/resources/`.
-4. Run `npm run lint`.
+4. Confirm any `cover` path points to a WebP in `public/images/writing/`.
+5. Run `npm run lint`.
 
 ## UI notes for future components
 

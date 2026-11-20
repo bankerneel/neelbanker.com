@@ -141,6 +141,19 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
 
       {/* ── The reading sheet — straight, so long text stays easy to read ── */}
       <div id="article-body" className="page-wrap mt-16 sm:mt-24">
+        {article.cover && (
+          <figure className="tone-panel mx-auto mb-10 max-w-[800px] border-2 border-current p-3 shadow-hard sm:mb-14 sm:p-4">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={article.cover}
+              alt=""
+              width={1200}
+              height={630}
+              decoding="async"
+              className="block h-auto w-full"
+            />
+          </figure>
+        )}
         <Scrap tall tape className="mx-auto max-w-[800px]" paperClassName="tone-panel px-6 pb-14 pt-14 sm:px-14 sm:pb-20 sm:pt-20">
           <div className="prose prose-lg prose-bazaar max-w-none">
             <MDXRemote
