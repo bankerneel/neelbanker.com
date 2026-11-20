@@ -1,6 +1,6 @@
 # States
 
-Last updated: 2026-11-20 (writing update)
+Last updated: 2026-11-20
 
 ## File Purpose
 
