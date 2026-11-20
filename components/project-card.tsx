@@ -42,6 +42,35 @@ export function ProjectCard({
           project.highlight && <span className="hand -mt-1 text-[1.35rem] leading-none text-dm-accent-ink">a favourite ✦</span>
         )}
       </div>
+      {/* Pre-sized plain imgs on purpose: next/image costs more JS than it saves for these local WebPs.
+          dark: keys off [data-theme="dark"] (see globals.css), so the banner follows the site toggle,
+          not just the OS. Both are lazy, so the hidden variant is not fetched. */}
+      {/* eslint-disable @next/next/no-img-element -- pre-sized local WebP; next/image costs more JS than it saves here */}
+      {project.cover && (
+        <div className="mt-4 w-full max-w-full overflow-hidden border-2 border-current/40">
+          <img
+            src={project.cover}
+            alt={`${project.title} cover`}
+            width={project.coverWidth ?? 1600}
+            height={project.coverHeight ?? 480}
+            loading="lazy"
+            decoding="async"
+            className={cn('block h-auto w-full', project.coverDark && 'dark:hidden')}
+          />
+          {project.coverDark && (
+            <img
+              src={project.coverDark}
+              alt={`${project.title} cover`}
+              width={project.coverWidth ?? 1600}
+              height={project.coverHeight ?? 480}
+              loading="lazy"
+              decoding="async"
+              className="hidden h-auto w-full dark:block"
+            />
+          )}
+        </div>
+      )}
+      {/* eslint-enable @next/next/no-img-element */}
       <h3
         className={cn(
           // long uppercase words ("RECOMMENDATION") must never widen the card; the
@@ -87,6 +116,23 @@ export function ProjectCard({
         >
           Case study<span className="sr-only">: {project.title}</span> ↗
         </a>
+      )}
+      {project.links && project.links.length > 0 && (
+        <ul aria-label={`Links for ${project.title}`} className="mt-3 flex max-w-full flex-wrap gap-2">
+          {project.links.map((link) => (
+            <li key={`${link.label}-${link.href}`} className="min-w-0 max-w-full">
+              <a
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={cn(chipLink, 'tone-sky max-w-full whitespace-normal break-words')}
+              >
+                {link.label}
+                <span className="sr-only">: {project.title}, opens in a new tab</span> ↗
+              </a>
+            </li>
+          ))}
+        </ul>
       )}
       <ul aria-label="Stack" className="mt-auto flex flex-wrap gap-1.5 pt-5">
         {project.stack.map((s) => (
