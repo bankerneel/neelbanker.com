@@ -1,6 +1,6 @@
 # States
 
-Last updated: 2026-11-20 (wamt project card added)
+Last updated: 2026-11-20
 
 ## File Purpose
 
@@ -14,16 +14,6 @@ The main site surfaces have gone through a broad UX/content refinement pass.
 Core routes now feel substantially more consistent, lighter, and more editorial than the earlier baseline.
 
 ## Completed
-
-- **Who Ate My Tokens project card (2026-11-18 content date, branch `t3/add-wamt-project-card`):**
-  - Added `content/projects/wamt-token-observability.mdx` with the public name (explicit exception to the Personal
-    pseudonym rule), employer `Personal`, date `2026-11-18`, README-only facts, and `Repo` / `Live demo` links.
-  - Added optional `links` (label and href chips), `cover`, `coverDark`, `coverWidth` and `coverHeight` frontmatter
-    to the project type, the MDX parser and `docs/content-authoring.md`; the card renders wrapping link chips and a
-    pre-sized plain `img` cover that follows the dark theme.
-  - Optimized the banner and two overview screenshots into `public/images/wamt/` as WebP under 60 KB each.
-  - Registered the slug under `ai` and `infrastructure` in `components/project-browser.tsx`; added e2e coverage for
-    the card, link destinations, both filters and cover sizing at 320px.
 
 - **Bands + the homepage film (2026-09-27, local branch `feat/motion-film`, not pushed):**
   - Section breaks: full-bleed bands with torn / perforated / zig-zag / scalloped edges on `/`, `/about`, `/projects`, `/work-with-me`.
@@ -114,6 +104,16 @@ Core routes now feel substantially more consistent, lighter, and more editorial 
 - Shared shell consistency pass completed across nav, footer, and CTA patterns.
 - NDA-sensitive project references anonymized in public-facing content.
 - About page wording corrected to state that Hindustan Ecolife is run by Neel's uncle and that Neel built/hosts the website.
+
+- **Who Ate My Tokens project card (2026-11-20):**
+  - Added `content/projects/wamt-token-observability.mdx` with the public name (explicit exception to the Personal
+    pseudonym rule), employer `Personal`, date `2026-11-18`, README-only facts, and `Repo` / `Live demo` links.
+  - Added optional `links` (label and href chips), `cover`, `coverDark`, `coverWidth` and `coverHeight` frontmatter
+    to the project type, the MDX parser and `docs/content-authoring.md`. The card renders wrapping link chips and a
+    pre-sized plain `img` cover that follows the dark theme.
+  - Optimized the banner and two overview screenshots into `public/images/wamt/` as WebP, each about 60 KB or smaller.
+  - Registered the slug under `ai` and `infrastructure` in `components/project-browser.tsx`. Added e2e coverage for
+    the card, link destinations, both filters and cover sizing at 320px.
 
 ## Current Homepage State
 
