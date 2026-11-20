@@ -4,6 +4,7 @@ The editable [SVG](../../public/favicon.svg) uses the heavier hand-cut N, a fold
 
 ## Favicon and app icons
 
+- [Before and after on actual Edge tabs](native-edge-tabs-before-after.png) in light and dark. Playwright drove system Edge and the captures show the left part of each native tab.
 - [Before and after at 16 px](favicon-tabs-before-after.png) on simulated light and dark browser tabs. Playwright captures the tab mockup in the page viewport.
 - [Sky, butter, and lilac at 16 px](favicon-colour-comparison.png) on the same simulated tabs.
 - [Light renders](icon-renders-light.png) and [dark renders](icon-renders-dark.png) show the 16, 32, 180, and 512 px icons at their native sizes. The 512 px mark and shadow fit within a 193.0 px radius inside the 204.8 px maskable safe zone.

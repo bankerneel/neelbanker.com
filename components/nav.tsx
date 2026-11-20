@@ -58,7 +58,7 @@ export function Nav() {
             href="/"
             onClick={() => setOpen(false)}
             className={cn(
-              'tone-panel flex h-9 -rotate-[1.4deg] shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap border-[3px] border-current px-2 text-base font-black uppercase leading-none tracking-tighter shadow-hard transition-[rotate] duration-200 hover:rotate-0 min-[360px]:text-lg sm:h-[38px] sm:px-3.5 sm:text-xl',
+              'tone-panel flex h-10 -rotate-[1.4deg] shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap border-[3px] border-current px-2 text-base font-black uppercase leading-none tracking-tighter shadow-hard transition-[rotate] duration-200 hover:rotate-0 min-[360px]:text-lg sm:px-3.5 sm:text-xl lg:h-[38px]',
               focusRing,
             )}
           >
