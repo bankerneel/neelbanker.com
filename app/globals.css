@@ -426,6 +426,12 @@
   }
 }
 
+@utility brand-mark {
+  display: block;
+  flex-shrink: 0;
+  background: url('/favicon.svg') center / contain no-repeat;
+}
+
 @utility page-wrap {
   width: 100%;
   max-width: 1400px;

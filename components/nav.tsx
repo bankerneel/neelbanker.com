@@ -53,15 +53,16 @@ export function Nav() {
             scrolled ? 'opacity-100' : 'opacity-0',
           )}
         />
-        <nav aria-label="Main navigation" className="page-wrap relative flex items-center justify-between gap-4 py-4">
+        <nav aria-label="Main navigation" className="page-wrap relative flex items-center justify-between gap-2 py-4 sm:gap-4">
           <Link
             href="/"
             onClick={() => setOpen(false)}
             className={cn(
-              'tone-panel -rotate-[1.4deg] shrink-0 cursor-pointer whitespace-nowrap border-[3px] border-current px-3.5 py-1.5 text-lg font-black uppercase leading-none tracking-tighter shadow-hard transition-[rotate] duration-200 hover:rotate-0 sm:text-xl',
+              'tone-panel flex h-10 -rotate-[1.4deg] shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap border-[3px] border-current px-2 text-base font-black uppercase leading-none tracking-tighter shadow-hard transition-[rotate] duration-200 hover:rotate-0 min-[360px]:text-lg sm:px-3.5 sm:text-xl lg:h-[38px]',
               focusRing,
             )}
           >
+            <span aria-hidden="true" className="brand-mark size-6" />
             Neel Banker
           </Link>
 
@@ -96,7 +97,7 @@ export function Nav() {
           </div>
 
           {/* Mobile */}
-          <div className="flex items-center gap-3 lg:hidden">
+          <div className="flex items-center gap-2 sm:gap-3 lg:hidden">
             <ThemeToggle />
             <button
               type="button"
@@ -104,7 +105,7 @@ export function Nav() {
               aria-expanded={open}
               aria-controls="mobile-menu"
               className={cn(
-                'ticket tone-butter min-h-10 cursor-pointer shadow-hard transition-[rotate] duration-200',
+                'ticket tone-butter min-h-10 cursor-pointer px-2 shadow-hard transition-[rotate] duration-200 sm:px-3',
                 open ? 'rotate-0' : 'rotate-2',
                 focusRing,
               )}

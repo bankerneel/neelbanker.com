@@ -7,6 +7,7 @@
 
 ## Product / Brand
 
+- The Folded Scrap mark uses a fixed butter face (`#f2dca8`) with a heavy hand-cut N, a folded corner, a torn edge, and a hard shadow. At 16 px the letter had higher contrast on butter than on sky or lilac. `public/favicon.svg` is the editable source for the site and social lockups. The 512 px app icon adds a paper background and maskable padding.
 - Personal brand site for Neel Banker.
 - **2026-09: the whole site is being redesigned in Dream Bazaar (Direction P)** — muted pastel collage on a
   dream-sky gradient, light + dark. The old dark + lime editorial look and Syne/JetBrains Mono are retired;

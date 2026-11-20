@@ -66,7 +66,10 @@ export function Footer() {
 
       <div className="mt-12 flex flex-col gap-12 lg:flex-row lg:items-start lg:gap-16">
         <Scrap className="w-full max-w-[520px] -rotate-1" paperClassName="tone-panel px-7 py-9 sm:px-9">
-          <p className="text-2xl font-black uppercase tracking-tighter">Neel Banker</p>
+          <p className="flex items-center gap-2 text-2xl font-black uppercase tracking-tighter">
+            <span aria-hidden="true" className="brand-mark size-8" />
+            Neel Banker
+          </p>
           <p className="mt-1 text-[11px] font-bold uppercase tracking-[0.16em] text-dm-ink-soft">
             Distributed systems &amp; blockchain architect · Ahmedabad, India
           </p>
