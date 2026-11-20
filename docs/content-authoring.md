@@ -113,7 +113,22 @@ chain: "Ethereum mainnet"
 employer: "Tech Alchemy"   # or "SoluLab" or "Personal" — the group; shows Neel's role for it (lib/roles.ts)
 caseStudy: "https://www.solulab.com/case-study/…"   # official external case study, shown as a link
 highlight: true   # pins the project first on /projects with a handwritten "a favourite" note
+links:            # optional extra labelled links, rendered as chips on the card
+  - label: "Repo"
+    href: "https://github.com/bankerneel/wamt"
+  - label: "Live demo"
+    href: "https://whoatemytokens.vercel.app"
+cover: "/images/wamt/banner.webp"             # optional card cover image under public/
+coverDark: "/images/wamt/banner-dark.webp"    # optional dark-theme variant, shown via dark: utilities
+coverWidth: 1600                              # intrinsic size, used for the plain <img> width/height
+coverHeight: 480
 ```
+
+`links` entries must be `{ label, href }` pairs with non-empty strings; anything else is ignored.
+Each chip gets a visible arrow and a screen-reader-only project title, wraps on narrow cards and
+keeps the site's focus ring. `cover` and `coverDark` are local WebP files kept small on purpose:
+the card uses pre-sized plain `img` elements (not `next/image`) and swaps them with `dark:` utilities,
+which follow `[data-theme="dark"]` rather than only the OS. Set the intrinsic width and height.
 
 **Naming rule (2026-09-27): the name depends on the group** (`employer`).
 - **SoluLab:** the real product name (Neel is not under NDA with SoluLab), e.g. "DocTrace — File-less Records on

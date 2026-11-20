@@ -46,6 +46,16 @@ export interface ProjectMeta {
   role?: string         // derived from employer (lib/roles.ts)
   caseStudy?: string    // frontmatter `caseStudy`: official external case-study URL
   highlight?: boolean   // frontmatter `highlight: true`: pinned first on /projects with a "favourite" note
+  cover?: string        // frontmatter `cover`: optional local image shown on the card, e.g. '/images/wamt/banner.webp'
+  coverDark?: string    // frontmatter `coverDark`: dark-theme variant of `cover`, shown via dark: utilities
+  coverWidth?: number   // intrinsic width of the cover, for the plain <img> width attribute
+  coverHeight?: number  // intrinsic height of the cover, for the plain <img> height attribute
+  links?: ProjectLink[] // frontmatter `links`: extra labelled links rendered as chips on the card
+}
+
+export interface ProjectLink {
+  label: string
+  href: string
 }
 
 export type Employer = 'Tech Alchemy' | 'SoluLab' | 'Personal'

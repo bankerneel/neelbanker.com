@@ -1,0 +1,46 @@
+---
+title: "Who Ate My Tokens (wamt): Local Token Observability for AI Coding Agents"
+excerpt: "A local, read-only token observation layer for T3 Code, Claude Code and Codex. Live threads, 5-hour and weekly limits, 30-day history and API-equivalent cost by project in one Rust binary."
+stack: ["Rust", "SQLite", "Server-Sent Events", "T3 Code", "Claude Code", "Codex"]
+date: "2026-11-18"
+employer: "Personal"
+cover: "/images/wamt/banner.webp"
+coverDark: "/images/wamt/banner-dark.webp"
+coverWidth: 1600
+coverHeight: 480
+links:
+  - label: "Repo"
+    href: "https://github.com/bankerneel/wamt"
+  - label: "Live demo"
+    # Swap the demo href to https://whoatemytokens.neelbanker.com when the domain goes live.
+    href: "https://whoatemytokens.vercel.app"
+---
+
+## Problem
+
+Token use across coding agents is hard to see while it happens. Usage on claude.ai and other devices can count toward Claude's cap while remaining outside the local estimate.
+
+## Approach
+
+Build a local, read-only observation layer around three sources: T3 Code's SQLite state, Claude Code JSONL transcripts and Codex session files. Read metadata only. The dashboard uses titles, models, statuses, tool names, times and token counts. Message text, tool inputs and outputs, commands and file paths stay inside the parser. One Rust binary compiles the page in, binds to 127.0.0.1 and makes no outgoing requests.
+
+## Architecture
+
+- The server opens the T3 database in SQLite read-only mode with short read transactions, and tails transcripts from the last byte seen. Observation leaves source files unchanged and skips T3 Code's secrets directory.
+- The page uses `/events` for live updates and has endpoints for thread drill-down, a 10-minute token timeline and a JSON summary at `/api/brief`.
+- The 5-hour plate opens a window at the first request after the previous one closed and lasts five hours. T3-recorded resets take precedence when available. Claude Code's `rate_limits` replace the estimate when the status line is installed.
+- The binary keeps its cache and log in `.state/`. The optional Claude Code status line installer updates `statusLine.command` with a backup and an exact restore.
+- A strict Content Security Policy, `nosniff`, a loopback-only bind and a Host check keep the page local. Fonts, the logo and the favicon are compiled into the binary.
+
+## Outcome
+
+- One Rust binary serves a single dashboard on `127.0.0.1:7317`, with compiled-in assets and no outbound requests.
+- Live threads and subagents show model, current step, context fill and tokens, with a row drill-down into runs, tool counts and a 10-minute timeline.
+- A 5-hour plate with a run-out forecast based on the last 30 minutes, a weekly meter and Codex's own limit line.
+- 30-day history, PRs with CI checks, spoiled cache leftovers and API-equivalent dollars by project, with copy and CSV export.
+- Diet tips name the threads behind heavy contexts, peak concurrency, marathon sessions and spoiled cache from metadata alone.
+- The code is available under the MIT license.
+
+## Lessons
+
+The local estimate covers usage visible in local records. When available, Claude Code's status line supplies the reported limits. Demo mode uses synthetic fixtures so screenshots can be shared without exposing real work.

@@ -129,6 +129,9 @@ _Original checklist:_
 - Case-study links ✅: `caseStudy` frontmatter renders an external link on the card (DocTrace). The SoluLab section lists
   16 official case studies by name (Neel's list, 2026-09-27).
 - Category transitions / richer interaction: current fade-in filter is fine; not pursued.
+- Who Ate My Tokens (2026-11-18, branch `t3/add-wamt-project-card`): new Personal project card using the explicit
+  public-name exception, with `Repo` and `Live demo` chips, a dark-aware WebP cover and membership in the `ai` and
+  `infrastructure` filters. Frontmatter support for `links` and `cover` is documented in `docs/content-authoring.md`.
 
 ### 5. Writing system polish ✅ (2026-09-27)
 

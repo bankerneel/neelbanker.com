@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import matter from 'gray-matter'
-import type { ArticleMeta, Article, ResourceMeta, ProjectMeta } from '@/types/content'
+import type { ArticleMeta, Article, ResourceMeta, ProjectMeta, ProjectLink } from '@/types/content'
 import { isEmployer, ROLE_BY_EMPLOYER } from '@/lib/roles'
 export { parseDate } from '@/lib/utils-date'
 
@@ -103,11 +103,28 @@ export function extractOutcome(content: string): string[] {
     .filter(Boolean)
 }
 
+/**
+ * Keep only well-formed { label, href } pairs from frontmatter. Junk entries are
+ * dropped rather than trusted: these values end up in href attributes.
+ */
+function parseProjectLinks(value: unknown): ProjectLink[] | undefined {
+  if (!Array.isArray(value)) return undefined
+  const links = value
+    .filter((item): item is Record<string, unknown> => !!item && typeof item === 'object' && !Array.isArray(item))
+    .map((item) => ({ label: item.label, href: item.href }))
+    .filter(
+      (link): link is ProjectLink =>
+        typeof link.label === 'string' && !!link.label && typeof link.href === 'string' && !!link.href,
+    )
+  return links.length > 0 ? links : undefined
+}
+
 export function getAllProjectMeta(): ProjectMeta[] {
   return readMdxDir('projects').map((file) => {
     const slug = file.replace(/\.mdx$/, '')
     const raw = fs.readFileSync(path.join(CONTENT_DIR, 'projects', file), 'utf-8')
     const { data, content } = matter(raw)
+    const links = parseProjectLinks(data.links)
     return {
       slug,
       title: data.title,
@@ -119,6 +136,11 @@ export function getAllProjectMeta(): ProjectMeta[] {
       ...(isEmployer(data.employer) ? { employer: data.employer, role: ROLE_BY_EMPLOYER[data.employer] } : {}),
       ...(typeof data.caseStudy === 'string' && data.caseStudy ? { caseStudy: data.caseStudy } : {}),
       ...(data.highlight === true ? { highlight: true } : {}),
+      ...(typeof data.cover === 'string' && data.cover ? { cover: data.cover } : {}),
+      ...(typeof data.coverDark === 'string' && data.coverDark ? { coverDark: data.coverDark } : {}),
+      ...(typeof data.coverWidth === 'number' && data.coverWidth > 0 ? { coverWidth: data.coverWidth } : {}),
+      ...(typeof data.coverHeight === 'number' && data.coverHeight > 0 ? { coverHeight: data.coverHeight } : {}),
+      ...(links ? { links } : {}),
     } satisfies ProjectMeta
   }).sort((a, b) => Number(Boolean(b.highlight)) - Number(Boolean(a.highlight)) || (a.date < b.date ? 1 : -1))
 }

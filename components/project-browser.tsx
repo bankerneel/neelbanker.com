@@ -42,6 +42,7 @@ const PROJECT_CATEGORIES: Record<string, ProjectFilter[]> = {
   'forge-product-system': ['leadership'],
   'relay-marketplace-platform': ['leadership'],
   'ignite-ido-platform': ['wallets', 'leadership'],
+  'wamt-token-observability': ['ai', 'infrastructure'],
 }
 
 const FEATURED_SPOTLIGHTS = [

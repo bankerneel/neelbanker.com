@@ -45,6 +45,14 @@
 - Preserve pseudo/codename references unless the user explicitly asks otherwise.
 - Public-facing content should avoid directly exposing NDA-sensitive client/project names.
 - Hindustan Ecolife should be described accurately: Neel built, developed, and hosts the site; the business is run by his uncle, who is the director.
+- **Named Personal exception (Neel's brief, 2026-11-20):** Who Ate My Tokens (wamt) is a Personal project whose real
+  public name is allowed on the site. This is a one-off exception, not a change to the pseudonym rule for other
+  Personal projects. Its demo link is `https://whoatemytokens.vercel.app` for now, with a frontmatter comment to
+  swap that href to `https://whoatemytokens.neelbanker.com` when the domain goes live.
+- Project frontmatter now supports optional `links` (`{ label, href }` chips on the card), `cover` / `coverDark`
+  (local WebP, dark variant swapped with `dark:` utilities so it follows the site toggle, not just the OS) and
+  `coverWidth` / `coverHeight`. The cover is a pre-sized plain `img` with a scoped `@next/next/no-img-element`
+  disable and reason; `next/image` is not worth its JS here.
 
 ## UI / UX Decisions Already Made
 
