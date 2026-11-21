@@ -1,0 +1,44 @@
+{
+  "label": "before2",
+  "base": "http://127.0.0.1:3000",
+  "capturedAt": "2026-11-21T17:31:17.614Z",
+  "routes": {
+    "/ @ desktop": {
+      "lcp": 948,
+      "tbt": 210,
+      "cls": 0
+    },
+    "/about @ desktop": {
+      "lcp": 772,
+      "tbt": 167,
+      "cls": 0
+    },
+    "/writing/cross-chain-credential-verification @ desktop": {
+      "lcp": 752,
+      "tbt": 260,
+      "cls": 0
+    },
+    "/ @ mobile": {
+      "lcp": 792,
+      "tbt": 225,
+      "cls": 0
+    },
+    "/about @ mobile": {
+      "lcp": 752,
+      "tbt": 186,
+      "cls": 0
+    },
+    "/writing/cross-chain-credential-verification @ mobile": {
+      "lcp": 696,
+      "tbt": 233,
+      "cls": 0
+    }
+  },
+  "particles": {
+    "fps": {},
+    "count": {},
+    "dpr": {},
+    "errors": []
+  },
+  "reduced": null
+}

@@ -1,0 +1,14 @@
+{
+  "method": "sum of gzip sizes of polyfillFiles and rootMainFiles from each route production build-manifest.json",
+  "routes": {
+    "/": { "files": 6, "rawKB": 555, "gzipKB": 168 },
+    "/about": { "files": 6, "rawKB": 555, "gzipKB": 168 },
+    "article": { "files": 6, "rawKB": 555, "gzipKB": 168 }
+  },
+  "threeInInitialChunks": false,
+  "dynamicChunks": [
+    { "file": "0y7g1a_ygfsn1.js", "rawKB": 185, "gzipKB": 49 },
+    { "file": "0yf4_b4a2llu6.js", "rawKB": 364, "gzipKB": 85 }
+  ],
+  "note": "WebGLRenderer appears only in the two dynamic chunks and in server chunks, never in any route's rootMainFiles or polyfillFiles."
+}

@@ -35,6 +35,20 @@
 - One small photo does not justify `next/image` (~6 KB gz client JS on /about); a pre-sized WebP in a plain `img` is lighter.
 - A client component can hydrate after the header: e2e clicks on it need `waitForHydration(locator)` (e2e/helpers.ts), or they are lost.
 
+## Particles (2026-11-21)
+
+- `components/particles/` is the shared, client only WebGL layer. One director owns the single renderer, scene,
+  camera and frame loop, and gates scenes so only one particle scene runs at a time. The sky shader stays separate.
+- The slot loader is the only particle code in a route's initial bundle. Its IntersectionObserver (200px) gates
+  dynamic import of three 0.187.0 and the scene. The reserved `.particle-slot` box keeps CLS at 0.
+- Adaptive quality follows the source lab exactly: 3 second warmup, 0.5 second wall clock FPS window, step down
+  after 3 seconds below 45 FPS, step up after 8 seconds above 57 FPS. DPR caps are 2 desktop and 1.5 phones.
+- Glyph Drift uses NEEL then BANKER only, samples Archivo 900 after the font loads (Arial fallback), reads all
+  colour from --dm-* tokens on load and on theme flip, uses additive soft sprites without bloom, and draws one
+  static NEEL frame under reduced motion. Counts are 26000 desktop and 10000 phone at high quality.
+- Warm dev measurements (1440px and 390px, CPU 4x, slow 4G) showed initial JS unchanged at 168 KB gz, CLS 0,
+  no console errors, and LCP/TBT within noise. Ember Field will register through the same director later.
+
 ## Content / NDA
 
 - **Naming by group (Neel, 2026-09-27, revised the same day):** SoluLab → real names (he is not under NDA with SoluLab); Tech Alchemy → `Project <Codename>` (real names never on the site); Personal → pseudonym product names (CredSeal, Keystone Bridge, Canopy Chain, StayWise, Sentinel Audit — confirmed by Neel). Scales and Coffer are Tech Alchemy (confirmed). Slugs ship to the browser, so Tech Alchemy slugs must stay neutral; DocTrace's slug went back to `doctrace-fabric-documents`. `/resume` keeps real names by his choice.

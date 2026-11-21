@@ -228,7 +228,7 @@ silently dropped by Turbopack in dev):
   (`components/motion/sky-shader.ts`: one WebGL fragment shader, dawn → dusk with scroll, half resolution,
   30fps, draws only while a `[data-sky-window]` is visible, starts after load + idle, skipped under reduced
   motion / Save-Data).
-- `components/motion/motion-stage.tsx` is the only JS: reveal marking (`data-reveal` time-based, `data-sd`
+- `components/motion/motion-stage.tsx` is the film's only JS: reveal marking (`data-reveal` time-based, `data-sd`
   fallback where scroll timelines are missing), ambient pausing, desktop-only pointer parallax / night-set
   spotlight / `data-magnetic` buttons, and starting the sky.
 - Rules: animate only transform / opacity / translate / scale / rotate (plus one clip-path word, SVG strokes,
@@ -237,6 +237,34 @@ silently dropped by Turbopack in dev):
 - Budgets (measured 2026-09-27, 375px, CPU 4×, slow 4G): TBT unchanged at 86 ms, CLS 0, +2.5 KB JS,
   motion CSS 3.5 KB gz, 0 janky frames. A GSAP hook (+141 ms TBT, headline ~1s late) and a Three.js sky
   (+133 KB, −27% scroll fps) were built, measured and rejected — don't reintroduce them.
+
+#### Shared particle runtime (2026-11-21)
+
+- `components/particles/` owns one WebGLRenderer, Scene and PerspectiveCamera behind a single active scene
+  director, so only one particle scene runs at a time. The sky shader in `components/motion/` is separate and
+  keeps its own rules.
+- `components/particles/slot.tsx` is a small client loader: its IntersectionObserver (rootMargin 200px) gates
+  `import()` of the runtime and the scene. three 0.187.0 is a normal dependency and never enters a route's
+  initial bundle. The slot renders an empty box with a reserved CSS height (`.particle-slot` in globals.css),
+  so CLS stays 0 before the canvas exists.
+- The runtime owns the frame loop, adaptive quality (3 second warmup, 0.5 second wall-clock FPS window, step
+  down after 3 seconds below 45 FPS, step up after 8 seconds above 57 FPS), DPR caps (2 desktop, 1.5 phones),
+  pause offscreen and on document.hidden, clean resume, resize, reduced motion, theme flips through a
+  MutationObserver on data-theme, and full dispose of geometries, materials, renderer, rAF and listeners.
+- A scene implements `ParticleSceneDefinition` from `components/particles/types.ts` and registers through
+  `mountParticleScene`. Ember Field and any later scene use the same gate. No lil-gui, no bloom, no CDN.
+- Glyph Drift (`components/particles/glyph-drift/`) cycles NEEL then BANKER only. Glyphs are sampled from
+  Archivo 900 after `document.fonts.load('900 236px "Archivo"')` and `document.fonts.ready`, with Arial as the
+  only fallback. Colours are read from --dm-* tokens at runtime and rebuilt when data-theme flips. Points use
+  soft round additive sprites with no bloom. Pointer repulsion is a passive pointermove; the wrapper sets
+  touch-action: pan-y so vertical scrolling is never hijacked. Reduced motion draws one static NEEL frame and
+  starts no loop.
+- The slot sits in the homepage night band above the selected work h2, outside the page-wrap section. The h2
+  and every CTA are unchanged; the canvas is aria-hidden decoration. `e2e/particles.spec.ts` covers lazy load,
+  reduced motion and the absence of the canvas on inner pages and articles.
+- Measured 2026-11-21 on a warm dev server at 1440px and 390px with CPU 4x and slow 4G: initial JS per route
+  stays at 168 KB gz (three lives only in two dynamic chunks, 134 KB gz together), CLS 0, no console errors,
+  LCP and TBT within noise. Glyph counts are 26000 on desktop and 10000 on phones at the high tier.
 
 ### Homepage
 

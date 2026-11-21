@@ -1,0 +1,70 @@
+{
+  "label": "after2",
+  "base": "http://127.0.0.1:3000",
+  "capturedAt": "2026-11-21T17:33:04.141Z",
+  "routes": {
+    "/ @ desktop": {
+      "lcp": 920,
+      "tbt": 188,
+      "cls": 0
+    },
+    "/about @ desktop": {
+      "lcp": 804,
+      "tbt": 216,
+      "cls": 0
+    },
+    "/writing/cross-chain-credential-verification @ desktop": {
+      "lcp": 744,
+      "tbt": 263,
+      "cls": 0
+    },
+    "/ @ mobile": {
+      "lcp": 820,
+      "tbt": 213,
+      "cls": 0
+    },
+    "/about @ mobile": {
+      "lcp": 756,
+      "tbt": 164,
+      "cls": 0
+    },
+    "/writing/cross-chain-credential-verification @ mobile": {
+      "lcp": 720,
+      "tbt": 247,
+      "cls": 0
+    }
+  },
+  "particles": {
+    "fps": {
+      "high-desktop": 61,
+      "medium-desktop": 61,
+      "low-desktop": 61,
+      "high-mobile": 60,
+      "medium-mobile": 61,
+      "low-mobile": 61
+    },
+    "count": {
+      "desktop": 26000,
+      "mobile": 10000
+    },
+    "dpr": {
+      "desktop": 2,
+      "mobile": 1.5
+    },
+    "errors": []
+  },
+  "reduced": {
+    "running": false,
+    "scene": "glyph-drift",
+    "quality": "high",
+    "pixelRatio": 2,
+    "fps": 0,
+    "count": 26000,
+    "reduced": true,
+    "frames": 1,
+    "mounts": 1,
+    "objects": 1,
+    "calls": 1,
+    "points": 26000
+  }
+}

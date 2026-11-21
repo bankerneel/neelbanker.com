@@ -1,0 +1,8 @@
+{
+  "method": "sum of gzip sizes of polyfillFiles and rootMainFiles from each route production build-manifest.json",
+  "routes": {
+    "/": { "files": 6, "rawKB": 555, "gzipKB": 168 },
+    "/about": { "files": 6, "rawKB": 555, "gzipKB": 168 },
+    "article": { "files": 6, "rawKB": 555, "gzipKB": 168 }
+  }
+}

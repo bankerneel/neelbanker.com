@@ -1,6 +1,6 @@
 # States
 
-Last updated: 2026-11-20
+Last updated: 2026-11-21
 
 ## File Purpose
 
@@ -14,6 +14,20 @@ The main site surfaces have gone through a broad UX/content refinement pass.
 Core routes now feel substantially more consistent, lighter, and more editorial than the earlier baseline.
 
 ## Completed
+
+- **Shared particle runtime + Glyph Drift (2026-11-21, branch `feat/particles-glyph-drift`):**
+  - A client loader in `components/particles/slot.tsx` dynamically imports three 0.187.0 and the scene only when
+    the homepage night band is within 200px. The box is reserved in CSS, so CLS stays 0.
+  - The runtime owns one renderer, scene, camera, frame loop and adaptive quality, pauses offscreen and when the
+    tab is hidden, flips colours with the theme and disposes everything on navigation. A single active scene
+    director leaves a clean registration point for Ember Field.
+  - Glyph Drift spells NEEL then BANKER from Archivo 900 samples, with soft additive sprites, no bloom, passive
+    pointer repulsion and one static reduced motion frame. 26000 points desktop, 10000 on phones, DPR capped 2
+    and 1.5. Screenshots and metrics are in `docs/particles/evidence/`.
+  - Warm before and after measurements (1440px and 390px, CPU 4x, slow 4G): initial JS unchanged at 168 KB gz,
+    CLS 0, no console errors, LCP and TBT within noise. Four new e2e tests cover lazy load, canvas presence,
+    reduced motion and inner pages. `npm run lint`, `npm run typecheck`, `npm test`, `npm run build` and
+    `npm run test:e2e` pass.
 
 - **Folded Scrap brand refresh (2026-11-20):** A hand-cut N on butter paper now appears in the favicon, app icons, nav, footer, and both social cards. The [brand evidence](design/brand-refresh/README.md) includes the 16 px colour comparison and both site themes.
 
