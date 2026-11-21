@@ -23,6 +23,9 @@ export interface ParticlePalette {
   butter: string
   lilac: string
   sky: string
+  rose: string
+  terra: string
+  inkSoft: string
   accentInk: string
   nightInk: string
   panel: string

@@ -151,6 +151,17 @@ _Original checklist:_
 - Open: Neel review of PR 19. The initial JS zero delta is a measurement, not independently auditable, because
   the before manifests are gitignored. Playwright is pinned to two workers for a stable full suite.
 
+### 5c. Ember Field (2026-11-22, stacked PR on PR 19)
+
+- Ember Field ships as a second scene behind the same director, mounted only in the homepage footer end card.
+  A `usePathname()` gate emits no DOM on other routes, and the canvas layer sits behind every footer link.
+- The GPGPU port is tuned down from the lab: 57600 / 36864 / 12544 points, 2 / 1.5 DPR caps, additive fire,
+  tuned sprite falloff, no bloom or glow, and an on-theme static fallback for every WebGL failure path.
+- Measurements and screenshots are in `docs/particles/evidence/`: all tiers at 58 to 60 FPS, initial JS 168 KB
+  gzip per route, no console errors, CLS 0 on home and inner pages. The article CLS 0.07 is pre-existing in
+  this harness. Five verification commands pass, including 62 e2e tests.
+- Open: Neel review. This PR retargets to dev once PR 19 merges; do not merge it into dev first.
+
 ## Later
 
 ### 6. Content expansion

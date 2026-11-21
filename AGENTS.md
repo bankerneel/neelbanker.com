@@ -270,6 +270,34 @@ silently dropped by Turbopack in dev):
 - Static reduced-motion frames must be invalidated on theme flip, resize and any late font re-sample. The scene
   calls `ctx.invalidate()` after async work and the director clears its cached frame before repainting.
 
+#### Ember Field (2026-11-21, stacked on PR 19)
+
+- `components/particles/ember-field/` ports the lab's GPGPU fire and smoke plume through the shared director.
+  There is still one renderer, one scene, one camera and one frame loop. Ember never creates a second canvas,
+  starts no rAF of its own and does its simulation step inside the host's `update()` by ping-ponging two float
+  (or half-float) render targets. No bloom, EffectComposer, lil-gui or glow plane.
+- Counts come from the source `sizeForScale` with the clamp lowered to 0.01 and the floor to 64: high 240x240 =
+  57600, medium 192x192 = 36864, low 112x112 = 12544. Ember maps the host's quality levels to effective scales
+  0.20 / 0.12 / 0.045 so the tiers land on those counts. DPR caps stay the runtime's 2 desktop and 1.5 phone.
+- Capability path: WebGL2 required, then `EXT_color_buffer_float`, then `EXT_color_buffer_half_float`, then a 4x4
+  framebuffer preflight. No WebGL2, no usable target, failed renderer creation or `webglcontextlost` swaps the
+  canvas for a static on-theme still built from `tone-*` fills and `--dm-*` tokens, `aria-hidden` and
+  `pointer-events-none`. Reduced motion or Save-Data seeds, steps once, paints once and starts no loop.
+- Fire stays on `THREE.AdditiveBlending` at opacity 0.2 with a tight sprite falloff and no glow; smoke is
+  normal-blended. Ignition is butter, cooling rose, spent terra and smoke ink-soft, all read from `--dm-*` at
+  runtime and refreshed on `data-theme` flips. Light theme uses a much lower smoke alpha than dark because
+  ink-soft is a dark ink there. Accent fills are decoration only, never text.
+- The slot is mounted only in the homepage footer end card. `components/particles/ember-field-slot.tsx` gates it
+  with `usePathname() === '/'` and emits no DOM on any other route. No new Band, no `data-sky-window`, no
+  `sky-canvas`, no change to the finale shapes or footer links. The layer is `z-0` behind the end card, links
+  stay above it, pointer repulsion is passive and desktop fine-pointer only, and the layer has `touch-action: pan-y`.
+- The renderer restores the shared camera on dispose, so Glyph Drift is unaffected by the handover. The third
+  test-only debug hook `disposeTest()` removes all test mounts deterministically.
+- Measured 2026-11-21, 1440 and 390 with CPU 4x and slow 4G: all three tiers at 58 to 60 FPS, CLS 0 on home
+  and inner pages, initial JS 168 KB gzip on /, /about and an article (zero gain), no console errors. The
+  article CLS of 0.07 in this harness is present before and after and is not caused by Ember. See
+  `docs/particles/evidence/`.
+
 ### Homepage
 
 - The hero (`components/home-hero.tsx`) is the approved lab prototype on real content: "Building / *what's* /

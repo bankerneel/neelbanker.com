@@ -98,3 +98,89 @@ npx playwright test e2e/particles.spec.ts
 Playwright is now pinned to two workers in `playwright.config.ts`, so the plain `npm run test:e2e` command passes.
 The earlier flake at the default worker count came from the dev server and system Edge being starved on this
 Windows box; unrelated navigation, form and layout tests timed out on different runs.
+
+---
+
+## Ember Field evidence (stacked PR on PR 19)
+
+Before means clean `2b9373e` (PR 19) on a second dev server bound to 127.0.0.1:3001. After means this branch on
+127.0.0.1:3000. Both were measured with the same standalone harness
+(`tools/particle-proof/measure.mjs` in the particle proof worktree), msedge, CPU 4x on phone, CPU 1 on desktop,
+slow 4G, warm route, 6 second observation. Raw files are `before-*.json` and `proof-*.json` here.
+
+| Route and viewport | Before LCP | After LCP | Before TBT | After TBT | Before CLS | After CLS |
+|---|---:|---:|---:|---:|---:|---:|
+| / desktop 1440 | 1556 ms | 1596 ms | 260 ms | 258 ms | 0 | 0 |
+| /about desktop | 1484 ms | 1488 ms | 102 ms | 93 ms | 0 | 0 |
+| article desktop | 1492 ms | 1508 ms | 94 ms | 92 ms | 0 | 0 |
+| / mobile 390 | 3140 ms | 3248 ms | 2000 ms | 1344 ms | 0 | 0 |
+| /about mobile | 2436 ms | 2376 ms | 971 ms | 969 ms | 0 | 0 |
+| article mobile | 2368 ms | 2440 ms | 913 ms | 923 ms | 0 (see note) | 0.07 (see note) |
+
+The mobile homepage LCP variance is dev server noise: TBT includes tasks before FCP in this harness, and the
+after run had no long task after FCP. The article CLS is not caused by Ember. Three repeated runs of the same
+article route measured 0.07 on this branch and 0.07 on the clean base, while the first single pass on both
+measured 0; the repeat files `proof-mobile-article-repeat*.json` and `before-mobile-article-repeat*.json`
+record that. The article has no Ember slot, and the slot emits no DOM on any non-homepage route.
+
+## Initial JS and chunk split
+
+`node docs/particles/evidence/audit-initial-js.mjs` produced `initial-js-ember.json` after `npm run build`:
+
+| Route | PR 19 gzip | Ember gzip |
+|---|---:|---:|
+| / | 168 KB | 168 KB |
+| /about | 168 KB | 168 KB |
+| article | 168 KB | 168 KB |
+
+Zero gain. `WebGLRenderer` appears only in two dynamic chunks and in none of the six files listed by any
+route's initial manifest.
+
+## Scene counts, DPR and FPS
+
+`node docs/particles/evidence/measure-ember.mjs` produced `metrics-ember.json`. Tiers were pinned through the
+existing debug hook after scrolling the footer slot into view. Phone runs used CPU 4x and slow 4G.
+
+| Viewport | Tier | Points | DPR cap | FPS | Console errors |
+|---|---|---:|---:|---:|---:|
+| 1440 desktop | high | 57600 | 2 | 59.74 | 0 |
+| 1440 desktop | medium | 36864 | 1.25 | 59.97 | 0 |
+| 1440 desktop | low | 12544 | 1 | 60.05 | 0 |
+| 390 phone | high | 57600 | 1.5 | 59.95 | 0 |
+| 390 phone | medium | 36864 | 1.25 | 60.05 | 0 |
+| 390 phone | low | 12544 | 1 | 58.65 | 0 |
+
+The phone budget is met at the auto selected high tier, so no reduction or fallback was needed.
+
+## Still and fallback
+
+Under reduced motion the footer shows one settled plume, `running: false` and `frames: 1`; a theme flip repaints
+exactly one more frame. Save-Data follows the same path through the director. With `getContext('webgl')` and
+`getContext('webgl2')` overridden to return null, the slot renders the `tone-*` still with no canvas and no
+console error. A synthetic `webglcontextlost` on the live canvas switches to the same still.
+
+## Ember screenshots
+
+- `ember-desktop-light.png`: 1440px footer end card, light theme
+- `ember-desktop-dark.png`: 1440px footer end card, dark theme
+- `ember-mobile-light.png`: 390px footer end card, light theme
+- `ember-mobile-dark.png`: 390px footer end card, dark theme
+- `ember-reduced-motion.png`: settled plume, no loop
+- `ember-fallback.png`: static on-theme still with no WebGL
+
+## Verification lines
+
+```
+npm.cmd run lint        exit=0
+npm.cmd run typecheck   exit=0
+npm.cmd test
+  Test Files  2 passed (2)
+       Tests  9 passed (9)
+npm.cmd run build       exit=0
+  ✓ Compiled successfully in 6.4s
+    Finished TypeScript in 10.1s ...
+npm.cmd run test:e2e
+  62 passed (1.4m)
+node node_modules/@playwright/test/cli.js test e2e/particles.spec.ts --workers=1
+  2 passed (18.9s)
+```

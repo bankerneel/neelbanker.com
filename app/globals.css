@@ -627,6 +627,68 @@
   height: 100%;
 }
 
+/* Ember Field sits behind the footer end card headline. The box is absolute,
+   so it adds no height and cannot shift the page when the canvas arrives. */
+.ember-slot {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+  width: min(48%, 640px);
+  height: clamp(260px, 38vw, 460px);
+  overflow: hidden;
+  touch-action: pan-y;
+}
+.ember-slot ~ div {
+  position: relative;
+  z-index: 1;
+}
+@media (max-width: 720px) {
+  .ember-slot {
+    width: 70%;
+    height: 320px;
+  }
+}
+
+/* Static on-theme still for WebGL failure paths. Only tone-* fills and
+   --dm-* tokens; no canvas, no text, no animation. */
+.ember-fallback {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.ember-fallback-sun {
+  position: absolute;
+  bottom: 7%;
+  left: 50%;
+  width: clamp(40px, 5vw, 68px);
+  aspect-ratio: 1;
+  border-radius: 9999px;
+  translate: -50% 0;
+}
+.ember-fallback-spark {
+  position: absolute;
+  width: clamp(8px, 1.1vw, 13px);
+  aspect-ratio: 1;
+}
+.ember-fallback-spark-a { bottom: 20%; left: 48%; rotate: 12deg; }
+.ember-fallback-spark-b { bottom: 34%; left: 53%; rotate: -8deg; }
+.ember-fallback-spark-c { bottom: 48%; left: 46%; rotate: 18deg; }
+.ember-fallback-spark-d { bottom: 60%; left: 55%; rotate: -14deg; }
+.ember-fallback-spark-e { bottom: 71%; left: 49%; rotate: 7deg; }
+.ember-fallback-spark-f { bottom: 82%; left: 54%; rotate: -11deg; }
+.ember-fallback-spark-g { bottom: 91%; left: 47%; rotate: 15deg; }
+.ember-fallback-swatches {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 26%;
+  opacity: 0.16;
+  color: var(--dm-ink-soft);
+}
+
 /* ── Print: isolate the resume document sheet ─────────────────────── */
 @media print {
   @page {

@@ -1,0 +1,111 @@
+{
+  "method": "gzip size of every file in each route production build-manifest.json",
+  "generatedAt": "2026-11-21T19:38:51.459Z",
+  "routes": {
+    "/": {
+      "files": [
+        {
+          "source": "polyfillFiles",
+          "file": "static/chunks/03~yq9q893hmn.js",
+          "gzipKB": 39
+        },
+        {
+          "source": "rootMainFiles",
+          "file": "static/chunks/0qox9l_q8ln~-.js",
+          "gzipKB": 8
+        },
+        {
+          "source": "rootMainFiles",
+          "file": "static/chunks/01tg0hkkqoaeh.js",
+          "gzipKB": 9
+        },
+        {
+          "source": "rootMainFiles",
+          "file": "static/chunks/0g0qkcfrj~ya7.js",
+          "gzipKB": 69
+        },
+        {
+          "source": "rootMainFiles",
+          "file": "static/chunks/00gv.j46dms0..js",
+          "gzipKB": 39
+        },
+        {
+          "source": "rootMainFiles",
+          "file": "static/chunks/turbopack-0kr_4rxdtl68x.js",
+          "gzipKB": 4
+        }
+      ],
+      "totalGzipKB": 168
+    },
+    "/about": {
+      "files": [
+        {
+          "source": "polyfillFiles",
+          "file": "static/chunks/03~yq9q893hmn.js",
+          "gzipKB": 39
+        },
+        {
+          "source": "rootMainFiles",
+          "file": "static/chunks/0qox9l_q8ln~-.js",
+          "gzipKB": 8
+        },
+        {
+          "source": "rootMainFiles",
+          "file": "static/chunks/01tg0hkkqoaeh.js",
+          "gzipKB": 9
+        },
+        {
+          "source": "rootMainFiles",
+          "file": "static/chunks/0g0qkcfrj~ya7.js",
+          "gzipKB": 69
+        },
+        {
+          "source": "rootMainFiles",
+          "file": "static/chunks/00gv.j46dms0..js",
+          "gzipKB": 39
+        },
+        {
+          "source": "rootMainFiles",
+          "file": "static/chunks/turbopack-0kr_4rxdtl68x.js",
+          "gzipKB": 4
+        }
+      ],
+      "totalGzipKB": 168
+    },
+    "article": {
+      "files": [
+        {
+          "source": "polyfillFiles",
+          "file": "static/chunks/03~yq9q893hmn.js",
+          "gzipKB": 39
+        },
+        {
+          "source": "rootMainFiles",
+          "file": "static/chunks/0qox9l_q8ln~-.js",
+          "gzipKB": 8
+        },
+        {
+          "source": "rootMainFiles",
+          "file": "static/chunks/01tg0hkkqoaeh.js",
+          "gzipKB": 9
+        },
+        {
+          "source": "rootMainFiles",
+          "file": "static/chunks/0g0qkcfrj~ya7.js",
+          "gzipKB": 69
+        },
+        {
+          "source": "rootMainFiles",
+          "file": "static/chunks/00gv.j46dms0..js",
+          "gzipKB": 39
+        },
+        {
+          "source": "rootMainFiles",
+          "file": "static/chunks/turbopack-0kr_4rxdtl68x.js",
+          "gzipKB": 4
+        }
+      ],
+      "totalGzipKB": 168
+    }
+  }
+}

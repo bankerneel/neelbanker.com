@@ -1,0 +1,60 @@
+{
+  "capturedAt": "2026-11-21T19:26:59.007Z",
+  "base": "http://127.0.0.1:3000",
+  "viewports": {
+    "desktop": {
+      "tiers": {
+        "high": {
+          "fps": 59.74,
+          "count": 57600,
+          "pixelRatio": 2,
+          "scene": "ember-field",
+          "canvases": 1
+        },
+        "medium": {
+          "fps": 59.97,
+          "count": 36864,
+          "pixelRatio": 1.25,
+          "scene": "ember-field",
+          "canvases": 1
+        },
+        "low": {
+          "fps": 60.05,
+          "count": 12544,
+          "pixelRatio": 1,
+          "scene": "ember-field",
+          "canvases": 1
+        }
+      },
+      "errors": [],
+      "cpuRate": 1
+    },
+    "phone": {
+      "tiers": {
+        "high": {
+          "fps": 59.95,
+          "count": 57600,
+          "pixelRatio": 1.5,
+          "scene": "ember-field",
+          "canvases": 1
+        },
+        "medium": {
+          "fps": 60.05,
+          "count": 36864,
+          "pixelRatio": 1.25,
+          "scene": "ember-field",
+          "canvases": 1
+        },
+        "low": {
+          "fps": 58.65,
+          "count": 12544,
+          "pixelRatio": 1,
+          "scene": "ember-field",
+          "canvases": 1
+        }
+      },
+      "errors": [],
+      "cpuRate": 4
+    }
+  }
+}

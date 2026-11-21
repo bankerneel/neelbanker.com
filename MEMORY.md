@@ -31,6 +31,14 @@
 - Starting WebGL before first paint can delay FCP on slow phones: the sky starts after `load` + `requestIdleCallback`.
 - Playwright: `test.use({ reducedMotion })` is ignored here; use `page.emulateMedia`. Playwright video needs ffmpeg (not installed); films were made from CDP screencast frames + Pillow.
 - Motion scope (Neel, 2026-09-27): light film on all pages except articles, `/resume` and anything next to a form; the footer end card is site chrome and plays everywhere.
+- Ember Field (2026-11-22) is the second particle scene, mounted only in the homepage footer end card behind a
+  `usePathname()` gate. It uses the shared director and never creates a second renderer or rAF. Its counts are
+  57600 / 36864 / 12544 from the lab's `sizeForScale` with a 0.01 clamp and 64 floor; DPR caps stay 2 desktop
+  and 1.5 phone. Additive fire at opacity 0.2, tight sprites, no bloom or glow. The four heat stages map to
+  butter, rose, terra and ink-soft from `--dm-*`; light theme needs a much lower smoke alpha because ink-soft
+  is a dark ink there. Capability probes and a 4x4 framebuffer preflight guard the GPU path; every failure,
+  context loss, reduced motion and Save-Data ends in a still with no console error. The footer slot is `z-0`
+  with `touch-action: pan-y` and passive desktop-only repulsion; links always paint above it.
 - Rolling counters caused CLS (centred digits slide as they grow): reserve the final width (`--w` in `ch`, tabular digits), grow from a fixed start, keep suffixes like "+" outside the rolling box.
 - One small photo does not justify `next/image` (~6 KB gz client JS on /about); a pre-sized WebP in a plain `img` is lighter.
 - A client component can hydrate after the header: e2e clicks on it need `waitForHydration(locator)` (e2e/helpers.ts), or they are lost.

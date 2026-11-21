@@ -1,0 +1,263 @@
+{
+  "schema": 1,
+  "label": "ember-mobile-about",
+  "url": "http://127.0.0.1:3000/about",
+  "capturedAt": "2026-11-21T19:28:40.534Z",
+  "config": {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "deviceScaleFactor": 1,
+    "cpuThrottlingRate": 4,
+    "network": {
+      "profile": "slow 4G",
+      "downloadBytesPerSecond": 209715,
+      "uploadBytesPerSecond": 96000,
+      "latencyMs": 150
+    },
+    "theme": "light",
+    "reducedMotion": false,
+    "waitMs": 6000,
+    "warmup": true,
+    "tbtWindowMs": 5000,
+    "fpsHookStarted": false
+  },
+  "environment": {
+    "node": "v24.19.0",
+    "platform": "win32",
+    "arch": "x64",
+    "hostname": "neel-omen-ultra",
+    "browserChannel": "msedge",
+    "browserVersion": "158.0.4370.33"
+  },
+  "metrics": {
+    "lcpMs": 2376,
+    "fcpMs": 2376,
+    "tbtMs": 969,
+    "tbtAfterFcpMs": 853,
+    "cls": 0,
+    "transferredJsBytes": 899505,
+    "scriptResourceCount": 29,
+    "fps": {
+      "frames": 0,
+      "durationMs": 0,
+      "fps": null,
+      "medianFrameMs": null,
+      "p95FrameMs": null,
+      "slowFramesOver32ms": 0,
+      "jankyFramesOver50ms": 0
+    },
+    "cdp": {
+      "taskDurationMs": 5875.28,
+      "scriptDurationMs": 1645.33,
+      "layoutDurationMs": 963.63,
+      "layoutCount": 8,
+      "recalcStyleCount": 160,
+      "jsHeapUsedBytes": 12101064,
+      "nodes": 1827
+    }
+  },
+  "raw": {
+    "lcpCandidates": [
+      {
+        "t": 2376,
+        "size": 43642,
+        "tag": "P",
+        "url": null
+      }
+    ],
+    "paintEntries": [
+      {
+        "name": "first-paint",
+        "t": 2376
+      },
+      {
+        "name": "first-contentful-paint",
+        "t": 2376
+      }
+    ],
+    "layoutShifts": [],
+    "longtasks": [
+      {
+        "t": 1288.7999999821186,
+        "d": 166,
+        "name": "self"
+      },
+      {
+        "t": 4939.399999976158,
+        "d": 903,
+        "name": "self"
+      },
+      {
+        "t": 7775.399999976158,
+        "d": 256,
+        "name": "self"
+      },
+      {
+        "t": 8802,
+        "d": 73,
+        "name": "self"
+      },
+      {
+        "t": 9307,
+        "d": 56,
+        "name": "self"
+      },
+      {
+        "t": 9375,
+        "d": 106,
+        "name": "self"
+      }
+    ],
+    "jsResources": [
+      {
+        "name": "http://127.0.0.1:3000/_next/static/chunks/node_modules_next_dist_compiled_next-devtools_index_0553esy.js",
+        "bytes": 218178,
+        "transfer": 218178,
+        "encoded": 217878,
+        "decoded": 746632
+      },
+      {
+        "name": "http://127.0.0.1:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_058-ah~._.js",
+        "bytes": 184041,
+        "transfer": 184041,
+        "encoded": 183741,
+        "decoded": 1057980
+      },
+      {
+        "name": "http://127.0.0.1:3000/_next/static/chunks/node_modules_next_dist_client_0fhqo1d._.js",
+        "bytes": 151107,
+        "transfer": 151107,
+        "encoded": 150807,
+        "decoded": 742815
+      },
+      {
+        "name": "http://127.0.0.1:3000/_next/static/media/8dba48c3ca6529a0-s.p.0ha-w2cbh9zh5.woff2",
+        "bytes": 51264,
+        "transfer": 51264,
+        "encoded": 50964,
+        "decoded": 50964
+      },
+      {
+        "name": "http://127.0.0.1:3000/_next/static/chunks/node_modules_next_dist_115brz8._.js",
+        "bytes": 45863,
+        "transfer": 45863,
+        "encoded": 45563,
+        "decoded": 246103
+      },
+      {
+        "name": "http://127.0.0.1:3000/_next/static/chunks/node_modules_0n.f243._.js",
+        "bytes": 37334,
+        "transfer": 37334,
+        "encoded": 37034,
+        "decoded": 239475
+      },
+      {
+        "name": "http://127.0.0.1:3000/_next/static/chunks/node_modules_next_dist_0tt2wve._.js",
+        "bytes": 36957,
+        "transfer": 36957,
+        "encoded": 36657,
+        "decoded": 208717
+      },
+      {
+        "name": "http://127.0.0.1:3000/_next/static/media/75affa71d1e2f6a7-s.p.0e5c5_wyqqx75.woff2",
+        "bytes": 35240,
+        "transfer": 35240,
+        "encoded": 34940,
+        "decoded": 34940
+      },
+      {
+        "name": "http://127.0.0.1:3000/_next/static/chunks/node_modules_next_dist_compiled_react-server-dom-turbopack_0p3wegg._.js",
+        "bytes": 32079,
+        "transfer": 32079,
+        "encoded": 31779,
+        "decoded": 174634
+      },
+      {
+        "name": "http://127.0.0.1:3000/_next/static/chunks/%5Broot-of-the-server%5D__0yswf~w._.css",
+        "bytes": 30658,
+        "transfer": 30658,
+        "encoded": 30358,
+        "decoded": 211154
+      },
+      {
+        "name": "http://127.0.0.1:3000/_next/static/chunks/node_modules_next_dist_compiled_0rpq4pf._.js",
+        "bytes": 28641,
+        "transfer": 28641,
+        "encoded": 28341,
+        "decoded": 144344
+      },
+      {
+        "name": "http://127.0.0.1:3000/_next/static/chunks/turbopack-_0p44nws._.js",
+        "bytes": 22319,
+        "transfer": 22319,
+        "encoded": 22019,
+        "decoded": 91085
+      },
+      {
+        "name": "http://127.0.0.1:3000/_next/static/chunks/_07bagk0._.js",
+        "bytes": 6446,
+        "transfer": 6446,
+        "encoded": 6146,
+        "decoded": 45261
+      },
+      {
+        "name": "http://127.0.0.1:3000/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_0yjw1oe._.js",
+        "bytes": 4122,
+        "transfer": 4122,
+        "encoded": 3822,
+        "decoded": 15461
+      },
+      {
+        "name": "http://127.0.0.1:3000/_next/static/chunks/_0hfrdop._.js",
+        "bytes": 3672,
+        "transfer": 3672,
+        "encoded": 3372,
+        "decoded": 18726
+      },
+      {
+        "name": "http://127.0.0.1:3000/_next/static/chunks/components_motion_sky-shader_ts_0b9jwu3._.js",
+        "bytes": 3304,
+        "transfer": 3304,
+        "encoded": 3004,
+        "decoded": 7284
+      },
+      {
+        "name": "http://127.0.0.1:3000/_next/static/chunks/_0rqeker._.js",
+        "bytes": 1056,
+        "transfer": 1056,
+        "encoded": 756,
+        "decoded": 756
+      },
+      {
+        "name": "http://127.0.0.1:3000/_next/static/chunks/node_modules_%40swc_helpers_cjs_0-4ujiy._.js",
+        "bytes": 1039,
+        "transfer": 1039,
+        "encoded": 739,
+        "decoded": 1984
+      },
+      {
+        "name": "http://127.0.0.1:3000/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_10z625~._.js",
+        "bytes": 975,
+        "transfer": 975,
+        "encoded": 675,
+        "decoded": 675
+      },
+      {
+        "name": "http://127.0.0.1:3000/_next/static/chunks/components_motion_sky-shader_ts_01_1wq7._.js",
+        "bytes": 927,
+        "transfer": 927,
+        "encoded": 627,
+        "decoded": 627
+      }
+    ],
+    "navigation": {
+      "responseEnd": 426.19999998807907,
+      "domContentLoaded": 1289.8999999761581,
+      "load": 5971.0999999940395
+    },
+    "devicePixelRatio": 1,
+    "observedAtMs": 11992.8
+  }
+}

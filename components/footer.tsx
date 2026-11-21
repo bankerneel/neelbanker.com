@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { Scrap } from '@/components/bazaar/scrap'
+import { EmberFieldSlot } from '@/components/particles/ember-field-slot'
 import { cn } from '@/lib/utils'
 import type { CSSProperties } from 'react'
 
@@ -47,6 +48,8 @@ export function Footer() {
       </div>
 
       <div className="page-wrap relative mt-28 sm:mt-20">
+        {/* homepage only: a decorative plume behind the end card, clear of its links */}
+        <EmberFieldSlot />
         <div className="relative">
           <p className="max-w-[16ch] text-[clamp(2rem,6.5vw,4.6rem)] font-black uppercase leading-[0.96] tracking-tighter sm:max-w-none">
             Building systems with{' '}

@@ -23,11 +23,20 @@ const TOKENS: Array<[keyof ParticlePalette, string]> = [
   ['butter', '--dm-butter'],
   ['lilac', '--dm-lilac'],
   ['sky', '--dm-sky'],
+  ['rose', '--dm-rose'],
+  ['terra', '--dm-terra'],
+  ['inkSoft', '--dm-ink-soft'],
   ['accentInk', '--dm-accent-ink'],
   ['nightInk', '--dm-night-ink'],
   ['panel', '--dm-panel'],
   ['ink', '--dm-ink'],
 ]
+
+/** Save-Data gets the same single still frame as prefers-reduced-motion. */
+function prefersStill(): boolean {
+  const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches || connection?.saveData === true
+}
 
 declare global {
   interface Window {
@@ -39,6 +48,7 @@ declare global {
       samplePixels(): number
       mountTest(id: string): void
       deactivateTest(): void
+      disposeTest(): void
     }
   }
 }
@@ -108,7 +118,7 @@ class ParticleDirector {
 
   constructor() {
     this.palette = readPalette()
-    this.reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    this.reduced = prefersStill()
     this.motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
     this.installDebugHook()
   }
@@ -153,6 +163,10 @@ class ParticleDirector {
       },
       deactivateTest: () => {
         this.testMounts[this.testMounts.length - 1]?.deactivate()
+      },
+      disposeTest: () => {
+        this.testMounts.forEach((mount) => mount.dispose())
+        this.testMounts = []
       },
     }
     Object.defineProperty(hook, 'frames', { get: () => this.framesRendered })

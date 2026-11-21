@@ -1,6 +1,6 @@
 # States
 
-Last updated: 2026-11-21
+Last updated: 2026-11-22
 
 ## File Purpose
 
@@ -29,6 +29,22 @@ Core routes now feel substantially more consistent, lighter, and more editorial 
     before manifests are gitignored. One e2e test with four checks covers lazy load, canvas presence, reduced
     motion and inner pages; Playwright is pinned to two workers so the plain `npm run test:e2e` command passes.
     `npm run lint`, `npm run typecheck`, `npm test`, `npm run build` and `npm run test:e2e` pass.
+
+- **Ember Field (2026-11-22, branch `feat/particles-ember-field`, stacked on PR 19):**
+  - A GPGPU fire and smoke plume lives only in the homepage footer end card. It uses the shared renderer,
+    scene, camera, loop, palette reader, adaptive quality and dispose path. No second canvas, no rAF of its
+    own, no bloom, no glow plane and no EffectComposer.
+  - Tier counts are 57600 high, 36864 medium and 12544 low from the adapted source `sizeForScale`; DPR caps
+    stay 2 desktop and 1.5 phone. Fire uses additive blending at opacity 0.2 with a tight sprite, smoke uses
+    normal blending with a lower alpha in light theme. Colours come from `--dm-*` at runtime and follow theme flips.
+  - WebGL2, extension probes and a 4x4 framebuffer preflight gate the GPU path. Any failure, context loss,
+    reduced motion or Save-Data leaves an on-theme static still or a settled single frame. The footer slot is
+    gated by `usePathname()`, so every other route keeps today's footer DOM.
+  - Measured all three tiers at 58 to 60 FPS on 1440 and 390 with CPU 4x and slow 4G. Initial JS is 168 KB
+    gzip per route, unchanged from PR 19, and `WebGLRenderer` appears only in dynamic chunks. CLS is 0 on home
+    and inner pages; the article CLS 0.07 in this harness is present before and after. No console errors.
+    Screenshots, raw metrics and both measurement scripts are in `docs/particles/evidence/`. The PR body
+    records the five passing command lines and retargets to dev after PR 19 merges.
 
 - **Folded Scrap brand refresh (2026-11-20):** A hand-cut N on butter paper now appears in the favicon, app icons, nav, footer, and both social cards. The [brand evidence](design/brand-refresh/README.md) includes the 16 px colour comparison and both site themes.
 
