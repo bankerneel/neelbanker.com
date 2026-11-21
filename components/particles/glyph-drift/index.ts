@@ -364,6 +364,7 @@ const definition: ParticleSceneDefinition = {
       words = WORDS.map((word) => sampleWord(word, true))
       if (reduced) snapHome()
       else computeTargets()
+      ctx.invalidate()
     })
 
     const handle: ParticleSceneHandle = {

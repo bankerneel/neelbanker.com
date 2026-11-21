@@ -1,0 +1,275 @@
+{
+  "method": "gzip size of every file listed in each route production build-manifest.json (polyfillFiles, rootMainFiles, lowPriorityFiles, pages)",
+  "generatedAt": "2026-11-21T18:19:33.202Z",
+  "routes": {
+    "/": {
+      "files": [
+        {
+          "source": "polyfillFiles",
+          "file": "static/chunks/03~yq9q893hmn.js",
+          "gzipKB": 39
+        },
+        {
+          "source": "rootMainFiles",
+          "file": "static/chunks/0qox9l_q8ln~-.js",
+          "gzipKB": 8
+        },
+        {
+          "source": "rootMainFiles",
+          "file": "static/chunks/01tg0hkkqoaeh.js",
+          "gzipKB": 9
+        },
+        {
+          "source": "rootMainFiles",
+          "file": "static/chunks/0g0qkcfrj~ya7.js",
+          "gzipKB": 69
+        },
+        {
+          "source": "rootMainFiles",
+          "file": "static/chunks/00gv.j46dms0..js",
+          "gzipKB": 39
+        },
+        {
+          "source": "rootMainFiles",
+          "file": "static/chunks/turbopack-0kr_4rxdtl68x.js",
+          "gzipKB": 4
+        }
+      ],
+      "totalGzipKB": 168
+    },
+    "/about": {
+      "files": [
+        {
+          "source": "polyfillFiles",
+          "file": "static/chunks/03~yq9q893hmn.js",
+          "gzipKB": 39
+        },
+        {
+          "source": "rootMainFiles",
+          "file": "static/chunks/0qox9l_q8ln~-.js",
+          "gzipKB": 8
+        },
+        {
+          "source": "rootMainFiles",
+          "file": "static/chunks/01tg0hkkqoaeh.js",
+          "gzipKB": 9
+        },
+        {
+          "source": "rootMainFiles",
+          "file": "static/chunks/0g0qkcfrj~ya7.js",
+          "gzipKB": 69
+        },
+        {
+          "source": "rootMainFiles",
+          "file": "static/chunks/00gv.j46dms0..js",
+          "gzipKB": 39
+        },
+        {
+          "source": "rootMainFiles",
+          "file": "static/chunks/turbopack-0kr_4rxdtl68x.js",
+          "gzipKB": 4
+        }
+      ],
+      "totalGzipKB": 168
+    },
+    "article": {
+      "files": [
+        {
+          "source": "polyfillFiles",
+          "file": "static/chunks/03~yq9q893hmn.js",
+          "gzipKB": 39
+        },
+        {
+          "source": "rootMainFiles",
+          "file": "static/chunks/0qox9l_q8ln~-.js",
+          "gzipKB": 8
+        },
+        {
+          "source": "rootMainFiles",
+          "file": "static/chunks/01tg0hkkqoaeh.js",
+          "gzipKB": 9
+        },
+        {
+          "source": "rootMainFiles",
+          "file": "static/chunks/0g0qkcfrj~ya7.js",
+          "gzipKB": 69
+        },
+        {
+          "source": "rootMainFiles",
+          "file": "static/chunks/00gv.j46dms0..js",
+          "gzipKB": 39
+        },
+        {
+          "source": "rootMainFiles",
+          "file": "static/chunks/turbopack-0kr_4rxdtl68x.js",
+          "gzipKB": 4
+        }
+      ],
+      "totalGzipKB": 168
+    }
+  },
+  "threeMarker": "WebGLRenderer",
+  "clientChunks": [
+    {
+      "file": "static/chunks/00gv.j46dms0..js",
+      "gzipKB": 39,
+      "hasThreeMarker": false
+    },
+    {
+      "file": "static/chunks/01tg0hkkqoaeh.js",
+      "gzipKB": 9,
+      "hasThreeMarker": false
+    },
+    {
+      "file": "static/chunks/01xlw8hd842-c.js",
+      "gzipKB": 1,
+      "hasThreeMarker": false
+    },
+    {
+      "file": "static/chunks/031a0f4ni98rc.js",
+      "gzipKB": 1,
+      "hasThreeMarker": false
+    },
+    {
+      "file": "static/chunks/03~yq9q893hmn.js",
+      "gzipKB": 39,
+      "hasThreeMarker": false
+    },
+    {
+      "file": "static/chunks/08kt~yudo1l-0.js",
+      "gzipKB": 2,
+      "hasThreeMarker": false
+    },
+    {
+      "file": "static/chunks/0bp-8v64ddkjp.js",
+      "gzipKB": 3,
+      "hasThreeMarker": false
+    },
+    {
+      "file": "static/chunks/0by~p3uqk4.2m.js",
+      "gzipKB": 2,
+      "hasThreeMarker": false
+    },
+    {
+      "file": "static/chunks/0c0uy98561nrn.js",
+      "gzipKB": 9,
+      "hasThreeMarker": false
+    },
+    {
+      "file": "static/chunks/0d3shmwh5_nmn.js",
+      "gzipKB": 13,
+      "hasThreeMarker": false
+    },
+    {
+      "file": "static/chunks/0g0qkcfrj~ya7.js",
+      "gzipKB": 69,
+      "hasThreeMarker": false
+    },
+    {
+      "file": "static/chunks/0ig6f974-dttc.js",
+      "gzipKB": 1,
+      "hasThreeMarker": false
+    },
+    {
+      "file": "static/chunks/0j-28~9rj39jy.js",
+      "gzipKB": 3,
+      "hasThreeMarker": false
+    },
+    {
+      "file": "static/chunks/0ns-fcjugrs7e.js",
+      "gzipKB": 2,
+      "hasThreeMarker": false
+    },
+    {
+      "file": "static/chunks/0oitzb0d0yiya.js",
+      "gzipKB": 1,
+      "hasThreeMarker": false
+    },
+    {
+      "file": "static/chunks/0oi_b16tm4mrc.js",
+      "gzipKB": 3,
+      "hasThreeMarker": false
+    },
+    {
+      "file": "static/chunks/0pjkat~8qqnch.js",
+      "gzipKB": 86,
+      "hasThreeMarker": true
+    },
+    {
+      "file": "static/chunks/0pm1_7wt_2794.js",
+      "gzipKB": 3,
+      "hasThreeMarker": false
+    },
+    {
+      "file": "static/chunks/0qkcv31.7ba~e.js",
+      "gzipKB": 1,
+      "hasThreeMarker": false
+    },
+    {
+      "file": "static/chunks/0qox9l_q8ln~-.js",
+      "gzipKB": 8,
+      "hasThreeMarker": false
+    },
+    {
+      "file": "static/chunks/0upi7z04f8z9e.js",
+      "gzipKB": 1,
+      "hasThreeMarker": false
+    },
+    {
+      "file": "static/chunks/0y7g1a_ygfsn1.js",
+      "gzipKB": 49,
+      "hasThreeMarker": true
+    },
+    {
+      "file": "static/chunks/0zig0fh30t6ou.js",
+      "gzipKB": 8,
+      "hasThreeMarker": false
+    },
+    {
+      "file": "static/chunks/0_e.rl5k1b.iw.js",
+      "gzipKB": 6,
+      "hasThreeMarker": false
+    },
+    {
+      "file": "static/chunks/14fa8czcmdezq.js",
+      "gzipKB": 65,
+      "hasThreeMarker": false
+    },
+    {
+      "file": "static/chunks/turbopack-0kr_4rxdtl68x.js",
+      "gzipKB": 4,
+      "hasThreeMarker": false
+    }
+  ],
+  "threeChunks": [
+    {
+      "file": "static/chunks/0pjkat~8qqnch.js",
+      "gzipKB": 86,
+      "hasThreeMarker": true
+    },
+    {
+      "file": "static/chunks/0y7g1a_ygfsn1.js",
+      "gzipKB": 49,
+      "hasThreeMarker": true
+    }
+  ],
+  "initialThreeMarker": false,
+  "beforeTotals": {
+    "/": {
+      "files": 6,
+      "rawKB": 555,
+      "gzipKB": 168
+    },
+    "/about": {
+      "files": 6,
+      "rawKB": 555,
+      "gzipKB": 168
+    },
+    "article": {
+      "files": 6,
+      "rawKB": 555,
+      "gzipKB": 168
+    }
+  },
+  "note": "Before totals come from the earlier committed initial-js-before.json measured on clean origin/dev with the same method. Before manifests are gitignored, so the zero delta is a measurement, not independently auditable from committed artifacts."
+}

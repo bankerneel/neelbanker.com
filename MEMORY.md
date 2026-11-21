@@ -46,8 +46,13 @@
 - Glyph Drift uses NEEL then BANKER only, samples Archivo 900 after the font loads (Arial fallback), reads all
   colour from --dm-* tokens on load and on theme flip, uses additive soft sprites without bloom, and draws one
   static NEEL frame under reduced motion. Counts are 26000 desktop and 10000 phone at high quality.
-- Warm dev measurements (1440px and 390px, CPU 4x, slow 4G) showed initial JS unchanged at 168 KB gz, CLS 0,
-  no console errors, and LCP/TBT within noise. Ember Field will register through the same director later.
+- Warm dev measurements (1440px and 390px, CPU 4x, slow 4G) showed CLS 0, no console errors and LCP/TBT within
+  noise. The measured initial JS delta is zero but is not independently auditable because the before manifests
+  are gitignored, so the docs state it as a measurement and point at the committed after-state chunk audit.
+  Counts are 26000 desktop and 10000 phone at high, with an 8000 phone floor. Ember Field will register through
+  the same director later.
+- Reduced motion static frames need explicit invalidation on theme flip, resize and late font re-sample. The
+  director exposes `ctx.invalidate()` for that purpose.
 
 ## Content / NDA
 

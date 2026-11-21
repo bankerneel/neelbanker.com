@@ -18,10 +18,11 @@ Colours are read from `--dm-sky`, `--dm-lilac`, `--dm-butter` and the other
 cool to warm across the glyph and sits on the dark night band in both themes.
 There is no bloom pass.
 
-Counts are chosen for this site rather than copied from the lab: 26000 points
-on desktop and 10000 on phones at the high tier, scaled to 15600 and 6000 at
-medium and to 8320 and 8000 at low. DPR is capped at 2 on desktop and 1.5 on
-phones by the runtime.
+Counts are chosen for this site rather than copied from the lab. Desktop tiers
+are 26000 at high, 15600 at medium and 8320 at low. Phone tiers are 10000 at
+high, 8000 at medium and 8000 at low. The 8000 floor means count stepping is
+flat on phones below high; only the DPR and point size change there. DPR caps
+are 2 on desktop, 1.5 on phones, then 1.25 at medium and 1 at low.
 
 Pointer repulsion uses a passive `pointermove` listener on the wrapper. The
 wrapper sets `touch-action: pan-y` so vertical page scrolling is not captured.

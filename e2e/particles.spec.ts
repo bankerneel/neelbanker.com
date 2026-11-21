@@ -18,30 +18,62 @@ test('the particle scene loads only near the viewport and respects reduced motio
   await expect(page.locator('canvas.particle-canvas')).toHaveCount(0)
 
   const webgl = await page.evaluate(() => !!document.createElement('canvas').getContext('webgl'))
-  if (webgl) {
-    // (b) scrolling the band into view mounts one canvas and the glyph scene
-    await page.locator('.particle-slot').scrollIntoViewIfNeeded()
-    await expect(page.locator('canvas.particle-canvas')).toHaveCount(1, { timeout: 12000 })
-    const state = await page.evaluate(() => window.__NB_PARTICLES__?.getState?.() ?? null)
-    expect(state?.scene).toBe('glyph-drift')
+  expect(webgl, 'WebGL is required for the particle e2e checks').toBe(true)
 
-    // (c) reduced motion draws one NEEL frame and starts no loop
-    await page.emulateMedia({ reducedMotion: 'reduce' })
-    await gotoHydrated(page, '/')
-    await page.locator('.particle-slot').scrollIntoViewIfNeeded()
-    await expect(page.locator('canvas.particle-canvas')).toHaveCount(1, { timeout: 12000 })
-    await page.waitForTimeout(300)
-    const first = await page.evaluate(() => window.__NB_PARTICLES__?.getState?.() ?? null)
-    expect(first?.reduced).toBe(true)
-    expect(first?.running).toBe(false)
-    await page.waitForTimeout(800)
-    const second = await page.evaluate(() => window.__NB_PARTICLES__?.getState?.() ?? null)
-    expect(second?.frames).toBe(first?.frames)
-    const moving = await page.evaluate(
-      () => document.getAnimations().filter((animation) => animation.playState === 'running').length,
-    )
-    expect(moving).toBeLessThanOrEqual(2)
-  }
+  // (b) scrolling the band into view mounts one canvas and a painted frame
+  await page.locator('.particle-slot').scrollIntoViewIfNeeded()
+  await expect(page.locator('canvas.particle-canvas')).toHaveCount(1, { timeout: 12000 })
+  const state = await page.evaluate(() => window.__NB_PARTICLES__?.getState?.() ?? null)
+  expect(state?.scene).toBe('glyph-drift')
+  expect(state?.count).toBeGreaterThan(0)
+  await expect.poll(() => page.evaluate(() => window.__NB_PARTICLES__?.samplePixels?.() ?? 0)).toBeGreaterThan(0)
+
+  // two slots must never leave two scene objects in the shared scene
+  await page.evaluate(() => {
+    let host = document.getElementById('nb-test-slot')
+    if (!host) {
+      host = document.createElement('div')
+      host.id = 'nb-test-slot'
+      host.style.cssText = 'position:absolute;top:0;left:0;width:240px;height:120px;pointer-events:none'
+      document.body.appendChild(host)
+    }
+    window.__NB_PARTICLES__?.mountTest?.('nb-test-slot')
+  })
+  await expect.poll(() => page.evaluate(() => window.__NB_PARTICLES__?.getState?.().mounts ?? 0)).toBe(2)
+  await expect.poll(() => page.evaluate(() => window.__NB_PARTICLES__?.getState?.().objects ?? 0)).toBe(1)
+  await page.evaluate(() => window.__NB_PARTICLES__?.deactivateTest?.())
+  await expect.poll(() => page.evaluate(() => window.__NB_PARTICLES__?.getState?.().objects ?? 0)).toBe(1)
+
+  // (c) reduced motion draws one NEEL frame, starts no loop, and repaints on theme flip
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await gotoHydrated(page, '/')
+  await page.locator('.particle-slot').scrollIntoViewIfNeeded()
+  await expect(page.locator('canvas.particle-canvas')).toHaveCount(1, { timeout: 12000 })
+  await page.waitForTimeout(700)
+  const first = await page.evaluate(() => window.__NB_PARTICLES__?.getState?.() ?? null)
+  expect(first?.reduced).toBe(true)
+  expect(first?.running).toBe(false)
+  expect(first?.count).toBeGreaterThan(0)
+  expect(first?.frames).toBe(1)
+  await expect.poll(() => page.evaluate(() => window.__NB_PARTICLES__?.samplePixels?.() ?? 0)).toBeGreaterThan(0)
+
+  await page.evaluate(() => {
+    document.documentElement.dataset.theme = 'dark'
+  })
+  await expect
+    .poll(() => page.evaluate(() => window.__NB_PARTICLES__?.getState?.().frames ?? 0))
+    .toBeGreaterThan(1)
+  const afterTheme = await page.evaluate(() => window.__NB_PARTICLES__?.getState?.() ?? null)
+  expect(afterTheme?.running).toBe(false)
+  expect(await page.evaluate(() => window.__NB_PARTICLES__?.samplePixels?.() ?? 0)).toBeGreaterThan(0)
+  await page.waitForTimeout(600)
+  const settled = await page.evaluate(() => window.__NB_PARTICLES__?.getState?.() ?? null)
+  expect(settled?.frames).toBe(afterTheme?.frames)
+
+  const moving = await page.evaluate(
+    () => document.getAnimations().filter((animation) => animation.playState === 'running').length,
+  )
+  expect(moving).toBeLessThanOrEqual(2)
 
   // (d) no particle canvas anywhere that does not own a slot
   for (const route of ['/about', '/projects', '/writing/cross-chain-credential-verification']) {

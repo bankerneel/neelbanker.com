@@ -24,10 +24,11 @@ Core routes now feel substantially more consistent, lighter, and more editorial 
   - Glyph Drift spells NEEL then BANKER from Archivo 900 samples, with soft additive sprites, no bloom, passive
     pointer repulsion and one static reduced motion frame. 26000 points desktop, 10000 on phones, DPR capped 2
     and 1.5. Screenshots and metrics are in `docs/particles/evidence/`.
-  - Warm before and after measurements (1440px and 390px, CPU 4x, slow 4G): initial JS unchanged at 168 KB gz,
-    CLS 0, no console errors, LCP and TBT within noise. Four new e2e tests cover lazy load, canvas presence,
-    reduced motion and inner pages. `npm run lint`, `npm run typecheck`, `npm test`, `npm run build` and
-    `npm run test:e2e` pass.
+  - Warm before and after measurements (1440px and 390px, CPU 4x, slow 4G): CLS 0, no console errors, LCP and
+    TBT within noise. The initial JS delta is measured as zero but is not independently auditable because the
+    before manifests are gitignored. One e2e test with four checks covers lazy load, canvas presence, reduced
+    motion and inner pages; Playwright is pinned to two workers so the plain `npm run test:e2e` command passes.
+    `npm run lint`, `npm run typecheck`, `npm test`, `npm run build` and `npm run test:e2e` pass.
 
 - **Folded Scrap brand refresh (2026-11-20):** A hand-cut N on butter paper now appears in the favicon, app icons, nav, footer, and both social cards. The [brand evidence](design/brand-refresh/README.md) includes the 16 px colour comparison and both site themes.
 

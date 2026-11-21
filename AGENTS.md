@@ -262,9 +262,13 @@ silently dropped by Turbopack in dev):
 - The slot sits in the homepage night band above the selected work h2, outside the page-wrap section. The h2
   and every CTA are unchanged; the canvas is aria-hidden decoration. `e2e/particles.spec.ts` covers lazy load,
   reduced motion and the absence of the canvas on inner pages and articles.
-- Measured 2026-11-21 on a warm dev server at 1440px and 390px with CPU 4x and slow 4G: initial JS per route
-  stays at 168 KB gz (three lives only in two dynamic chunks, 134 KB gz together), CLS 0, no console errors,
-  LCP and TBT within noise. Glyph counts are 26000 on desktop and 10000 on phones at the high tier.
+- Measured 2026-11-21 on a warm dev server at 1440px and 390px with CPU 4x and slow 4G: CLS 0, no console
+  errors, LCP and TBT within noise. The initial JS gain is within the loader budget, but the measured zero delta
+  is not independently auditable because the before manifests are gitignored. See `docs/particles/evidence/` for
+  the full after-state chunk audit. Glyph counts are 26000 desktop and 10000 phone at high quality, with an 8000
+  floor on phones so count stepping is flat below high.
+- Static reduced-motion frames must be invalidated on theme flip, resize and any late font re-sample. The scene
+  calls `ctx.invalidate()` after async work and the director clears its cached frame before repainting.
 
 ### Homepage
 

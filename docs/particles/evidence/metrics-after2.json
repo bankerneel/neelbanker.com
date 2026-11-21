@@ -1,45 +1,45 @@
 {
   "label": "after2",
   "base": "http://127.0.0.1:3000",
-  "capturedAt": "2026-11-21T17:33:04.141Z",
+  "capturedAt": "2026-11-21T18:25:14.869Z",
   "routes": {
     "/ @ desktop": {
-      "lcp": 920,
-      "tbt": 188,
+      "lcp": 888,
+      "tbt": 401,
       "cls": 0
     },
     "/about @ desktop": {
-      "lcp": 804,
-      "tbt": 216,
+      "lcp": 788,
+      "tbt": 171,
       "cls": 0
     },
     "/writing/cross-chain-credential-verification @ desktop": {
-      "lcp": 744,
-      "tbt": 263,
+      "lcp": 728,
+      "tbt": 245,
       "cls": 0
     },
     "/ @ mobile": {
-      "lcp": 820,
-      "tbt": 213,
+      "lcp": 904,
+      "tbt": 209,
       "cls": 0
     },
     "/about @ mobile": {
-      "lcp": 756,
-      "tbt": 164,
+      "lcp": 780,
+      "tbt": 269,
       "cls": 0
     },
     "/writing/cross-chain-credential-verification @ mobile": {
-      "lcp": 720,
-      "tbt": 247,
+      "lcp": 728,
+      "tbt": 261,
       "cls": 0
     }
   },
   "particles": {
     "fps": {
       "high-desktop": 61,
-      "medium-desktop": 61,
+      "medium-desktop": 60,
       "low-desktop": 61,
-      "high-mobile": 60,
+      "high-mobile": 61,
       "medium-mobile": 61,
       "low-mobile": 61
     },

@@ -40,6 +40,8 @@ export interface ParticleSceneContext {
   width: number
   height: number
   reportCount: (count: number) => void
+  /** Ask the director to repaint one static frame. No-op while looping. */
+  invalidate: () => void
 }
 
 export interface ParticleSceneHandle {

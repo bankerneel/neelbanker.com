@@ -1,14 +1,34 @@
 {
   "method": "sum of gzip sizes of polyfillFiles and rootMainFiles from each route production build-manifest.json",
   "routes": {
-    "/": { "files": 6, "rawKB": 555, "gzipKB": 168 },
-    "/about": { "files": 6, "rawKB": 555, "gzipKB": 168 },
-    "article": { "files": 6, "rawKB": 555, "gzipKB": 168 }
+    "/": {
+      "files": 6,
+      "rawKB": 555,
+      "gzipKB": 168
+    },
+    "/about": {
+      "files": 6,
+      "rawKB": 555,
+      "gzipKB": 168
+    },
+    "article": {
+      "files": 6,
+      "rawKB": 555,
+      "gzipKB": 168
+    }
   },
   "threeInInitialChunks": false,
   "dynamicChunks": [
-    { "file": "0y7g1a_ygfsn1.js", "rawKB": 185, "gzipKB": 49 },
-    { "file": "0yf4_b4a2llu6.js", "rawKB": 364, "gzipKB": 85 }
+    {
+      "file": "0y7g1a_ygfsn1.js",
+      "rawKB": 185,
+      "gzipKB": 49
+    },
+    {
+      "file": "0pjkat~8qqnch.js",
+      "rawKB": 365,
+      "gzipKB": 86
+    }
   ],
-  "note": "WebGLRenderer appears only in the two dynamic chunks and in server chunks, never in any route's rootMainFiles or polyfillFiles."
+  "note": "Full per-route chunk table and scan of all client chunks are in initial-js-audit.json. The before manifests are gitignored, so the zero delta is measured, not independently auditable from committed artifacts."
 }

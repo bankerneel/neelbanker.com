@@ -140,6 +140,17 @@ _Original checklist:_
 - Reading progress: thin accent-ink bar tracking the article sheet.
 - Review the two articles about agent orchestration and token tracking, then publish on merge. Update the Who Ate My Tokens landing link when its custom domain is live.
 
+### 5b. Shared particle runtime + Glyph Drift (2026-11-21, PR 19)
+
+- Added a client particle runtime with one renderer, scene, camera, frame loop and single active scene director.
+  Ember Field is the next scene to register through the same gate.
+- Glyph Drift lives in the homepage night band above the selected work heading. Words are NEEL then BANKER only,
+  sampled from Archivo 900, coloured from --dm-* tokens at runtime, with a static NEEL frame under reduced motion.
+- Dynamic import at 200px, reserved slot box, DPR caps 2 and 1.5, adaptive quality from the source lab, and full
+  dispose are covered by one e2e test and the evidence in `docs/particles/evidence/`.
+- Open: Neel review of PR 19. The initial JS zero delta is a measurement, not independently auditable, because
+  the before manifests are gitignored. Playwright is pinned to two workers for a stable full suite.
+
 ## Later
 
 ### 6. Content expansion

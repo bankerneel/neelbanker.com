@@ -35,6 +35,10 @@ declare global {
       frames: number
       getState(): Record<string, unknown>
       setQuality(level: QualityLevel): void
+      invalidate(): void
+      samplePixels(): number
+      mountTest(id: string): void
+      deactivateTest(): void
     }
   }
 }
@@ -89,6 +93,8 @@ class ParticleDirector {
   private level: QualityLevel = 'high'
   private autoQuality = true
   private count = 0
+  private rememberedRatio: Partial<Record<QualityLevel, number>> = {}
+  private testMounts: ParticleMount[] = []
 
   private palette: ParticlePalette
   private reduced: boolean
@@ -132,6 +138,21 @@ class ParticleDirector {
         this.autoQuality = false
         this.applyQuality(level)
       },
+      invalidate: () => this.invalidate(),
+      samplePixels: () => this.samplePixels(),
+      mountTest: (id: string) => {
+        const host = document.getElementById(id)
+        if (!host) return
+        void import('./glyph-drift').then(({ default: definition }) => {
+          if (!host.isConnected) return
+          const mount = this.mount(host, definition)
+          this.testMounts.push(mount)
+          mount.activate()
+        })
+      },
+      deactivateTest: () => {
+        this.testMounts[this.testMounts.length - 1]?.deactivate()
+      },
     }
     Object.defineProperty(hook, 'frames', { get: () => this.framesRendered })
     window.__NB_PARTICLES__ = hook
@@ -162,7 +183,7 @@ class ParticleDirector {
       this.reduced = this.motionQuery.matches
       const mount = this.active()
       if (mount?.handle) mount.handle.setReducedMotion?.(this.reduced, mount.ctx)
-      this.staticDrawnFor = null
+      this.invalidate()
       this.sync()
     }
     this.motionQuery.addEventListener('change', this.onMotionChange)
@@ -178,21 +199,54 @@ class ParticleDirector {
     return this.activeId === null ? null : this.mounts.get(this.activeId) ?? null
   }
 
+  private qualityFor(level: QualityLevel): QualitySettings {
+    const base = QUALITY[level]
+    const ratio = this.rememberedRatio[level] ?? Math.min(base.pixelRatio, dprCap())
+    return { ...base, pixelRatio: ratio }
+  }
+
   private applyQuality(level: QualityLevel): void {
     this.level = level
-    const base = QUALITY[level]
-    const quality: QualitySettings = { ...base, pixelRatio: Math.min(base.pixelRatio, dprCap()) }
+    const quality = this.qualityFor(level)
+    this.rememberedRatio[level] = quality.pixelRatio
     const mount = this.active()
-    if (!mount || !this.renderer) {
-      // remembered for the next scene; its ctx is built with this tier
-      QUALITY[level].pixelRatio = quality.pixelRatio
-      return
-    }
+    if (!mount || !this.renderer) return
     mount.ctx.quality = quality
     this.renderer.setPixelRatio(quality.pixelRatio)
     this.resizeRenderer(mount)
     mount.handle?.setQuality?.(quality, mount.ctx)
-    if (this.reduced) this.drawStatic()
+    if (this.reduced) this.invalidate()
+  }
+
+  /** Clear the cached static frame and repaint it when motion is reduced. */
+  invalidate(): void {
+    this.staticDrawnFor = null
+    const mount = this.active()
+    if (this.reduced && mount?.wanted && mount.inView) this.drawStatic()
+  }
+
+  /** Count lit pixels from a fresh render. Measurement hook, never used in UI. */
+  private samplePixels(): number {
+    if (!this.active()?.handle || !this.renderer || !this.scene || !this.camera) return 0
+    this.renderer.render(this.scene, this.camera)
+    const gl = this.renderer.getContext()
+    const w = gl.drawingBufferWidth
+    const h = gl.drawingBufferHeight
+    const pixels = new Uint8Array(w * h * 4)
+    gl.readPixels(0, 0, w, h, gl.RGBA, gl.UNSIGNED_BYTE, pixels)
+    let lit = 0
+    for (let i = 0; i < pixels.length; i += 4) {
+      if (pixels[i] > 4 || pixels[i + 1] > 4 || pixels[i + 2] > 4 || pixels[i + 3] > 4) lit += 1
+    }
+    return lit
+  }
+
+  /** Dispose the outgoing scene's objects before another scene takes over. */
+  private releaseHandle(mount: Mount): void {
+    if (!mount.handle) return
+    mount.handle.dispose(mount.ctx)
+    mount.handle = null
+    this.scene?.clear()
   }
 
   private resizeRenderer(mount: Mount): void {
@@ -205,6 +259,7 @@ class ParticleDirector {
     this.camera.updateProjectionMatrix()
     this.renderer.setSize(w, h, false)
     mount.handle?.resize?.(w, h, mount.ctx)
+    if (this.reduced) this.invalidate()
   }
 
   private updatePalette(): void {
@@ -214,13 +269,12 @@ class ParticleDirector {
       mount.ctx.palette = this.palette
       mount.handle.setPalette?.(this.palette, mount.ctx)
     }
-    if (this.reduced) this.drawStatic()
+    this.invalidate()
   }
 
   private buildHandle(mount: Mount): void {
     if (mount.handle || !this.renderer || !this.scene || !this.camera) return
-    const base = QUALITY[this.level]
-    const quality: QualitySettings = { ...base, pixelRatio: Math.min(base.pixelRatio, dprCap()) }
+    const quality = this.qualityFor(this.level)
     const ctx: ParticleSceneContext = {
       renderer: this.renderer,
       scene: this.scene,
@@ -234,6 +288,9 @@ class ParticleDirector {
       reportCount: (count) => {
         if (this.active() === mount) this.count = count
       },
+      invalidate: () => {
+        if (this.active() === mount) this.invalidate()
+      },
     }
     mount.ctx = ctx
     mount.handle = mount.definition.create(ctx)
@@ -246,6 +303,8 @@ class ParticleDirector {
       cancelAnimationFrame(this.raf)
       this.raf = 0
     }
+    const previous = this.active()
+    if (previous) this.releaseHandle(previous)
     this.lowTime = 0
     this.highTime = 0
     this.activeId = id
@@ -345,8 +404,7 @@ class ParticleDirector {
 
   mount(container: HTMLElement, definition: ParticleSceneDefinition): ParticleMount {
     const id = this.nextId++
-    const base = QUALITY[this.level]
-    const quality: QualitySettings = { ...base, pixelRatio: Math.min(base.pixelRatio, dprCap()) }
+    const quality = this.qualityFor(this.level)
     const ctx: ParticleSceneContext = {
       renderer: null as unknown as THREE.WebGLRenderer,
       scene: null as unknown as THREE.Scene,
@@ -359,6 +417,9 @@ class ParticleDirector {
       height: 1,
       reportCount: (count) => {
         if (this.active() === record) this.count = count
+      },
+      invalidate: () => {
+        if (this.active() === record) this.invalidate()
       },
     }
     const record: Mount = {
@@ -422,7 +483,12 @@ class ParticleDirector {
       deactivate: () => {
         if (record.disposed) return
         record.wanted = false
-        if (this.activeId === id) this.setActive(null)
+        if (this.activeId === id) {
+          const next = [...this.mounts.values()].find(
+            (candidate) => candidate.id !== id && !candidate.disposed && candidate.wanted && candidate.inView,
+          )
+          this.setActive(next ? next.id : null)
+        }
       },
       dispose: () => {
         if (record.disposed) return
@@ -444,6 +510,8 @@ class ParticleDirector {
   private disposeGL(): void {
     if (this.raf) cancelAnimationFrame(this.raf)
     this.raf = 0
+    this.testMounts.forEach((mount) => mount.dispose())
+    this.testMounts = []
     for (const mount of this.mounts.values()) {
       mount.io?.disconnect()
       mount.ro?.disconnect()
