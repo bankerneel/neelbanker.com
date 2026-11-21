@@ -1,5 +1,7 @@
 import Link from 'next/link'
 import type { CSSProperties } from 'react'
+import './hero-systems.css'
+import { SubHero } from '@/components/hero-systems/sub-hero'
 import { getAllArticleMeta, getAllProjectMeta, getAllResourceMeta } from '@/lib/mdx'
 import { ServiceCard } from '@/components/service-card'
 import { ProjectCard } from '@/components/project-card'
@@ -65,6 +67,7 @@ export default function HomePage() {
     <>
       <FilmProgress />
       <HomeHero />
+      <SubHero />
 
       {/* ── Receipts — proof near the fold ─────────────────────────── */}
       <section aria-labelledby="receipts" className="page-wrap mt-20 sm:mt-24" data-sky-window>
