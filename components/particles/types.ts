@@ -46,6 +46,8 @@ export interface ParticleSceneContext {
 
 export interface ParticleSceneHandle {
   update(dt: number, elapsed: number, ctx: ParticleSceneContext): void
+  /** Snap geometry to the current targets for the single reduced-motion frame. */
+  staticFrame?(ctx: ParticleSceneContext): void
   resize?(w: number, h: number, ctx: ParticleSceneContext): void
   setQuality?(q: QualitySettings, ctx: ParticleSceneContext): void
   setReducedMotion?(reduced: boolean, ctx: ParticleSceneContext): void

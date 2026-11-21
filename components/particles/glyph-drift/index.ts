@@ -339,16 +339,21 @@ const definition: ParticleSceneDefinition = {
       return 1.4
     }
 
+    function snapToTargets(): void {
+      computeTargets()
+      if (count) {
+        posArr.set(target)
+        vel.fill(0)
+        positionAttr.needsUpdate = true
+      }
+    }
+
     function snapHome(): void {
       wordIndex = 0
       phase = 'hold'
       phaseTime = 0
       scatter = 0
-      computeTargets()
-      if (count) {
-        posArr.set(target)
-        positionAttr.needsUpdate = true
-      }
+      snapToTargets()
     }
 
     refreshViewport()
@@ -368,6 +373,14 @@ const definition: ParticleSceneDefinition = {
     })
 
     const handle: ParticleSceneHandle = {
+      staticFrame(c: ParticleSceneContext): void {
+        if (!reduced) return
+        // Keep the selected word (BANKER may already be chosen) but snap its
+        // points to the targets the resize just recomputed.
+        snapToTargets()
+        void c
+      },
+
       update(dt: number, elapsed: number, c: ParticleSceneContext): void {
         if (!geometry || !material) return
         if (reduced) {

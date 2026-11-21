@@ -44,6 +44,52 @@ test('the particle scene loads only near the viewport and respects reduced motio
   await page.evaluate(() => window.__NB_PARTICLES__?.deactivateTest?.())
   await expect.poll(() => page.evaluate(() => window.__NB_PARTICLES__?.getState?.().objects ?? 0)).toBe(1)
 
+  // A displaced mount stays wanted: when the active mount gives up the
+  // renderer it must be re-elected as soon as it scrolls back into view.
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }))
+  await expect.poll(() => page.evaluate(() => window.__NB_PARTICLES__?.getState?.().eligible ?? 0)).toBe(0)
+
+  await page.evaluate(() => {
+    const far = document.createElement('div')
+    far.id = 'nb-far-slot'
+    far.style.cssText = 'position:fixed;left:0;top:-1000px;width:240px;height:120px;pointer-events:none'
+    document.body.appendChild(far)
+    window.__NB_PARTICLES__?.mountTest?.('nb-far-slot')
+  })
+  await expect.poll(() => page.evaluate(() => window.__NB_PARTICLES__?.getState?.().mounts ?? 0)).toBe(3)
+
+  await page.evaluate(() => {
+    const near = document.createElement('div')
+    near.id = 'nb-near-slot'
+    near.style.cssText = 'position:fixed;left:0;top:120px;width:240px;height:120px;pointer-events:none'
+    document.body.appendChild(near)
+    window.__NB_PARTICLES__?.mountTest?.('nb-near-slot')
+  })
+  await expect.poll(() => page.evaluate(() => window.__NB_PARTICLES__?.getState?.().mounts ?? 0)).toBe(4)
+  await expect.poll(() => page.evaluate(() => window.__NB_PARTICLES__?.getState?.().eligible ?? 0)).toBe(1)
+  await expect.poll(() => page.evaluate(() => window.__NB_PARTICLES__?.getState?.().objects ?? 0)).toBe(1)
+
+  // The active mount deactivates while the displaced one is still offscreen.
+  await page.evaluate(() => window.__NB_PARTICLES__?.deactivateTest?.())
+  await expect.poll(() => page.evaluate(() => window.__NB_PARTICLES__?.getState?.().eligible ?? 0)).toBe(0)
+  await expect.poll(() => page.evaluate(() => window.__NB_PARTICLES__?.getState?.().objects ?? 0)).toBe(0)
+
+  // Bring the displaced mount back: the canvas moves to its container and the
+  // scene renders again without a reload.
+  await page.evaluate(() => {
+    document.getElementById('nb-far-slot')!.style.top = '120px'
+  })
+  await expect.poll(() => page.evaluate(() => window.__NB_PARTICLES__?.getState?.().eligible ?? 0)).toBe(1)
+  await expect.poll(() => page.evaluate(() => window.__NB_PARTICLES__?.getState?.().objects ?? 0)).toBe(1)
+  await expect
+    .poll(() => page.evaluate(() => document.querySelector('canvas.particle-canvas')?.parentElement?.id ?? ''))
+    .toBe('nb-far-slot')
+  const beforeRepaint = await page.evaluate(() => Number(window.__NB_PARTICLES__?.getState?.().frames ?? 0))
+  await expect
+    .poll(() => page.evaluate(() => window.__NB_PARTICLES__?.getState?.().frames ?? 0))
+    .toBeGreaterThan(beforeRepaint)
+  expect(await page.evaluate(() => window.__NB_PARTICLES__?.samplePixels?.() ?? 0)).toBeGreaterThan(0)
+
   // (c) reduced motion draws one NEEL frame, starts no loop, and repaints on theme flip
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await gotoHydrated(page, '/')
@@ -69,6 +115,16 @@ test('the particle scene loads only near the viewport and respects reduced motio
   await page.waitForTimeout(600)
   const settled = await page.evaluate(() => window.__NB_PARTICLES__?.getState?.() ?? null)
   expect(settled?.frames).toBe(afterTheme?.frames)
+
+  // A resize must repaint the still frame with geometry scaled to the new box.
+  const beforeResize = await page.evaluate(() => Number(window.__NB_PARTICLES__?.getState?.().frames ?? 0))
+  await page.setViewportSize({ width: 900, height: 720 })
+  await expect
+    .poll(() => page.evaluate(() => window.__NB_PARTICLES__?.getState?.().frames ?? 0))
+    .toBeGreaterThan(beforeResize)
+  const afterResize = await page.evaluate(() => window.__NB_PARTICLES__?.getState?.() ?? null)
+  expect(afterResize?.running).toBe(false)
+  expect(await page.evaluate(() => window.__NB_PARTICLES__?.samplePixels?.() ?? 0)).toBeGreaterThan(0)
 
   const moving = await page.evaluate(
     () => document.getAnimations().filter((animation) => animation.playState === 'running').length,

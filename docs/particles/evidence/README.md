@@ -74,6 +74,10 @@ re-sample also invalidates the cached frame.
 - `glyph-reduced-motion.png`: static NEEL frame
 - `glyph-cycle-banker.png`: the second word after about 7 seconds
 
+`glyph-cycle-banker.png` is unchanged from the previous commit (b737097), while the other five were regenerated
+there. The two follow-up runtime fixes cover mount re-election and the reduced-motion static frame; neither changes
+the animated NEEL to BANKER cycle this still captures, so it remains an accurate record of the final scene.
+
 ## Verification lines
 
 ```

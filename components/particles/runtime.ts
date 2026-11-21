@@ -128,6 +128,7 @@ class ParticleDirector {
           reduced: this.reduced,
           frames: this.framesRendered,
           mounts: this.mounts.size,
+          eligible: [...this.mounts.values()].filter((mount) => !mount.disposed && mount.wanted && mount.inView).length,
           objects: this.scene ? this.scene.children.length : 0,
           calls: this.renderer ? this.renderer.info.render.calls : 0,
           points: this.renderer ? this.renderer.info.render.points : 0,
@@ -197,6 +198,22 @@ class ParticleDirector {
 
   private active(): Mount | null {
     return this.activeId === null ? null : this.mounts.get(this.activeId) ?? null
+  }
+
+  /**
+   * Put one wanted, in-view mount in charge of the shared renderer. Ownership
+   * changes at three points: a mount gives it up, a wanted mount enters the
+   * view, and sync finds no active mount. A displaced mount that stays wanted
+   * is therefore re-elected when it scrolls back in.
+   */
+  private electActive(): Mount | null {
+    const current = this.active()
+    if (current && !current.disposed && current.wanted && current.inView) return current
+    const next = [...this.mounts.values()].find(
+      (candidate) => !candidate.disposed && candidate.wanted && candidate.inView,
+    )
+    this.setActive(next ? next.id : null)
+    return this.active()
   }
 
   private qualityFor(level: QualityLevel): QualitySettings {
@@ -327,6 +344,7 @@ class ParticleDirector {
     const mount = this.active()
     if (!mount?.handle || !this.renderer || !this.scene || !this.camera) return
     if (this.staticDrawnFor === mount.id) return
+    mount.handle.staticFrame?.(mount.ctx)
     mount.handle.update(0, 0, mount.ctx)
     this.renderer.render(this.scene, this.camera)
     this.framesRendered += 1
@@ -334,7 +352,11 @@ class ParticleDirector {
   }
 
   private sync(): void {
-    const mount = this.active()
+    let mount = this.active()
+    if (!mount) {
+      this.electActive()
+      mount = this.active()
+    }
     if (!mount || !this.renderer || !this.scene || !this.camera) {
       if (this.raf) cancelAnimationFrame(this.raf)
       this.raf = 0
@@ -440,7 +462,12 @@ class ParticleDirector {
     if ('IntersectionObserver' in window) {
       record.io = new IntersectionObserver(
         (entries) => {
-          for (const entry of entries) record.inView = entry.isIntersecting
+          let becameVisible = false
+          for (const entry of entries) {
+            if (entry.isIntersecting && !record.inView) becameVisible = true
+            record.inView = entry.isIntersecting
+          }
+          if (becameVisible && record.wanted) this.electActive()
           this.sync()
         },
         { rootMargin: '200px' },
@@ -483,12 +510,7 @@ class ParticleDirector {
       deactivate: () => {
         if (record.disposed) return
         record.wanted = false
-        if (this.activeId === id) {
-          const next = [...this.mounts.values()].find(
-            (candidate) => candidate.id !== id && !candidate.disposed && candidate.wanted && candidate.inView,
-          )
-          this.setActive(next ? next.id : null)
-        }
+        if (this.activeId === id) this.electActive()
       },
       dispose: () => {
         if (record.disposed) return
