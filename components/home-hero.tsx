@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { NewsletterForm } from '@/components/newsletter-form'
+import { HeroBurn } from '@/components/hero-systems/hero-burn'
 import { Scrap } from '@/components/bazaar/scrap'
 import { chipLink } from '@/components/bazaar/styles'
 import { cn } from '@/lib/utils'
@@ -31,6 +32,9 @@ export function HomeHero() {
   return (
     <>
       <section className="hero-stage page-wrap relative pt-8 sm:pt-12" aria-labelledby="hero-title" data-hero data-ambient data-sky-window>
+        {/* burning paper: behind the copy, above the sky. Empty under reduced motion. */}
+        <HeroBurn />
+
         {/* dream furniture — decorative only */}
         <div
           aria-hidden="true"
