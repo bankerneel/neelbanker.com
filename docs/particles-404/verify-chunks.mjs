@@ -4,11 +4,13 @@
 
 import fs from 'node:fs'
 import path from 'node:path'
+import zlib from 'node:zlib'
 
 const root = process.cwd()
 const nextDir = path.join(root, '.next')
 const outFile = path.join(root, 'docs', 'particles-404', 'chunk-scan.txt')
-const MARKERS = ['WebGLRenderer', 'BufferGeometry']
+const MARKERS = ['WebGLRenderer', 'BufferGeometry', 'ShaderMaterial']
+const SLOT_BUDGET = 2048
 
 function walk(dir, files = []) {
   if (!fs.existsSync(dir)) return files
@@ -34,43 +36,106 @@ function reads(file) {
 
 const chunks = walk(path.join(nextDir, 'static', 'chunks')).filter((f) => f.endsWith('.js'))
 const bodies = new Map(chunks.map((file) => [file, reads(file)]))
-const threeChunks = chunks.filter((file) => MARKERS.every((marker) => bodies.get(file).includes(marker)))
+const hasMarker = (file) => MARKERS.some((marker) => bodies.get(file).includes(marker))
+const threeChunks = chunks.filter(hasMarker)
 const slotChunks = chunks.filter((file) => bodies.get(file).includes('particle-slot'))
 const names = threeChunks.map((file) => path.basename(file))
 const slotNames = slotChunks.map((file) => path.basename(file))
 
-const routeFiles = walk(path.join(nextDir, 'server', 'app')).filter((f) => /\.(html|rsc)$/.test(f))
+// Every server artifact counts, not only html and rsc, so a chunk name that
+// leaks through a manifest or a data payload is still caught.
+const serverFiles = walk(path.join(nextDir, 'server'))
 const routeHits = []
-for (const file of routeFiles) {
-  const body = reads(file)
-  const hits = names.filter((name) => body.includes(name))
+for (const file of serverFiles) {
+  const hits = names.filter((name) => reads(file).includes(name))
   if (hits.length) routeHits.push({ file: relative(file), hits })
 }
 
-const slotRouteFiles = routeFiles.filter((file) => slotNames.some((name) => reads(file).includes(name)))
+// The homepage's initial chunk list. Next 16 with Turbopack has no root
+// app-build-manifest.json, so fall back to the per route build manifest plus
+// the script tags in the prerendered html, which are what the browser loads.
+let homepageChunks = []
+let homepageSource = ''
+const appManifest = path.join(nextDir, 'app-build-manifest.json')
+const routeManifest = path.join(nextDir, 'server', 'app', 'page', 'build-manifest.json')
+const homepageHtml = path.join(nextDir, 'server', 'app', 'index.html')
+if (fs.existsSync(appManifest)) {
+  const manifest = JSON.parse(reads(appManifest))
+  homepageChunks = manifest.pages?.['/']?.files ?? []
+  homepageSource = relative(appManifest)
+  if (homepageChunks.length === 0) {
+    const compact = manifest.pages?.['/'] ?? {}
+    homepageChunks = [...(compact.files ?? []), ...(compact.scripts ?? [])]
+  }
+} else if (fs.existsSync(routeManifest)) {
+  const manifest = JSON.parse(reads(routeManifest))
+  homepageChunks = [
+    ...(manifest.rootMainFiles ?? []),
+    ...(manifest.polyfillFiles ?? []),
+    ...(manifest.lowPriorityFiles ?? []),
+  ]
+  homepageSource = relative(routeManifest)
+}
+const htmlChunks = [...new Set(
+  [...reads(homepageHtml).matchAll(/(?:src|href)="\/_next\/static\/chunks\/([^"?]+\.js)/g)].map((m) => m[1]),
+)]
+if (htmlChunks.length) {
+  homepageChunks = [...new Set([...homepageChunks, ...htmlChunks])]
+  homepageSource += homepageSource ? ' + .next/server/app/index.html' : '.next/server/app/index.html'
+}
+const homepageBasenames = homepageChunks.map((chunk) => path.basename(chunk))
+const homepageThree = homepageBasenames.filter((name) => names.includes(name))
+const homepageMarkerHits = homepageBasenames.filter((name) => {
+  const file = chunks.find((chunk) => path.basename(chunk) === name)
+  return file ? hasMarker(file) : false
+})
+
+// Measured size of the slot loader. This is the whole homepage cost of the
+// scene, because three arrives later through the two dynamic imports.
+const slotFile = slotChunks[0]
+const slotRaw = slotFile ? fs.statSync(slotFile).size : 0
+const slotGzip = slotFile ? zlib.gzipSync(fs.readFileSync(slotFile)).length : 0
+const slotUnderBudget = slotRaw > 0 && slotRaw < SLOT_BUDGET
+
+const slotRouteFiles = serverFiles.filter((file) => slotNames.some((name) => reads(file).includes(name)))
 const notFoundReaches = slotRouteFiles.some((file) => relative(file).includes('_not-found'))
-const slotCarriesThree = slotChunks.some((file) => MARKERS.some((marker) => bodies.get(file).includes(marker)))
-const bad = routeHits.length > 0 || !notFoundReaches || slotCarriesThree || threeChunks.length === 0
+const slotCarriesThree = slotChunks.some(hasMarker)
+const bad =
+  routeHits.length > 0 ||
+  !notFoundReaches ||
+  slotCarriesThree ||
+  !slotUnderBudget ||
+  homepageThree.length > 0 ||
+  homepageMarkerHits.length > 0 ||
+  !homepageSource ||
+  threeChunks.length === 0
 const label = path.basename(threeChunks[0] ?? 'none')
 
 const lines = [
   'three.js production chunk scan',
   '==============================',
   '',
-  `Signature: ${MARKERS.join(' + ')}`,
+  `Signature, any marker: ${MARKERS.join(' | ')}`,
   `three chunks: ${threeChunks.length ? names.join(', ') : 'none found'}`,
   `three main chunk: ${label}`,
   `slot chunks: ${slotNames.length ? slotNames.join(', ') : 'none found'}`,
+  `slot loader measured: ${slotRaw} bytes raw, ${slotGzip} bytes gzip, budget ${SLOT_BUDGET} bytes raw`,
+  `slot loader under budget: ${slotUnderBudget}`,
   '',
-  'Route payloads referencing a three chunk:',
+  `Homepage chunk source: ${homepageSource || 'none found'}`,
+  `Homepage initial chunks: ${homepageChunks.length}`,
+  `Homepage three chunks: ${homepageThree.length ? homepageThree.join(', ') : 'none'}`,
+  `Homepage chunks carrying a three marker: ${homepageMarkerHits.length ? homepageMarkerHits.join(', ') : 'none'}`,
+  '',
+  'Server artifacts referencing a three chunk:',
   ...(routeHits.length ? routeHits.map(({ file, hits }) => `  ${file} -> ${hits.join(', ')}`) : ['  none']),
   '',
-  `Routes referencing the slot loader: ${slotRouteFiles.length} (Next.js ships the global not-found boundary to every route)`,
+  `Server artifacts referencing the slot loader: ${slotRouteFiles.length} (Next.js ships the global not-found boundary to every route)`,
   `Slot loader carries three code: ${slotCarriesThree}`,
   `404 route reaches the slot loader: ${notFoundReaches}`,
   `Result: ${bad ? 'FAIL' : 'PASS'}`,
   '',
-  'The slot loader is a 1 KB client component with two dynamic import calls.',
+  'The slot loader is a small client component with two dynamic import calls.',
   'three is fetched only when that component mounts on the 404 route.',
   '',
 ]

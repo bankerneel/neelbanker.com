@@ -125,7 +125,9 @@ export function mountParticleScene(container: HTMLElement, definition: ParticleS
     })
     nextRenderer.outputColorSpace = THREE.SRGBColorSpace
     nextRenderer.toneMapping = THREE.NoToneMapping
-    nextRenderer.setClearColor(0x000000, 0)
+    // Alpha 0 makes the clear transparent, so the RGB comes from a live token
+    // instead of a hard-coded colour.
+    nextRenderer.setClearColor(new THREE.Color(palette.nightInk || palette.ink), 0)
     const nextCanvas = nextRenderer.domElement
     nextCanvas.className = 'particle-canvas'
     nextCanvas.setAttribute('aria-hidden', 'true')

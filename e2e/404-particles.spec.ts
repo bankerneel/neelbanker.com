@@ -76,6 +76,10 @@ test('reduced motion paints one still 404 and starts no loop', async ({ page }) 
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await gotoHydrated(page, LOST)
   await expect(page.locator('canvas.particle-canvas')).toHaveCount(1, { timeout: 15000 })
+  // The async Archivo re-sample calls invalidate once after fonts settle.
+  await page.evaluate(async () => {
+    await document.fonts.ready
+  })
   await expect.poll(async () => (await state(page))?.word).toBe('404')
   const first = await state(page)
   await page.waitForTimeout(700)
@@ -83,7 +87,9 @@ test('reduced motion paints one still 404 and starts no loop', async ({ page }) 
   expect(first?.reduced).toBe(true)
   expect(first?.running).toBe(false)
   expect(second?.running).toBe(false)
-  expect(second?.frames).toBe(first?.frames)
+  // One extra still frame from the font re-sample is allowed; no loop is.
+  expect(second!.frames).toBeLessThanOrEqual(2)
+  expect(second!.frames - first!.frames).toBeLessThanOrEqual(1)
 })
 
 test('three.js is fetched on the 404 route and on no other route', async ({ page }) => {

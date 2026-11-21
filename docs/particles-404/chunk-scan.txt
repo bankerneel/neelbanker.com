@@ -1,18 +1,25 @@
 three.js production chunk scan
 ==============================
 
-Signature: WebGLRenderer + BufferGeometry
-three chunks: 0s9b0xj6c5ks8.js, 0y7g1a_ygfsn1.js
-three main chunk: 0s9b0xj6c5ks8.js
-slot chunks: 0d5w6c2cot0o_.js
+Signature, any marker: WebGLRenderer | BufferGeometry | ShaderMaterial
+three chunks: 0fmvlp-78q-bz.js, 0tzt68ffrt0fo.js, 0y7g1a_ygfsn1.js
+three main chunk: 0fmvlp-78q-bz.js
+slot chunks: 0-.fltm8n6uvy.js
+slot loader measured: 1062 bytes raw, 624 bytes gzip, budget 2048 bytes raw
+slot loader under budget: true
 
-Route payloads referencing a three chunk:
+Homepage chunk source: .next/server/app/page/build-manifest.json + .next/server/app/index.html
+Homepage initial chunks: 18
+Homepage three chunks: none
+Homepage chunks carrying a three marker: none
+
+Server artifacts referencing a three chunk:
   none
 
-Routes referencing the slot loader: 181 (Next.js ships the global not-found boundary to every route)
+Server artifacts referencing the slot loader: 211 (Next.js ships the global not-found boundary to every route)
 Slot loader carries three code: false
 404 route reaches the slot loader: true
 Result: PASS
 
-The slot loader is a 1 KB client component with two dynamic import calls.
+The slot loader is a small client component with two dynamic import calls.
 three is fetched only when that component mounts on the 404 route.

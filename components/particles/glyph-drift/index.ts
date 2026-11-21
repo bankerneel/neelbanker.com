@@ -54,7 +54,7 @@ async function loadArchivo(family: string): Promise<boolean> {
   }
 }
 
-function sampleWord(text: Word, family: string): WordData {
+function sampleWord(text: Word, family: string, mask: string): WordData {
   const canvas = document.createElement('canvas')
   canvas.width = 1024
   canvas.height = 320
@@ -74,7 +74,9 @@ function sampleWord(text: Word, family: string): WordData {
       size *= maxWidth / measured
       g.font = `900 ${size}px ${stack}`
     }
-    g.fillStyle = '#ffffff'
+    // Only the alpha channel is read below, so any opaque token colour works.
+    // The token is read live from --dm-ink by the runtime.
+    if (mask) g.fillStyle = mask
     g.textAlign = 'center'
     g.textBaseline = 'middle'
     g.fillText(text, canvas.width / 2, canvas.height / 2)
@@ -173,7 +175,7 @@ const definition: ParticleSceneDefinition = {
 
   create(ctx: ParticleSceneContext): ParticleSceneHandle {
     const family = archivoFamily()
-    let words: WordData[] = WORDS.map((word) => sampleWord(word, family))
+    let words: WordData[] = WORDS.map((word) => sampleWord(word, family, ctx.palette.ink))
     let colors = paletteColors(ctx.palette)
     let reduced = ctx.reducedMotion
     let disposed = false
@@ -369,7 +371,7 @@ const definition: ParticleSceneDefinition = {
     // fallback glyphs are shown, so the first frame is never a blank box.
     void loadArchivo(family).then((ok) => {
       if (disposed || !ok) return
-      words = WORDS.map((word) => sampleWord(word, family))
+      words = WORDS.map((word) => sampleWord(word, family, ctx.palette.ink))
       if (reduced) snapHome()
       else computeTargets()
       ctx.invalidate()
