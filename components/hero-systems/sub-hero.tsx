@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import {
   chainHead,
   clamp,
@@ -23,26 +23,19 @@ const ERA_LINKS = [
 ] as const
 
 /**
- * The pinned career map. Server-rendered heading and real links live in the
- * HTML; the canvas is decoration and is aria-hidden. One rAF reads scroll at
- * most once, from a passive listener, and all layout is measured only on
- * resize or theme change, never per frame.
+ * The pinned career map engine. The slot owns the server-rendered section,
+ * heading, links and canvas element; this module only enhances that DOM.
+ * One rAF reads scroll at most once, from a passive listener, and all layout
+ * is measured only on resize or theme change, never per frame.
  */
 export function SubHero() {
-  const wrapRef = useRef<HTMLElement>(null)
-  const stageRef = useRef<HTMLDivElement>(null)
-  const headRef = useRef<HTMLDivElement>(null)
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-  const chipRef = useRef<HTMLAnchorElement>(null)
-  const labelRef = useRef<HTMLDivElement>(null)
-
   useEffect(() => {
-    const wrap = wrapRef.current
-    const stage = stageRef.current
-    const head = headRef.current
-    const canvas = canvasRef.current
-    const chip = chipRef.current
-    const label = labelRef.current
+    const wrap = document.getElementById('sub')
+    const stage = document.getElementById('subStage')
+    const head = document.getElementById('subHead')
+    const canvas = document.querySelector<HTMLCanvasElement>('#sub .sub-canvas')
+    const chip = document.getElementById('eraLink') as HTMLAnchorElement | null
+    const label = document.getElementById('subLabel')
     if (!wrap || !stage || !head || !canvas) return
     const ctx = canvas.getContext('2d')
     if (!ctx) return
@@ -266,47 +259,5 @@ export function SubHero() {
     }
   }, [])
 
-  return (
-    <section id="sub" ref={wrapRef} className="sub-hero" data-sub-hero aria-labelledby="sub-heading">
-      <div id="subStage" ref={stageRef} className="sub-stage">
-        <canvas ref={canvasRef} className="sub-canvas" aria-hidden="true" />
-
-        <div className="page-wrap sub-pw">
-          <div id="subHead" ref={headRef} className="sub-head">
-            <span className="ticket tone-panel -rotate-1">Seven years, three eras</span>
-            <h2 id="sub-heading">
-              Blockchain <span className="text-dm-accent-ink">→</span> Web3 <span className="text-dm-accent-ink">→</span> AI agents
-            </h2>
-            <p>Scroll to walk through the work. Each era links to the real thing: a case study or a post.</p>
-            <span className="sub-hand hand">keep scrolling ↓</span>
-          </div>
-        </div>
-
-        <a
-          id="eraLink"
-          ref={chipRef}
-          className="sub-era-link cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-dm-panel"
-          href={ERA_LINKS[0].href}
-          data-visible="false"
-        >
-          <b>{ERA_LINKS[0].k}</b> {ERA_LINKS[0].chip} →
-        </a>
-
-        <div id="subLabel" ref={labelRef} className="sub-label" aria-hidden="true" />
-
-        <ul className="sub-sr-links" aria-label="All three eras">
-          {ERA_LINKS.map((link) => (
-            <li key={link.href}>
-              <a
-                href={link.href}
-                className="cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-dm-panel"
-              >
-                <b>{link.k}</b> {link.t} →
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </section>
-  )
+  return null
 }

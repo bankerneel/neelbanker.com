@@ -100,8 +100,10 @@ test('reduced motion drops the pin and lists all three links in the open', async
     await expect(link).toBeVisible()
     expect((await link.boundingBox())?.width).toBeGreaterThan(0)
   }
-  // The canvas still holds a single, still web3 frame.
-  await expect(page.locator('.sub-label')).toContainText(/web3/i)
+  // The canvas still holds a single, still web3 frame once it mounts on
+  // intersection, without a pin or any animation.
+  await page.locator('[data-sub-hero]').scrollIntoViewIfNeeded()
+  await expect(page.locator('.sub-label')).toContainText(/web3/i, { timeout: 10_000 })
 })
 
 test('a real scroll leaves the film progress and the hero pull-back intact', async ({ page }) => {
