@@ -1,16 +1,15 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, type RefObject } from 'react'
 
 /**
  * Burning paper behind the hero copy. Port of the approved lab engine in
  * design/hero-systems/final.html (makeBurn, the hero's pointer handling and
  * its frame loop), adapted to the live --dm-* palette.
  *
- * The host always reserves the hero-sized box, but the canvas is mounted only
- * after the opening hook (~1.2 s) and only when motion is allowed, so the hero
- * paragraph stays the LCP element and nothing competes with the CSS hook.
- * Under reduced motion the reserved box is deliberately left empty.
+ * Loaded on demand by hero-burn-slot.tsx once the opening hook is over, so the
+ * engine never enters the homepage initial bundle. The host is an absolute,
+ * aria-hidden overlay provided by the slot and carries the test hooks.
  */
 
 type Tone = 'panel' | 'butter' | 'rose' | 'sky' | 'lilac'
@@ -49,7 +48,6 @@ type BurnContext = {
   pointer: Pointer
 }
 
-const HOOK_MS = 1200
 const FRAME_BUDGET_MS = 20
 const TONES: Tone[] = ['panel', 'panel', 'butter', 'rose', 'sky', 'lilac']
 const TAU = Math.PI * 2
@@ -244,33 +242,10 @@ function makeBurn(maxN: number, every: number, size: number, ctx: BurnContext) {
   }
 }
 
-export function HeroBurn() {
-  const hostRef = useRef<HTMLDivElement>(null)
+export function HeroBurn({ hostRef }: { hostRef: RefObject<HTMLDivElement | null> }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const motionRef = useRef<MediaQueryList | null>(null)
-  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    const motion = (motionRef.current = matchMedia('(prefers-reduced-motion: reduce)'))
-    if (motion.matches) return
-    let timer = 0
-    // The OS can switch to reduce during the hook delay, before the engine
-    // exists. Keep the box empty in that case too.
-    const onChange = (e: MediaQueryListEvent) => {
-      if (!e.matches) return
-      window.clearTimeout(timer)
-      setMounted(false)
-    }
-    motion.addEventListener('change', onChange)
-    timer = window.setTimeout(() => setMounted(true), HOOK_MS)
-    return () => {
-      window.clearTimeout(timer)
-      motion.removeEventListener('change', onChange)
-    }
-  }, [])
-
-  useEffect(() => {
-    if (!mounted) return
     const host = hostRef.current
     const canvas = canvasRef.current
     if (!host || !canvas) return
@@ -358,11 +333,10 @@ export function HeroBurn() {
       if (document.hidden) stop()
       else start()
     }
-    const motion = motionRef.current ?? matchMedia('(prefers-reduced-motion: reduce)')
+    const motion = matchMedia('(prefers-reduced-motion: reduce)')
     const onMotionChange = (e: MediaQueryListEvent) => {
       if (!e.matches) return
       stop()
-      setMounted(false)
     }
 
     section.addEventListener('pointermove', onMove, { passive: true })
@@ -415,11 +389,7 @@ export function HeroBurn() {
       c.setTransform(1, 0, 0, 1, 0, 0)
       c.clearRect(0, 0, canvas.width, canvas.height)
     }
-  }, [mounted])
+  }, [hostRef])
 
-  return (
-    <div ref={hostRef} aria-hidden="true" className="hero-burn-layer" data-hero-burn>
-      {mounted && <canvas ref={canvasRef} aria-hidden="true" className="hero-burn-canvas" data-hero-burn-canvas />}
-    </div>
-  )
+  return <canvas ref={canvasRef} aria-hidden="true" className="hero-burn-canvas" data-hero-burn-canvas />
 }
