@@ -244,20 +244,23 @@ Three new scenes sit on top of the film. All three keep the Dream Bazaar rules: 
 `--dm-*` tokens, there is no CDN and no external font, and decorative layers are `aria-hidden` while the
 real content stays in the HTML.
 
-- **Burning paper** (`components/hero-systems/hero-burn.tsx`): a canvas behind the hero copy.
-  `.hero-burn-layer` reserves the full hero box at z-0, so layout never shifts. The canvas mounts only after
-  the ~1.2 s CSS hook and only when motion is allowed, which keeps the hero paragraph as LCP. It reads
-  `--dm-ember` and `--dm-glow` (new tokens with light and dark values) plus the existing `--dm-*` fills.
-  It pauses off screen and when the document is hidden, and trims its scrap count after sustained slow
-  frames. Reduced motion leaves the reserved box empty. Never raise it above the copy or start it before
-  the hook.
-- **Pinned sub hero** (`components/hero-systems/sub-hero.tsx`, `engine.ts`, `app/hero-systems.css`): a 340vh
-  section that pins its stage at the nav height and walks blockchain, web3 and AI agents as the visitor
-  scrolls. Eras hold from 0-20, 40-60 and 80-100 percent and morph between. The era chip and the readout
-  track live scroll progress, and the chip is a real link. All three links stay in `.sub-sr-links` for
-  keyboards and assistive tech. One rAF reads scroll and layout is measured only on resize or theme change.
-  Reduced motion drops the pin, hides the chip and readout, shows all three links and paints one still web3
-  frame. The blockchain readout may read the Ethereum head from the browser once every 12 s with a 3 s
+- **Burning paper** (`components/hero-systems/hero-burn-slot.tsx`, `hero-burn.tsx`): a tiny client slot keeps
+  an absolute, aria-hidden overlay at z-0, so layout never shifts. The engine is a dynamic import that loads
+  only after the ~1.2 s CSS hook and once the hero is near the viewport, and it is absent from the homepage
+  initial chunk list. This keeps the hero paragraph as LCP. It reads `--dm-ember` and `--dm-glow` (new tokens
+  with light and dark values) plus the existing `--dm-*` fills. It pauses off screen, on hidden documents and
+  on a runtime reduced-motion change, and trims its scrap count after sustained slow frames. Reduced motion
+  leaves the reserved box empty. Never raise it above the copy or start it before the hook.
+- **Pinned sub hero** (`components/hero-systems/sub-hero-slot.tsx`, `sub-hero-gate.tsx`, `sub-hero.tsx`,
+  `engine.ts`, `app/hero-systems.css`): a server-rendered 340vh slot owns the heading, canvas, readout, chip
+  and all three real links, so none of that markup or data is duplicated in a client bundle. A tiny gate
+  dynamic imports the engine once the reserved box is within 300px of the viewport, and the engine is absent
+  from the homepage initial chunk list. The stage pins at the nav height and walks blockchain, web3 and AI
+  agents as the visitor scrolls. Eras hold from 0-20, 40-60 and 80-100 percent and morph between. The era chip
+  and readout track live scroll progress, and the chip is a real link. All three links stay in `.sub-sr-links`
+  for keyboards and assistive tech. One rAF reads scroll and layout is measured only on resize or theme
+  change. Reduced motion drops the pin, hides the chip and readout, shows all three links and paints one still
+  web3 frame. The blockchain readout may read the Ethereum head from the browser once every 12 s with a 3 s
   timeout, and stays labelled simulated on failure. Never call that RPC from a shell.
 - **Glyph Drift on the 404 only** (`components/particles/slot.tsx`, `components/particles/glyph-drift/`,
   `app/particles-404.css`): a reserved dark slot above the destination links. three.js and the scene are
@@ -265,25 +268,27 @@ real content stays in the HTML.
   initial bundle. The slot is `aria-hidden`, cycles the words 404 and LOST, and reduced motion paints one
   still frame with no loop. Ember Field and the rejected Particle Lab homepage placement are not shipped.
 
-Measured 2026-11-22 from production builds of `origin/dev` (32e68dd) and the PR 21 head (eee2a99), Edge on
-this shared host, CPU 4x on both widths and slow 4G on the phone run, median of 3 runs. TBT here is the
-long-task time over 50 ms in the five seconds after FCP, not a Lighthouse TTI run, so absolute values sit
-above the historic 86 ms figure. Use the before and after delta as the signal.
+Measured 2026-11-22 from clean production builds of `origin/dev` (32e68dd) and the PR 21 head (1f5feb7), Edge
+on this shared host, CPU 4x on both widths and slow 4G on the phone run. Each value is the median of 5 runs with
+BEFORE and AFTER interleaved and their order alternated, which removes the time drift seen in a first pass on
+a busier host. TBT here is the long-task time over 50 ms in the five seconds after FCP, not a Lighthouse TTI
+run, so absolute values sit above the historic 86 ms figure. Use the before and after delta as the signal.
 
 | | BEFORE desktop | AFTER desktop | BEFORE phone | AFTER phone |
 |---|---|---|---|---|
-| LCP | 1468 ms | 1452 ms | 2900 ms | 2940 ms |
-| TBT estimate | 357 ms | 725 ms | 349 ms | 526 ms |
+| LCP | 1952 ms | 1752 ms | 3012 ms | 3096 ms |
+| TBT estimate | 677 ms | 680 ms | 349 ms | 379 ms |
 | CLS | 0 | 0 | 0 | 0 |
-| Host cadence, hero, median / p95 | 16.7 / 16.9 ms | 16.7 / 16.9 ms | 16.7 / 16.8 ms | 16.7 / 16.9 ms |
+| Host cadence, hero, median / p95 | 16.7 / 16.9 ms | 16.7 / 17.0 ms | 16.7 / 16.9 ms | 16.7 / 16.9 ms |
 | Host cadence, sub hero, median / p95 | none | 16.7 / 16.9 ms | none | 16.7 / 16.9 ms |
 
-Initial JS gzip from the built HTML: `/` goes from 200.1 KB to 209.3 KB, the 404 from 197.8 KB to 198.4 KB,
-where the 404 delta is the ~624 B slot loader and three.js stays out of every initial bundle. LCP and CLS
-hold and host frame cadence shows no regression. TBT rises on both widths and misses the recorded "TBT
-unchanged" budget; that regression is stated here and needs triage rather than a relaxed budget. Host frame
-cadence comes from rAF intervals, not GPU FPS. WebGL and canvas draws are async and there is no timer query,
-so no GPU frame time is claimed.
+Initial JS gzip from the built HTML: `/` goes from 200.1 KB to 202.3 KB, the 404 from 197.8 KB to 198.5 KB.
+The 404 delta is the ~624 B slot loader; three.js and both homepage engines stay out of every initial chunk
+list. Against the previous integration head the homepage fell by about 7.0 KB gzip, close to the reported
+851 B for the burn engine and 5.6 KiB for the sub hero engine. LCP, CLS and host frame cadence show no
+regression. TBT is within noise on both widths: +3 ms desktop and +30 ms phone, smaller than the spread of
+the repeated runs. No acceptance budget is relaxed. Host frame cadence comes from rAF intervals, not GPU FPS.
+WebGL and canvas draws are async and there is no timer query, so no GPU frame time is claimed.
 
 ### Homepage
 
@@ -292,8 +297,8 @@ so no GPU frame time is claimed.
   as a tilted "ticker tape" marquee (the marquee is a kept user preference; it stops under reduced motion).
 - It is a static server component. Its entrance is CSS only (see Motion); the hero paragraph is the LCP element,
   so it may move but must never start invisible.
-- It also carries the burning paper canvas behind the copy and the pinned three era map before the marquee.
-  Both are described in Motion above.
+- It also carries the burning paper slot behind the copy and the pinned three era slot before the marquee.
+  Both engines load on demand and are described in Motion above.
 - The old dark hero, its lazy desktop constellation and `hero-logos` were removed in the redesign.
 - Favicon source is `public/favicon.svg`; do not reintroduce `app/favicon.ico`.
 - OG images (`app/opengraph-image.tsx`, `app/writing/[slug]/opengraph-image.tsx`) share `lib/og.tsx`: the light

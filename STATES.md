@@ -17,21 +17,26 @@ Core routes now feel substantially more consistent, lighter, and more editorial 
 
 - **Folded Scrap brand refresh (2026-11-20):** A hand-cut N on butter paper now appears in the favicon, app icons, nav, footer, and both social cards. The [brand evidence](design/brand-refresh/README.md) includes the 16 px colour comparison and both site themes.
 
-- **Homepage hero systems and 404 Glyph Drift (2026-11-22, PR 21 into `dev`, head `eee2a99`):**
-  - Burning paper (`components/hero-systems/hero-burn.tsx`) sits behind the hero copy. The reserved box never
-    shifts layout, the canvas mounts after the ~1.2 s hook, and reduced motion leaves it empty. It reads the
-    new `--dm-ember` and `--dm-glow` tokens plus the existing palette.
-  - A pinned three era career map (`sub-hero.tsx`, `engine.ts`, `app/hero-systems.css`) sits between the hero
-    and the tech marquee. Scroll walks blockchain, web3 and AI agents. The era chip is a real link, all three
-    links stay in the HTML, and reduced motion drops the pin for a still frame and open links.
+- **Homepage hero systems and 404 Glyph Drift (2026-11-22, PR 21 into `dev`, head `1f5feb7`):**
+  - Burning paper loads through a tiny client slot at `components/hero-systems/hero-burn-slot.tsx`. The engine
+    is a dynamic import gated by the ~1.2 s hook and intersection, so it never enters the homepage initial
+    chunk list. The absolute overlay never shifts layout, and reduced motion leaves it empty. It reads the new
+    `--dm-ember` and `--dm-glow` tokens plus the existing palette.
+  - The pinned three era career map uses a server-rendered slot (`sub-hero-slot.tsx`) and a small gate
+    (`sub-hero-gate.tsx`) that dynamic imports `sub-hero.tsx` and `engine.ts` on intersection. The engine is
+    absent from the homepage initial chunk list. Scroll walks blockchain, web3 and AI agents. The era chip is
+    a real link, all three links stay in the HTML, and reduced motion drops the pin for a still frame and
+    open links.
   - Glyph Drift (`components/particles/slot.tsx`, `glyph-drift/`, `app/particles-404.css`) lives only on the
     404. three.js is dynamic imported after the reserved slot intersects, never in an initial bundle.
-  - Evidence: 20 screenshots in `design/hero-systems/shots/`, before and after production metrics, and
-    76 e2e plus 9 unit tests passing. Screenshots cover both viewports in both themes and all three eras.
-  - TBT rose from 357 to 725 ms on desktop and from 349 to 526 ms on the phone run, from 3 run medians with
-    CPU 4x and slow 4G on phone. LCP stayed within noise, CLS stayed at 0 and host frame cadence held at a
-    16.7 ms median. The TBT regression is open for triage. Ember Field and the rejected Particle Lab homepage
-    placement are not shipped.
+  - Evidence: 20 screenshots in `design/hero-systems/shots/` were rechecked against the lazy slots and kept,
+    since only animation phase differs. Before and after production metrics use 5 interleaved runs. 76 e2e
+    plus 9 unit tests pass.
+  - Interleaved medians (CPU 4x, slow 4G on phone): LCP 1952 to 1752 ms desktop and 3012 to 3096 ms phone,
+    TBT 677 to 680 ms desktop and 349 to 379 ms phone, CLS 0, host frame cadence flat at a 16.7 ms median.
+    Initial JS gzip on `/` fell from 209.3 KB at the previous integration head to 202.3 KB, and the 404 is
+    198.5 KB. TBT is within noise on both widths, so the earlier regression is resolved without relaxing any
+    budget. Ember Field and the rejected Particle Lab homepage placement are not shipped.
 
 - **Bands + the homepage film (2026-09-27, local branch `feat/motion-film`, not pushed):**
   - Section breaks: full-bleed bands with torn / perforated / zig-zag / scalloped edges on `/`, `/about`, `/projects`, `/work-with-me`.
@@ -136,12 +141,12 @@ Core routes now feel substantially more consistent, lighter, and more editorial 
 ## Current Homepage State
 
 - Hero is the Dream Bazaar wall (`components/home-hero.tsx`): "Building / *what's* / Next.", copy scrap, stat polaroids, subscribe strip, ticker-tape marquee. Static server component, no entrance animation.
-- It now also carries the burning paper canvas behind the copy and the pinned three era map before the marquee. Opening motion stays CSS only and the canvas arrives after the hook.
+- It now also carries a lazy burning paper slot behind the copy and a server-rendered pinned three era slot before the marquee. Opening motion stays CSS only and both engines arrive after their gates open.
 
 ## Needs Review
 
-- PR 21 (hero systems, open into `dev`): triage the TBT rise of +368 ms desktop and +177 ms phone before merge.
-  LCP, CLS and host frame cadence are unchanged. Do not relax the recorded budgets.
+- PR 21 (hero systems, open into `dev`): the TBT rise is no longer present at the new head (1f5feb7), with
+  +3 ms desktop and +30 ms phone on 5 interleaved medians, both within run spread. No budget was relaxed.
 - The two new AI-pillar articles cover the T3 Code kitchen brigade and Why I Built Who Ate My Tokens. Both publish on merge to `main`.
 - The articles introduce optional static WebP covers at the top of the reading area. Older articles continue to render without covers.
 - `skale-appchains` draft is an outline of questions for Neel; it stays in gitignored `content/drafts/`.
