@@ -9,6 +9,7 @@ import { MotionStage } from '@/components/motion/motion-stage'
 import { FilmProgress, Scribbled } from '@/components/motion/scribbled'
 import { Scrap } from '@/components/bazaar/scrap'
 import { Band } from '@/components/bazaar/band'
+import { ParticleSlot } from '@/components/particles/slot'
 import { chipLink, focusRing, pick, tilts } from '@/components/bazaar/styles'
 import { cn } from '@/lib/utils'
 
@@ -90,6 +91,7 @@ export default function HomePage() {
       {spotlight && (
         <Band tone="night" edge="torn" pattern="stars" spotlight className="mt-24 sm:mt-28">
         <div aria-hidden="true" className="band-dusk" />
+        <ParticleSlot scene="glyph-drift" className="mx-auto max-w-[1400px]" />
         <section aria-labelledby="selected-work" className="page-wrap py-24 sm:py-28">
             <div data-sd className="sd-moonrise surreal-arch arch-halo tone-lilac px-4 pb-12 pt-24 min-[360px]:px-7 sm:px-12 sm:pt-20">
               <p className="text-center text-[11px] font-bold uppercase tracking-[0.24em]">Selected work ✦</p>

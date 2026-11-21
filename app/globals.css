@@ -610,6 +610,23 @@
   }
 }
 
+/* Particle scene slot. The box is reserved in server HTML so CLS stays 0.
+   Vertical scrolling stays with the page; only the pointer moves particles. */
+.particle-slot {
+  position: relative;
+  width: 100%;
+  height: clamp(200px, 30vw, 420px);
+  overflow: hidden;
+  touch-action: pan-y;
+}
+.particle-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 /* ── Print: isolate the resume document sheet ─────────────────────── */
 @media print {
   @page {
