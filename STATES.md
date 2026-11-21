@@ -40,7 +40,8 @@ Core routes now feel substantially more consistent, lighter, and more editorial 
   - WebGL2, extension probes and a 4x4 framebuffer preflight gate the GPU path. Any failure, context loss,
     reduced motion or Save-Data leaves an on-theme static still or a settled single frame. The footer slot is
     gated by `usePathname()`, so every other route keeps today's footer DOM.
-  - Measured all three tiers at 58 to 60 FPS on 1440 and 390 with CPU 4x and slow 4G. Initial JS is 168 KB
+  - Measured all three tiers at 58 to 60 host frames per second, on 1440 at CPU 1 and on 390 at CPU 4, both with
+    slow 4G. This is host rAF cadence, not GPU time. Initial JS is 168 KB
     gzip per route, unchanged from PR 19, and `WebGLRenderer` appears only in dynamic chunks. CLS is 0 on home
     and inner pages; the article CLS 0.07 in this harness is present before and after. No console errors.
     Screenshots, raw metrics and both measurement scripts are in `docs/particles/evidence/`. The PR body

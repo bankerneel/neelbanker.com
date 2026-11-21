@@ -57,8 +57,8 @@
 - Warm dev measurements (1440px and 390px, CPU 4x, slow 4G) showed CLS 0, no console errors and LCP/TBT within
   noise. The measured initial JS delta is zero but is not independently auditable because the before manifests
   are gitignored, so the docs state it as a measurement and point at the committed after-state chunk audit.
-  Counts are 26000 desktop and 10000 phone at high, with an 8000 phone floor. Ember Field will register through
-  the same director later.
+  Counts are 26000 desktop and 10000 phone at high, with an 8000 phone floor. Ember Field registers through the
+  same director in PR 20. Ember counts are 57600 high, 36864 medium and 12544 low.
 - Reduced motion static frames need explicit invalidation on theme flip, resize and late font re-sample. The
   director exposes `ctx.invalidate()` for that purpose.
 
