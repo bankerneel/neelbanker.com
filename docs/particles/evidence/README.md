@@ -117,11 +117,17 @@ slow 4G, warm route, 6 second observation. Raw files are `before-*.json` and `pr
 | /about mobile | 2436 ms | 2376 ms | 971 ms | 969 ms | 0 | 0 |
 | article mobile | 2368 ms | 2440 ms | 913 ms | 923 ms | 0 (see note) | 0.07 (see note) |
 
-The mobile homepage LCP variance is dev server noise: TBT includes tasks before FCP in this harness, and the
-after run had no long task after FCP. The article CLS is not caused by Ember. Three repeated runs of the same
-article route measured 0.07 on this branch and 0.07 on the clean base, while the first single pass on both
-measured 0; the repeat files `proof-mobile-article-repeat*.json` and `before-mobile-article-repeat*.json`
-record that. The article has no Ember slot, and the slot emits no DOM on any non-homepage route.
+The dev route comparison is inconclusive, not an improvement. `proof-mobile-home.json` records a long task at
+t=5025.7 ms with duration 895 ms and FCP at 3248 ms. That task is just outside the harness 5000 ms TBT window,
+while the before run's 876 ms task at t=4972.9 ms landed inside it with FCP at 3140 ms. Both runs have a roughly
+900 ms long task after FCP, so the lower after TBT is a window boundary artifact, not evidence of a regression
+fixed or a performance gain. The LCP difference of 108 ms is within dev server noise. A quiet production pass
+is planned separately after this PR is clean.
+
+The article CLS is not caused by Ember. Three repeated runs of the same article route measured 0.07 on this
+branch and 0.07 on the clean base, while the first single pass on both measured 0; the repeat files
+`proof-mobile-article-repeat*.json` and `before-mobile-article-repeat*.json` record that. The article has no
+Ember slot, and the slot emits no DOM on any non-homepage route.
 
 ## Initial JS and chunk split
 
@@ -133,24 +139,33 @@ record that. The article has no Ember slot, and the slot emits no DOM on any non
 | /about | 168 KB | 168 KB |
 | article | 168 KB | 168 KB |
 
-Zero gain. `WebGLRenderer` appears only in two dynamic chunks and in none of the six files listed by any
-route's initial manifest.
+Zero gain. The audit also scans the contents of every emitted client chunk for the literal `WebGLRenderer`.
+The committed output records the two matching dynamic chunks and an empty `initialChunksWithWebGLRenderer`
+list, so no route's initial manifest includes the renderer.
 
-## Scene counts, DPR and FPS
+## Scene counts, DPR and host frame cadence
 
 `node docs/particles/evidence/measure-ember.mjs` produced `metrics-ember.json`. Tiers were pinned through the
-existing debug hook after scrolling the footer slot into view. Phone runs used CPU 4x and slow 4G.
+existing debug hook after scrolling the footer slot into view. Phone runs used CPU 4x and desktop runs CPU 1,
+both with slow 4G.
 
-| Viewport | Tier | Points | DPR cap | FPS | Console errors |
+The cadence value comes from `window.__NB_PARTICLES__.getState().frames`, which the shared runtime increments
+once per host requestAnimationFrame render while the simulation shader runs. WebGL work is asynchronous, so
+this is a host frame cadence figure, not a GPU timer query and not a measurement of shader execution time.
+It is labelled `hostFrameCadence` in the JSON.
+
+| Viewport | Tier | Points | DPR cap | Host frame cadence per second | Console errors |
 |---|---|---:|---:|---:|---:|
-| 1440 desktop | high | 57600 | 2 | 59.74 | 0 |
-| 1440 desktop | medium | 36864 | 1.25 | 59.97 | 0 |
-| 1440 desktop | low | 12544 | 1 | 60.05 | 0 |
-| 390 phone | high | 57600 | 1.5 | 59.95 | 0 |
-| 390 phone | medium | 36864 | 1.25 | 60.05 | 0 |
-| 390 phone | low | 12544 | 1 | 58.65 | 0 |
+| 1440 desktop | high | 57600 | 2 | 60.11 | 0 |
+| 1440 desktop | medium | 36864 | 1.25 | 59.91 | 0 |
+| 1440 desktop | low | 12544 | 1 | 59.78 | 0 |
+| 390 phone | high | 57600 | 1.5 | 59.97 | 0 |
+| 390 phone | medium | 36864 | 1.25 | 60.07 | 0 |
+| 390 phone | low | 12544 | 1 | 59.97 | 0 |
 
-The phone budget is met at the auto selected high tier, so no reduction or fallback was needed.
+The host keeps its cadence at the auto selected high tier, so no reduction or fallback was needed. Because
+this is a host cadence measurement with no GPU timing, the claim is limited to the host keeping a steady
+cadence while Ember runs.
 
 ## Still and fallback
 
@@ -160,6 +175,9 @@ exactly one more frame. Save-Data follows the same path through the director. Wi
 console error. A synthetic `webglcontextlost` on the live canvas switches to the same still.
 
 ## Ember screenshots
+
+These are element crops of the footer end card, not full viewport screenshots. The desktop crops are about
+1400 by 559 pixels taken from a 1440 wide viewport; the phone crops are the full 390 width of the end card.
 
 - `ember-desktop-light.png`: 1440px footer end card, light theme
 - `ember-desktop-dark.png`: 1440px footer end card, dark theme
@@ -177,10 +195,12 @@ npm.cmd test
   Test Files  2 passed (2)
        Tests  9 passed (9)
 npm.cmd run build       exit=0
-  ✓ Compiled successfully in 6.4s
-    Finished TypeScript in 10.1s ...
+  ✓ Compiled successfully in 6.0s
+    Finished TypeScript in 9.8s ...
 npm.cmd run test:e2e
-  62 passed (1.4m)
+  62 passed (1.3m)
 node node_modules/@playwright/test/cli.js test e2e/particles.spec.ts --workers=1
   2 passed (18.9s)
 ```
+
+`e2e-pinned.log` is the full suite output captured from this head and records 62 passed.

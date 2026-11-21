@@ -1,6 +1,11 @@
-// Ember Field FPS, count and DPR evidence. Run from the repo root against a
-// dev server bound to 127.0.0.1:3000. Uses the installed Edge via msedge.
+// Ember Field host frame cadence, count and DPR evidence. Run from the repo
+// root against a dev server bound to 127.0.0.1:3000. Uses Edge via msedge.
 //   node docs/particles/evidence/measure-ember.mjs
+// The cadence value is derived from the host requestAnimationFrame counter in
+// window.__NB_PARTICLES__.getState().frames, which increments once per host
+// render while the simulation shader runs. WebGL work is asynchronous, so this
+// is not a GPU timer query and not a measurement of shader execution time.
+// Phone runs use CPU 4x, desktop runs use CPU 1, both with slow 4G.
 // No em dashes, no en dashes, no network access beyond the local server.
 
 import { chromium } from '@playwright/test'
@@ -60,7 +65,7 @@ async function measure(browser, viewport) {
     const after = await page.evaluate(() => Number(window.__NB_PARTICLES__?.getState?.().frames ?? 0))
     const state = await page.evaluate(() => window.__NB_PARTICLES__?.getState?.() ?? {})
     tiers[level] = {
-      fps: round(((after - before) * 1000) / (Date.now() - started)),
+      hostFrameCadence: round(((after - before) * 1000) / (Date.now() - started)),
       count: state.count,
       pixelRatio: state.pixelRatio,
       scene: state.scene,
@@ -73,7 +78,13 @@ async function measure(browser, viewport) {
 }
 
 const browser = await chromium.launch({ channel: 'msedge' })
-const result = { capturedAt: new Date().toISOString(), base: BASE, viewports: {} }
+const result = {
+  capturedAt: new Date().toISOString(),
+  base: BASE,
+  metric: 'host requestAnimationFrame cadence, not GPU time',
+  limitation: 'WebGL work is asynchronous, so the counter does not time shader execution',
+  viewports: {},
+}
 try {
   for (const viewport of VIEWPORTS) result.viewports[viewport.name] = await measure(browser, viewport)
   fs.mkdirSync(OUT, { recursive: true })

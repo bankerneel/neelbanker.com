@@ -293,10 +293,14 @@ silently dropped by Turbopack in dev):
   stay above it, pointer repulsion is passive and desktop fine-pointer only, and the layer has `touch-action: pan-y`.
 - The renderer restores the shared camera on dispose, so Glyph Drift is unaffected by the handover. The third
   test-only debug hook `disposeTest()` removes all test mounts deterministically.
-- Measured 2026-11-21, 1440 and 390 with CPU 4x and slow 4G: all three tiers at 58 to 60 FPS, CLS 0 on home
-  and inner pages, initial JS 168 KB gzip on /, /about and an article (zero gain), no console errors. The
-  article CLS of 0.07 in this harness is present before and after and is not caused by Ember. See
-  `docs/particles/evidence/`.
+- Measured 2026-11-21, desktop 1440 at CPU 1 and phone 390 at CPU 4, both with slow 4G: host frame cadence
+  of about 60 per second at all three tiers. This comes from the runtime's requestAnimationFrame counter and
+  is not a GPU timer query. WebGL work is asynchronous, so shader execution time is not measured. CLS is 0
+  on home and inner pages, initial JS is 168 KB gzip on /, /about and an article (zero gain), no console
+  errors. The article CLS of 0.07 in this harness is present before and after and is not caused by Ember.
+  The dev route comparison is inconclusive, not an improvement: a roughly 900 ms long task after FCP lands
+  on both sides of the harness 5000 ms TBT window boundary. A quiet production pass is planned separately.
+  See `docs/particles/evidence/`.
 
 ### Homepage
 

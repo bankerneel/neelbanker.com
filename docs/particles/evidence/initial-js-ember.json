@@ -1,6 +1,6 @@
 {
-  "method": "gzip size of every file in each route production build-manifest.json",
-  "generatedAt": "2026-11-21T19:38:51.459Z",
+  "method": "gzip size of every file in each route production build-manifest.json, plus a content scan of emitted client chunks",
+  "generatedAt": "2026-11-21T20:11:51.428Z",
   "routes": {
     "/": {
       "files": [
@@ -107,5 +107,22 @@
       ],
       "totalGzipKB": 168
     }
+  },
+  "contentScan": {
+    "needle": "WebGLRenderer",
+    "scannedDirectory": ".next/static/chunks",
+    "chunksWithWebGLRenderer": [
+      {
+        "file": "static/chunks/0.n_p~pwa8cvg.js",
+        "gzipKB": 49,
+        "inInitialList": false
+      },
+      {
+        "file": "static/chunks/09xkzfa3rjbyw.js",
+        "gzipKB": 86,
+        "inInitialList": false
+      }
+    ],
+    "initialChunksWithWebGLRenderer": []
   }
 }
