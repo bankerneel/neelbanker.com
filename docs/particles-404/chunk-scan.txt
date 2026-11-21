@@ -1,0 +1,18 @@
+three.js production chunk scan
+==============================
+
+Signature: WebGLRenderer + BufferGeometry
+three chunks: 0s9b0xj6c5ks8.js, 0y7g1a_ygfsn1.js
+three main chunk: 0s9b0xj6c5ks8.js
+slot chunks: 0d5w6c2cot0o_.js
+
+Route payloads referencing a three chunk:
+  none
+
+Routes referencing the slot loader: 181 (Next.js ships the global not-found boundary to every route)
+Slot loader carries three code: false
+404 route reaches the slot loader: true
+Result: PASS
+
+The slot loader is a 1 KB client component with two dynamic import calls.
+three is fetched only when that component mounts on the 404 route.

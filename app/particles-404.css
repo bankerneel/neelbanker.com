@@ -1,0 +1,22 @@
+/* Reserved stage for the 404 Glyph Drift canvas. The box is sized with CSS so
+   the canvas can arrive after intersection without shifting any content. */
+
+.particle-slot {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: clamp(220px, 34vw, 420px);
+  overflow: hidden;
+  touch-action: pan-y;
+}
+
+.particle-slot .particle-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Reduced motion is handled in the runtime: it paints one still frame of 404
+   and starts no frame loop. There is no CSS animation to guard here. */
