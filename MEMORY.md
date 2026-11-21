@@ -35,6 +35,27 @@
 - One small photo does not justify `next/image` (~6 KB gz client JS on /about); a pre-sized WebP in a plain `img` is lighter.
 - A client component can hydrate after the header: e2e clicks on it need `waitForHydration(locator)` (e2e/helpers.ts), or they are lost.
 
+## Hero systems (2026-11-22, PR 21)
+
+- Three scenes shipped: burning paper behind the hero copy, a pinned three era career map before the marquee,
+  and Glyph Drift on the 404 only. All read colours from `--dm-*`; there is no CDN, no external font and no
+  hard-coded fill. Ember Field and the Particle Lab homepage placement were rejected and are not shipped.
+- The burn canvas delays its mount until after the ~1.2 s CSS hook so the hero paragraph stays LCP. It pauses
+  off screen and on hidden documents, and trims its load after sustained slow frames. Reduced motion leaves
+  the reserved box empty rather than shrinking it.
+- The sub hero keeps one rAF, measures layout only on resize or theme change, and holds all three real links in
+  `.sub-sr-links`. Its Ethereum head read runs only from the browser, once per 12 s in the blockchain era, with
+  a 3 s timeout and a simulated fallback. Never initiate that call from a shell.
+- Glyph Drift dynamic imports three.js only after the 404 slot intersects. The slot loader is about 624 B gz,
+  and three.js appears in no route's initial bundle. The scene cycles 404 and LOST, and reduced motion paints
+  one still frame with no loop.
+- Measured before and after on production builds, median of 3 runs, CPU 4x and slow 4G on phone: LCP within
+  noise, CLS 0, host frame cadence flat at a 16.7 ms median. TBT rose 357 to 725 ms desktop and 349 to 526 ms
+  phone. That regression is real and open, not a threshold change. Absolute TBT sits above the historic 86 ms
+  because this host is shared and the window is long-task based, so compare deltas only.
+- High worker counts make Playwright time out on this host. `npm run test:e2e` passes 76 of 76 in CI mode with
+  one worker; the default 11 worker run hit navigation timeouts that did not reproduce at lower concurrency.
+
 ## Content / NDA
 
 - **Naming by group (Neel, 2026-09-27, revised the same day):** SoluLab → real names (he is not under NDA with SoluLab); Tech Alchemy → `Project <Codename>` (real names never on the site); Personal → pseudonym product names (CredSeal, Keystone Bridge, Canopy Chain, StayWise, Sentinel Audit — confirmed by Neel). Scales and Coffer are Tech Alchemy (confirmed). Slugs ship to the browser, so Tech Alchemy slugs must stay neutral; DocTrace's slug went back to `doctrace-fabric-documents`. `/resume` keeps real names by his choice.

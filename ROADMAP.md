@@ -10,6 +10,11 @@
 
 - **Folded Scrap brand refresh (2026-11-20):** Implementation and local review captured in [brand evidence](design/brand-refresh/README.md). PR targets `main` for Neel's review and merge.
 
+- **Homepage hero systems and 404 Glyph Drift (2026-11-22):** PR 21 is open into `dev` at `eee2a99`, with the
+  evidence and docs branch `work/evidence-docs` to be cherry-picked by Neel. Screenshots and before and after
+  metrics are captured. Next step is review of the preview, then triage of the TBT rise before merge. Ember
+  Field and the Particle Lab homepage placement stay out of scope.
+
 ### 0. Redesign — build out Dream Bazaar (Direction P)
 
 The site was judged to have become generic (its near-black + lime palette and Syne/mono
@@ -160,6 +165,14 @@ _Original checklist:_
 - `layout` — no element past the viewport at 320 / 375 / 768 / 1024px on seven key routes. It caught two real
   bugs on the way in (homepage polaroids and a long uppercase project title at 320px)
 - `e2e/helpers.ts` `gotoHydrated()` waits for React hydration before interacting
+
+### 8. Hero systems QA and TBT triage (2026-11-22, PR 21)
+
+- Review the 20 screenshots in `design/hero-systems/shots/` across both viewports, both themes and all three
+  eras of the pinned map.
+- Triage the TBT rise: +368 ms desktop and +177 ms phone on the median of 3 runs. LCP, CLS and host frame
+  cadence show no regression. Do not relax the recorded budgets.
+- Real-device QA is still open for the burn canvas and the pinned map, as with the rest of the film.
 
 ## Ongoing Rules
 

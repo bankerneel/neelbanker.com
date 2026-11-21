@@ -1,6 +1,6 @@
 # States
 
-Last updated: 2026-11-20
+Last updated: 2026-11-22
 
 ## File Purpose
 
@@ -16,6 +16,22 @@ Core routes now feel substantially more consistent, lighter, and more editorial 
 ## Completed
 
 - **Folded Scrap brand refresh (2026-11-20):** A hand-cut N on butter paper now appears in the favicon, app icons, nav, footer, and both social cards. The [brand evidence](design/brand-refresh/README.md) includes the 16 px colour comparison and both site themes.
+
+- **Homepage hero systems and 404 Glyph Drift (2026-11-22, PR 21 into `dev`, head `eee2a99`):**
+  - Burning paper (`components/hero-systems/hero-burn.tsx`) sits behind the hero copy. The reserved box never
+    shifts layout, the canvas mounts after the ~1.2 s hook, and reduced motion leaves it empty. It reads the
+    new `--dm-ember` and `--dm-glow` tokens plus the existing palette.
+  - A pinned three era career map (`sub-hero.tsx`, `engine.ts`, `app/hero-systems.css`) sits between the hero
+    and the tech marquee. Scroll walks blockchain, web3 and AI agents. The era chip is a real link, all three
+    links stay in the HTML, and reduced motion drops the pin for a still frame and open links.
+  - Glyph Drift (`components/particles/slot.tsx`, `glyph-drift/`, `app/particles-404.css`) lives only on the
+    404. three.js is dynamic imported after the reserved slot intersects, never in an initial bundle.
+  - Evidence: 20 screenshots in `design/hero-systems/shots/`, before and after production metrics, and
+    76 e2e plus 9 unit tests passing. Screenshots cover both viewports in both themes and all three eras.
+  - TBT rose from 357 to 725 ms on desktop and from 349 to 526 ms on the phone run, from 3 run medians with
+    CPU 4x and slow 4G on phone. LCP stayed within noise, CLS stayed at 0 and host frame cadence held at a
+    16.7 ms median. The TBT regression is open for triage. Ember Field and the rejected Particle Lab homepage
+    placement are not shipped.
 
 - **Bands + the homepage film (2026-09-27, local branch `feat/motion-film`, not pushed):**
   - Section breaks: full-bleed bands with torn / perforated / zig-zag / scalloped edges on `/`, `/about`, `/projects`, `/work-with-me`.
@@ -120,9 +136,12 @@ Core routes now feel substantially more consistent, lighter, and more editorial 
 ## Current Homepage State
 
 - Hero is the Dream Bazaar wall (`components/home-hero.tsx`): "Building / *what's* / Next.", copy scrap, stat polaroids, subscribe strip, ticker-tape marquee. Static server component, no entrance animation.
+- It now also carries the burning paper canvas behind the copy and the pinned three era map before the marquee. Opening motion stays CSS only and the canvas arrives after the hook.
 
 ## Needs Review
 
+- PR 21 (hero systems, open into `dev`): triage the TBT rise of +368 ms desktop and +177 ms phone before merge.
+  LCP, CLS and host frame cadence are unchanged. Do not relax the recorded budgets.
 - The two new AI-pillar articles cover the T3 Code kitchen brigade and Why I Built Who Ate My Tokens. Both publish on merge to `main`.
 - The articles introduce optional static WebP covers at the top of the reading area. Older articles continue to render without covers.
 - `skale-appchains` draft is an outline of questions for Neel; it stays in gitignored `content/drafts/`.
