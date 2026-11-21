@@ -247,12 +247,26 @@ function makeBurn(maxN: number, every: number, size: number, ctx: BurnContext) {
 export function HeroBurn() {
   const hostRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const motionRef = useRef<MediaQueryList | null>(null)
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    const timer = window.setTimeout(() => setMounted(true), HOOK_MS)
-    return () => window.clearTimeout(timer)
+    const motion = (motionRef.current = matchMedia('(prefers-reduced-motion: reduce)'))
+    if (motion.matches) return
+    let timer = 0
+    // The OS can switch to reduce during the hook delay, before the engine
+    // exists. Keep the box empty in that case too.
+    const onChange = (e: MediaQueryListEvent) => {
+      if (!e.matches) return
+      window.clearTimeout(timer)
+      setMounted(false)
+    }
+    motion.addEventListener('change', onChange)
+    timer = window.setTimeout(() => setMounted(true), HOOK_MS)
+    return () => {
+      window.clearTimeout(timer)
+      motion.removeEventListener('change', onChange)
+    }
   }, [])
 
   useEffect(() => {
@@ -344,10 +358,17 @@ export function HeroBurn() {
       if (document.hidden) stop()
       else start()
     }
+    const motion = motionRef.current ?? matchMedia('(prefers-reduced-motion: reduce)')
+    const onMotionChange = (e: MediaQueryListEvent) => {
+      if (!e.matches) return
+      stop()
+      setMounted(false)
+    }
 
     section.addEventListener('pointermove', onMove, { passive: true })
     section.addEventListener('pointerleave', onLeave, { passive: true })
     document.addEventListener('visibilitychange', onVisibility)
+    motion.addEventListener('change', onMotionChange)
 
     const observer =
       'IntersectionObserver' in window
@@ -365,11 +386,11 @@ export function HeroBurn() {
     themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
 
     let resizeTimer = 0
-    let lastWidth = section.getBoundingClientRect().width
+    let lastRect = section.getBoundingClientRect()
     const onResize = () => {
-      const w = section.getBoundingClientRect().width
-      if (Math.abs(w - lastWidth) < 2) return
-      lastWidth = w
+      const r = section.getBoundingClientRect()
+      if (Math.abs(r.width - lastRect.width) < 2 && Math.abs(r.height - lastRect.height) < 2) return
+      lastRect = r
       window.clearTimeout(resizeTimer)
       resizeTimer = window.setTimeout(size, 150)
     }
@@ -386,6 +407,7 @@ export function HeroBurn() {
       section.removeEventListener('pointermove', onMove)
       section.removeEventListener('pointerleave', onLeave)
       document.removeEventListener('visibilitychange', onVisibility)
+      motion.removeEventListener('change', onMotionChange)
       observer?.disconnect()
       themeObserver.disconnect()
       if (resizeObserver) resizeObserver.disconnect()
