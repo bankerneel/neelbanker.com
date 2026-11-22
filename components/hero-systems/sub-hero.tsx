@@ -15,6 +15,9 @@ import {
   type Pointer,
   type Rect,
 } from './engine'
+import { sceneIsActive, setSceneInView, subscribeScenes } from './scene-coordinator'
+
+const FRAME_BUDGET_MS = 20
 
 const ERA_LINKS = [
   { k: 'case study', t: 'DocTrace on Hyperledger Fabric', chip: 'DocTrace on Fabric', href: '/projects/doctrace-fabric-documents' },
@@ -25,8 +28,9 @@ const ERA_LINKS = [
 /**
  * The pinned career map engine. The slot owns the server-rendered section,
  * heading, links and canvas element; this module only enhances that DOM.
- * One rAF reads scroll at most once, from a passive listener, and all layout
- * is measured only on resize or theme change, never per frame.
+ * One rAF reads scroll once per frame. Layout is measured on resize and theme
+ * changes only, and pointer coordinates come from cached geometry. The scene
+ * coordinator makes sure the burning paper is paused while this one is pinned.
  */
 export function SubHero() {
   useEffect(() => {
@@ -43,14 +47,19 @@ export function SubHero() {
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)')
     let raf = 0
     let last = 0
+    let slow = 0
+    let fast = 0
+    let drawStride = 2
+    let tick = 0
     let W = 0
     let H = 0
     let DPR = 1
     let navH = 64
     let sectionTop = 0
     let span = 1
+    let stageLeft = 0
+    let stageTopDoc = 0
     let scrollY = window.scrollY
-    let needsScroll = true
     let visible = true
     let R: Rect = { x: 16, y: 0, w: 0, h: 0 }
     let E: EraSystem | null = null
@@ -64,29 +73,33 @@ export function SubHero() {
 
     wrap.dataset.motion = reduce.matches ? 'reduced' : 'full'
 
-    const progress = () => {
-      if (needsScroll) {
-        scrollY = window.scrollY
-        needsScroll = false
-      }
-      return clamp((scrollY + navH - sectionTop) / span, 0, 1)
+    const progress = () => clamp((scrollY + navH - sectionTop) / span, 0, 1)
+
+    // The sticky stage is at navH while pinned. Outside the pin we derive its
+    // viewport top from cached document coordinates, never from layout.
+    const stageTopNow = () => {
+      if (scrollY < sectionTop - navH) return stageTopDoc - scrollY
+      if (scrollY > sectionTop + span - navH) return sectionTop + span - scrollY
+      return navH
     }
 
     const measure = () => {
+      scrollY = window.scrollY
       const wr = wrap.getBoundingClientRect()
       const sr = stage.getBoundingClientRect()
       const hb = head.getBoundingClientRect()
       navH = document.querySelector('header')?.getBoundingClientRect().height ?? 64
       wrap.style.setProperty('--sub-nav-h', `${Math.round(navH)}px`)
-      sectionTop = wr.top + window.scrollY
+      sectionTop = wr.top + scrollY
+      stageLeft = sr.left
+      stageTopDoc = sr.top + scrollY
       span = Math.max(1, wr.height - sr.height)
       W = sr.width
       H = sr.height
-      DPR = Math.min(2, window.devicePixelRatio || 1)
+      DPR = 1
       canvas.width = Math.round(W * DPR)
       canvas.height = Math.round(H * DPR)
       if (W < 760) {
-        // Phone: heading on top, graph below it.
         const y = hb.bottom - sr.top + 24
         R = { x: 16, y, w: Math.max(80, W - 32), h: Math.max(120, H - y - 50), narrow: true }
       } else {
@@ -95,14 +108,13 @@ export function SubHero() {
       }
       E = makeEras(
         { ...R, y: R.y + 66, h: R.h - 66 },
-        R.narrow ? 26 : 42,
+        R.narrow ? 16 : 32,
         { wrap: false, K: R.narrow ? 1.25 : 1.75, radF: 0.42, ticker: false },
       )
       ef = reduce.matches ? 1 : eraFromP(progress())
       vel = 0
       eraShown = -2
       labelShown = ''
-      needsScroll = true
     }
 
     const showChip = (k: number, strong: boolean) => {
@@ -136,8 +148,10 @@ export function SubHero() {
       }
     }
 
-    const frame = (dt: number, now: number) => {
-      if (!E) return
+    // The spring and the scroll readout advance on every rAF. Only the graph
+    // raster is throttled when the device cannot keep up.
+    const advance = (dt: number) => {
+      scrollY = window.scrollY
       const sp = progress()
       const target = eraFromP(sp)
       if (reduce.matches) {
@@ -151,6 +165,11 @@ export function SubHero() {
         vel += (om * om * (target - ef) - 2 * om * vel) * h
         ef = clamp(ef + vel * h, 0, 2)
       }
+      return sp
+    }
+
+    const frame = (now: number, sp: number) => {
+      if (!E) return
       E.scrub = sp
       E.update(now, ef)
       ctx.setTransform(DPR, 0, 0, DPR, 0, 0)
@@ -173,32 +192,63 @@ export function SubHero() {
     }
 
     const loop = (now: number) => {
-      if (visible) {
-        const dt = Math.min(50, last ? now - last : 16.67)
-        last = now
-        frame(dt, now)
+      if (!E || !visible || !sceneIsActive('sub-hero')) {
+        raf = 0
+        return
       }
+      const dt = Math.min(50, last ? now - last : 16.67)
+      last = now
+      if (dt > FRAME_BUDGET_MS) {
+        slow++
+        fast = 0
+      } else {
+        slow = Math.max(0, slow - 1)
+        fast++
+      }
+      // The graph is decorative, so it draws at 30 fps and widens the stride
+      // under sustained load. The spring and readout still run every frame.
+      if (slow > 6 && drawStride < 32) {
+        drawStride *= 2
+        slow = 0
+      }
+      if (fast > 180 && drawStride > 1) {
+        drawStride /= 2
+        fast = 0
+      }
+      const sp = advance(dt)
+      tick++
+      if (tick % drawStride === 0) frame(now, sp)
       raf = requestAnimationFrame(loop)
     }
 
     const start = () => {
-      cancelAnimationFrame(raf)
+      if (raf) cancelAnimationFrame(raf)
+      raf = 0
+      tick = 0
+      slow = 0
+      fast = 0
+      drawStride = 2
       pal = readPalette(document.documentElement)
       measure()
-      if (reduce.matches) frame(16.67, performance.now())
-      else {
+      syncPin()
+      if (reduce.matches) frame(performance.now(), advance(16.67))
+      else sync()
+    }
+
+    const sync = () => {
+      if (reduce.matches || !E) return
+      if (sceneIsActive('sub-hero') && visible && !raf) {
         last = 0
         raf = requestAnimationFrame(loop)
+      } else if (!sceneIsActive('sub-hero') || !visible) {
+        if (raf) cancelAnimationFrame(raf)
+        raf = 0
       }
     }
 
-    const onScroll = () => {
-      needsScroll = true
-    }
     const onPointerMove = (e: PointerEvent) => {
-      const r = stage.getBoundingClientRect()
-      const x = e.clientX - r.left
-      const y = e.clientY - r.top
+      const x = e.clientX - stageLeft
+      const y = e.clientY - stageTopNow()
       if (ptr.in) {
         ptr.vx = x - ptr.x
         ptr.vy = y - ptr.y
@@ -214,22 +264,32 @@ export function SubHero() {
     }
     const onPointerDown = (e: PointerEvent) => {
       if (!E) return
-      const r = stage.getBoundingClientRect()
-      E.burst(e.clientX - r.left, e.clientY - r.top, performance.now(), ef)
+      E.burst(e.clientX - stageLeft, e.clientY - stageTopNow(), performance.now(), ef)
     }
     const stopChipPointer = (e: Event) => e.stopPropagation()
 
-    window.addEventListener('scroll', onScroll, { passive: true })
     stage.addEventListener('pointermove', onPointerMove, { passive: true })
     stage.addEventListener('pointerleave', onPointerLeave, { passive: true })
     stage.addEventListener('pointerdown', onPointerDown, { passive: true })
     chip?.addEventListener('pointerdown', stopChipPointer)
 
+    const syncPin = () => {
+      const pinned = E !== null && scrollY + navH >= sectionTop && scrollY + navH <= sectionTop + span
+      setSceneInView('sub-hero', visible && pinned)
+    }
+    const onScroll = () => {
+      // Store scroll only. No draw and no layout read happens in this handler.
+      scrollY = window.scrollY
+      syncPin()
+    }
     const io = new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting
       last = 0
+      syncPin()
     })
     io.observe(wrap)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    const unsubscribe = subscribeScenes(sync)
 
     let resizeTimer = 0
     const ro = new ResizeObserver(() => {
@@ -245,9 +305,12 @@ export function SubHero() {
     start()
 
     return () => {
-      cancelAnimationFrame(raf)
+      if (raf) cancelAnimationFrame(raf)
+      raf = 0
       clearTimeout(resizeTimer)
       window.removeEventListener('scroll', onScroll)
+      setSceneInView('sub-hero', false)
+      unsubscribe()
       stage.removeEventListener('pointermove', onPointerMove)
       stage.removeEventListener('pointerleave', onPointerLeave)
       stage.removeEventListener('pointerdown', onPointerDown)

@@ -39,6 +39,17 @@ Core routes now feel substantially more consistent, lighter, and more editorial 
     TBT is within noise on both widths, so the earlier regression is resolved without relaxing any
     budget. Ember Field and the rejected Particle Lab homepage placement are not shipped.
 
+- **PR 21 review fixes (2026-11-22):** Burning paper and the pinned sub hero now share one coordinator so only
+  one canvas runs, draw work is throttled independently of physics, geometry is cached, and no frame reads
+  layout. Canvas shadow blur is gone, arrays are compacted in place and the era weights tuple is reused. The
+  hero canvas caps DPR at 1.5 desktop and 1 phone with at most 16 phone scraps; the phone pin is 220svh with
+  clamped agent labels and no scroll hijacking. All scenes start after load plus `requestIdleCallback`.
+  The 404 now shows only particle glyphs on the transparent sky, with a visually hidden h1, token palette
+  in both themes, normal blending in light and delayed three.js loading. Lighthouse 13.6 after: accessibility,
+  best practices and SEO are 100 on home, 404 and an article in both presets; performance is 100 except home
+  mobile at 95. A CDP trace at 1440 with no throttle shows 0% frames over 20 ms and p95 16.9 ms. Eighty
+  e2e and 9 unit tests pass. Six shots in `design/hero-systems/shots/` were recaptured.
+
 - **Bands + the homepage film (2026-09-27, local branch `feat/motion-film`, not pushed):**
   - Section breaks: full-bleed bands with torn / perforated / zig-zag / scalloped edges on `/`, `/about`, `/projects`, `/work-with-me`.
   - Homepage motion: CSS hook (paper strips rip off the headline), scroll-driven sequence (a different technique per section), footer finale at dusk, living WebGL sky (dawn → dusk). Rules and budgets in AGENTS.md "Motion".

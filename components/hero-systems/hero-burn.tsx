@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, type RefObject } from 'react'
+import { sceneIsActive, setSceneInView, subscribeScenes } from './scene-coordinator'
 
 /**
  * Burning paper behind the hero copy. Port of the approved lab engine in
@@ -10,10 +11,13 @@ import { useEffect, useRef, type RefObject } from 'react'
  * Loaded on demand by hero-burn-slot.tsx once the opening hook is over, so the
  * engine never enters the homepage initial bundle. The host is an absolute,
  * aria-hidden overlay provided by the slot and carries the test hooks.
+ *
+ * Layout is measured only on resize. The scroll listener stores scrollY, the
+ * single rAF does all drawing, and the canvas is only as big as the hero box.
  */
 
 type Tone = 'panel' | 'butter' | 'rose' | 'sky' | 'lilac'
-type Vertex = [number, number, number, number] // cx, cy, radius, noise
+type Vertex = [number, number, number, number]
 type Scrap = {
   x: number
   y: number
@@ -155,18 +159,23 @@ function makeBurn(maxN: number, every: number, size: number, ctx: BurnContext) {
         }
       }
     }
-    for (let i = scraps.length - 1; i >= 0; i--) {
+    // In-place compaction keeps the frame loop free of new arrays.
+    let out = 0
+    for (let i = 0; i < scraps.length; i += 1) {
       const p = scraps[i]
-      if (p.life >= 1 || p.y <= -80) scraps.splice(i, 1)
+      if (p.life < 1 && p.y > -80) scraps[out++] = p
     }
-    for (let i = sparks.length - 1; i >= 0; i--) {
+    scraps.length = out
+    out = 0
+    for (let i = 0; i < sparks.length; i += 1) {
       const q = sparks[i]
       q.x += q.vx * f
       q.y += q.vy * f
       q.vy *= Math.pow(0.985, f)
       q.l -= q.d * f
-      if (q.l <= 0) sparks.splice(i, 1)
+      if (q.l > 0) sparks[out++] = q
     }
+    sparks.length = out
   }
 
   const draw = (c: CanvasRenderingContext2D) => {
@@ -180,7 +189,8 @@ function makeBurn(maxN: number, every: number, size: number, ctx: BurnContext) {
       const co = Math.cos(p.a)
       const si = Math.sin(p.a)
       c.beginPath()
-      p.v.forEach(([cx, cy, r, nz], i) => {
+      for (let i = 0; i < p.v.length; i += 1) {
+        const [cx, cy, r, nz] = p.v[i]
         const rr = r * (1 - burn * (0.55 + 0.45 * nz))
         const lx = cx * rr
         const ly = cy * rr
@@ -188,7 +198,7 @@ function makeBurn(maxN: number, every: number, size: number, ctx: BurnContext) {
         const Y = p.y + lx * si + ly * co + o
         if (i) c.lineTo(X, Y)
         else c.moveTo(X, Y)
-      })
+      }
       c.closePath()
       return burn
     }
@@ -206,13 +216,16 @@ function makeBurn(maxN: number, every: number, size: number, ctx: BurnContext) {
       c.fillStyle = charred(pal[p.tone], burn)
       c.fill()
       if (burn > 0) {
+        // A wide translucent pass stands in for canvas shadowBlur, which is
+        // a known frame killer when repeated for every scrap on every frame.
+        c.strokeStyle = pal.glow
+        c.globalAlpha = 0.24
+        c.lineWidth = 5 + burn * 4
+        c.stroke()
+        c.strokeStyle = pal.ember
         c.globalAlpha = 0.85
         c.lineWidth = 1.1 + burn * 1.6
-        c.strokeStyle = pal.ember
-        c.shadowColor = pal.glow
-        c.shadowBlur = 10 * burn
         c.stroke()
-        c.shadowBlur = 0
       }
     }
 
@@ -257,6 +270,9 @@ export function HeroBurn({ hostRef }: { hostRef: RefObject<HTMLDivElement | null
     let width = 0
     let height = 0
     let dpr = 1
+    let rectLeft = 0
+    let rectTopDoc = 0
+    let scrollY = window.scrollY
     let palette = readPalette()
     const ctx: BurnContext = {
       palette: () => palette,
@@ -267,34 +283,56 @@ export function HeroBurn({ hostRef }: { hostRef: RefObject<HTMLDivElement | null
     }
     let burn!: ReturnType<typeof makeBurn>
 
-    let visible = true
     let raf = 0
     let last = 0
     let frames = 0
     let slow = 0
+    let fast = 0
+    let drawStride = 2
+    let tick = 0
 
     const size = () => {
+      const phone = section.offsetWidth < 760
+      // offsetWidth and offsetHeight are the untransformed hero box. A
+      // getBoundingClientRect here would include the opening hook's scale.
+      width = section.offsetWidth
+      height = section.offsetHeight
       const r = section.getBoundingClientRect()
-      width = r.width
-      height = r.height
-      dpr = Math.min(width < 760 ? 1.5 : 2, window.devicePixelRatio || 1)
+      rectLeft = r.left
+      rectTopDoc = r.top + window.scrollY
+      dpr = Math.min(phone ? 1 : 1.5, window.devicePixelRatio || 1)
       canvas.width = Math.round(width * dpr)
       canvas.height = Math.round(height * dpr)
-      burn = makeBurn(width < 760 ? 28 : 54, 8, 1.25, ctx)
+      burn = makeBurn(phone ? 16 : 54, 8, 1.25, ctx)
       burn.draw(c)
     }
 
     const frame = (now: number) => {
       const dt = Math.min(50, last ? now - last : 16.67)
       last = now
-      if (dt > FRAME_BUDGET_MS) slow++
-      else slow = Math.max(0, slow - 1)
-      if (slow > 45) {
+      if (dt > FRAME_BUDGET_MS) {
+        slow++
+        fast = 0
+      } else {
+        slow = Math.max(0, slow - 1)
+        fast++
+      }
+      // Physics runs every frame. Only the raster work is throttled, so the
+      // paper keeps drifting smoothly even when the draw stride widens.
+      burn.step(dt)
+      // The paper drifts slowly, so a 30 fps draw is enough. Sustained slow
+      // frames widen the stride; sustained fast frames narrow it again.
+      if (slow > 6 && drawStride < 32) {
+        drawStride *= 2
         burn.trim()
         slow = 0
       }
-      burn.step(dt)
-      burn.draw(c)
+      if (fast > 180 && drawStride > 1) {
+        drawStride /= 2
+        fast = 0
+      }
+      tick++
+      if (tick % drawStride === 0) burn.draw(c)
       pointer.vx *= 0.8
       pointer.vy *= 0.8
       host.dataset.frames = String(++frames)
@@ -302,8 +340,12 @@ export function HeroBurn({ hostRef }: { hostRef: RefObject<HTMLDivElement | null
     }
 
     const start = () => {
-      if (raf || document.hidden || !visible) return
+      if (raf || document.hidden || !sceneIsActive('hero-burn')) return
       last = 0
+      slow = 0
+      fast = 0
+      drawStride = 2
+      tick = 0
       host.dataset.running = '1'
       raf = requestAnimationFrame(frame)
     }
@@ -312,11 +354,14 @@ export function HeroBurn({ hostRef }: { hostRef: RefObject<HTMLDivElement | null
       raf = 0
       delete host.dataset.running
     }
+    const sync = () => {
+      if (sceneIsActive('hero-burn')) start()
+      else stop()
+    }
 
     const onMove = (e: PointerEvent) => {
-      const r = section.getBoundingClientRect()
-      const x = e.clientX - r.left
-      const y = e.clientY - r.top
+      const x = e.clientX - rectLeft
+      const y = e.clientY + scrollY - rectTopDoc
       if (pointer.in) {
         pointer.vx = x - pointer.x
         pointer.vy = y - pointer.y
@@ -329,9 +374,12 @@ export function HeroBurn({ hostRef }: { hostRef: RefObject<HTMLDivElement | null
       pointer.in = false
       pointer.x = pointer.y = -1e4
     }
+    const onScroll = () => {
+      scrollY = window.scrollY
+    }
     const onVisibility = () => {
       if (document.hidden) stop()
-      else start()
+      else sync()
     }
     const motion = matchMedia('(prefers-reduced-motion: reduce)')
     const onMotionChange = (e: MediaQueryListEvent) => {
@@ -341,18 +389,19 @@ export function HeroBurn({ hostRef }: { hostRef: RefObject<HTMLDivElement | null
 
     section.addEventListener('pointermove', onMove, { passive: true })
     section.addEventListener('pointerleave', onLeave, { passive: true })
+    window.addEventListener('scroll', onScroll, { passive: true })
     document.addEventListener('visibilitychange', onVisibility)
     motion.addEventListener('change', onMotionChange)
+    const unsubscribe = subscribeScenes(sync)
 
     const observer =
       'IntersectionObserver' in window
         ? new IntersectionObserver(([entry]) => {
-            visible = entry.isIntersecting
-            if (visible) start()
-            else stop()
+            setSceneInView('hero-burn', entry.isIntersecting)
           })
         : null
     if (observer) observer.observe(section)
+    else setSceneInView('hero-burn', true)
 
     const themeObserver = new MutationObserver(() => {
       palette = readPalette()
@@ -360,11 +409,12 @@ export function HeroBurn({ hostRef }: { hostRef: RefObject<HTMLDivElement | null
     themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
 
     let resizeTimer = 0
-    let lastRect = section.getBoundingClientRect()
+    let lastW = 0
+    let lastH = 0
     const onResize = () => {
-      const r = section.getBoundingClientRect()
-      if (Math.abs(r.width - lastRect.width) < 2 && Math.abs(r.height - lastRect.height) < 2) return
-      lastRect = r
+      if (Math.abs(section.offsetWidth - lastW) < 2 && Math.abs(section.offsetHeight - lastH) < 2) return
+      lastW = section.offsetWidth
+      lastH = section.offsetHeight
       window.clearTimeout(resizeTimer)
       resizeTimer = window.setTimeout(size, 150)
     }
@@ -373,13 +423,22 @@ export function HeroBurn({ hostRef }: { hostRef: RefObject<HTMLDivElement | null
     else addEventListener('resize', onResize)
 
     size()
-    start()
+    lastW = width
+    lastH = height
+    setSceneInView(
+      'hero-burn',
+      rectTopDoc < window.scrollY + window.innerHeight && rectTopDoc + height > window.scrollY,
+    )
+    sync()
 
     return () => {
       stop()
+      setSceneInView('hero-burn', false)
+      unsubscribe()
       window.clearTimeout(resizeTimer)
       section.removeEventListener('pointermove', onMove)
       section.removeEventListener('pointerleave', onLeave)
+      window.removeEventListener('scroll', onScroll)
       document.removeEventListener('visibilitychange', onVisibility)
       motion.removeEventListener('change', onMotionChange)
       observer?.disconnect()

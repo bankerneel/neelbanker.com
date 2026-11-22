@@ -23,10 +23,13 @@ export interface ParticlePalette {
   butter: string
   lilac: string
   sky: string
+  rose: string
+  terra: string
   accentInk: string
   nightInk: string
   panel: string
   ink: string
+  dark: boolean
 }
 
 export interface ParticleSceneContext {

@@ -43,7 +43,7 @@ test('unknown URLs and missing articles return the 404 page', async ({ page }) =
   for (const route of ['/definitely-not-a-page', '/writing/not-a-real-slug']) {
     const response = await page.goto(route)
     expect(response?.status()).toBe(404)
-    await expect(page.getByRole('heading', { level: 1 })).toContainText('404')
+    await expect(page.getByRole('heading', { level: 1 })).toContainText('Page not found')
     await expect(page).toHaveTitle(/Page not found/)
   }
 })

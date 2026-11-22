@@ -74,6 +74,8 @@ export type EraSystem = {
   R: Rect
   N: number
   cell: number
+  /** Reused every frame so the scrub never allocates a weights tuple. */
+  weights: [number, number, number]
   p: EraNode[]
   net: Net
   agents: Agent[]
@@ -178,7 +180,7 @@ export function makeNet(nodes: NetNode[], pos: (p: NetNode, i: number) => [numbe
   nodes.forEach((p, i) => {
     P0.map((q, j) => [(q[0] - P0[i][0]) ** 2 + (q[1] - P0[i][1]) ** 2, j] as [number, number])
       .sort((a, b) => a[0] - b[0])
-      .slice(1, 4)
+      .slice(1, 3)
       .forEach(([, j]) => {
         const key = i < j ? i + ':' + j : j + ':' + i
         if (!seen.has(key)) {
@@ -224,12 +226,16 @@ export function makeNet(nodes: NetNode[], pos: (p: NetNode, i: number) => [numbe
   }
   net.update = (now) => {
     if (net.done && now > net.next) net.start(now, (Math.random() * nodes.length) | 0)
-    const keep: Msg[] = []
-    for (const m of net.msgs) {
+    // Compact in place. inform() appends to net.msgs, so only the messages
+    // present at the start of this frame are considered.
+    const count = net.msgs.length
+    let kept = 0
+    for (let i = 0; i < count; i += 1) {
+      const m = net.msgs[i]
       if (now >= m.t0 + m.dur) net.inform(m.b, now, m.a)
-      else keep.push(m)
+      else net.msgs[kept++] = m
     }
-    net.msgs = keep
+    net.msgs.length = kept
     if (!net.done && net.msgs.length === 0) {
       net.done = true
       net.fin = now - net.rs
@@ -283,7 +289,7 @@ function bez(A: Point, B: Point, t: number): [number, number] {
   return [u * u * A.x + 2 * u * t * cx + t * t * B.x, u * u * A.y + 2 * u * t * cy + t * t * B.y]
 }
 
-function drawPacket(c: CanvasRenderingContext2D, A: Point, B: Point, t: number, text: string | undefined, colour: string | undefined, pal: Palette) {
+function drawPacket(c: CanvasRenderingContext2D, A: Point, B: Point, t: number, text: string | undefined, colour: string | undefined, pal: Palette, bounds?: Rect) {
   const a0 = c.globalAlpha
   c.strokeStyle = colour || pal.accent
   c.lineWidth = 1.2
@@ -303,18 +309,28 @@ function drawPacket(c: CanvasRenderingContext2D, A: Point, B: Point, t: number, 
     c.font = MONO(10.5)
     const w = c.measureText(text).width
     const a = Math.sin(Math.PI * clamp(t, 0, 1))
+    const boxW = w + 10
+    let bx = x + 9
+    if (bounds) bx = Math.min(Math.max(bx, bounds.x), Math.max(bounds.x, bounds.x + bounds.w - boxW))
     c.globalAlpha = a0 * a * 0.92
     c.fillStyle = pal.panel
-    c.fillRect(x + 9, y - 19, w + 10, 16)
+    c.fillRect(bx, y - 19, boxW, 16)
     c.globalAlpha = a0 * a
     c.fillStyle = pal.ink
     c.textBaseline = 'middle'
-    c.fillText(text, x + 14, y - 11)
+    c.fillText(text, bx + 5, y - 11)
     c.globalAlpha = a0
   }
 }
 
-function drawAgent(c: CanvasRenderingContext2D, a: Agent, now: number, pal: Palette, ptr: Pointer, r = 16, label = a.name.toUpperCase()) {
+function clampLabel(x: number, width: number, bounds?: Rect): number {
+  if (!bounds) return x
+  const left = bounds.x + width / 2
+  const right = Math.max(left, bounds.x + bounds.w - width / 2)
+  return Math.min(Math.max(x, left), right)
+}
+
+function drawAgent(c: CanvasRenderingContext2D, a: Agent, now: number, pal: Palette, ptr: Pointer, r = 16, label = a.name.toUpperCase(), bounds?: Rect) {
   const a0 = c.globalAlpha
   const hot = now - (a.act ?? -1e9) < 650
   const hover = ptr.in && Math.hypot(ptr.x - a.x, ptr.y - a.y) < r + 10
@@ -347,10 +363,11 @@ function drawAgent(c: CanvasRenderingContext2D, a: Agent, now: number, pal: Pale
   c.textAlign = 'center'
   c.textBaseline = 'top'
   c.fillStyle = pal.inkSoft
-  c.fillText(label, a.x, a.y + r + 7)
+  c.fillText(label, clampLabel(a.x, c.measureText(label).width, bounds), a.y + r + 7)
   if (hover && ROLES[a.name]) {
+    const role = ROLES[a.name]
     c.fillStyle = pal.accent
-    c.fillText(ROLES[a.name], a.x, a.y + r + 21)
+    c.fillText(role, clampLabel(a.x, c.measureText(role).width, bounds), a.y + r + 21)
   }
   c.textAlign = 'left'
 }
@@ -499,6 +516,7 @@ export function makeEras(
     R,
     N,
     cell,
+    weights: [0, 0, 0] as [number, number, number],
     p,
     net,
     agents,
@@ -529,26 +547,43 @@ export function makeEras(
           d: rnd(0.015, 0.03),
         })
     }
-  const tgt = (i: number, k: number, now: number): [number, number] => {
+  // Two reusable targets keep the update from allocating a pair per node per
+  // frame. Callers must consume them before the next call.
+  const targetA: [number, number] = [0, 0]
+  const targetB: [number, number] = [0, 0]
+  const tgt = (i: number, k: number, now: number, out: [number, number]): void => {
     const q = p[i]
-    if (k === 0) return T0[i]
-    if (k === 1) return [T1[i][0] + Math.sin(now * 0.0004 + q.ph) * 4, T1[i][1] + Math.cos(now * 0.00033 + q.ph) * 4]
-    const a = agents[q.ag]
-    const ang = q.oa + now * q.os
-    return [a.x + Math.cos(ang) * q.orr, a.y + Math.sin(ang) * q.orr]
+    if (k === 0) {
+      out[0] = T0[i][0]
+      out[1] = T0[i][1]
+    } else if (k === 1) {
+      out[0] = T1[i][0] + Math.sin(now * 0.0004 + q.ph) * 4
+      out[1] = T1[i][1] + Math.cos(now * 0.00033 + q.ph) * 4
+    } else {
+      const a = agents[q.ag]
+      const ang = q.oa + now * q.os
+      out[0] = a.x + Math.cos(ang) * q.orr
+      out[1] = a.y + Math.sin(ang) * q.orr
+    }
   }
-  E.w = (ef) => [eraW(ef, 0, wrap), eraW(ef, 1, wrap), eraW(ef, 2, wrap)]
+  E.w = (ef) => {
+    E.weights[0] = eraW(ef, 0, wrap)
+    E.weights[1] = eraW(ef, 1, wrap)
+    E.weights[2] = eraW(ef, 2, wrap)
+    return E.weights
+  }
   E.update = (now, ef) => {
     const base = Math.floor(ef)
     const fr = ease(ef - base)
     const k0 = ((base % 3) + 3) % 3
     const k1 = wrap ? (k0 + 1) % 3 : Math.min(2, k0 + 1)
-    p.forEach((q, i) => {
-      const a = tgt(i, k0, now)
-      const b = tgt(i, k1, now)
-      q.x = a[0] + (b[0] - a[0]) * fr
-      q.y = a[1] + (b[1] - a[1]) * fr
-    })
+    for (let i = 0; i < p.length; i += 1) {
+      const q = p[i]
+      tgt(i, k0, now, targetA)
+      tgt(i, k1, now, targetB)
+      q.x = targetA[0] + (targetB[0] - targetA[0]) * fr
+      q.y = targetA[1] + (targetB[1] - targetA[1]) * fr
+    }
     const [wB, wN, wA] = E.w(ef)
     if (wB > 0.9 && now > E.nextMine) {
       E.fresh = (E.fresh + 1) % N
@@ -580,27 +615,34 @@ export function makeEras(
         E.next2 = now + rnd(420, 760)
       }
     }
-    E.msgs =
-      wA > 0.9
-        ? E.msgs.filter((m) => {
-            if (now - m.t0 > m.dur) {
-              if (m.B.name) m.B.act = now
-              return false
-            }
-            return true
-          })
-        : []
-    for (const s of E.sp) {
+    if (wA > 0.9) {
+      let kept = 0
+      for (let i = 0; i < E.msgs.length; i += 1) {
+        const m = E.msgs[i]
+        if (now - m.t0 > m.dur) {
+          if (m.B.name) m.B.act = now
+        } else {
+          E.msgs[kept++] = m
+        }
+      }
+      E.msgs.length = kept
+    } else {
+      E.msgs.length = 0
+    }
+    let keptSparks = 0
+    for (let i = 0; i < E.sp.length; i += 1) {
+      const s = E.sp[i]
       s.x += s.vx
       s.y += s.vy
       s.l -= s.d
+      if (s.l > 0) E.sp[keptSparks++] = s
     }
-    E.sp = E.sp.filter((s) => s.l > 0)
+    E.sp.length = keptSparks
   }
   E.draw = (c, now, ef, palette, pointer) => {
     const [wB, wN, wA] = E.w(ef)
     const ember = style === 'ember'
-    if (ticker) drawTicker(c, R, [wB, wN, wA], E.scrub, palette)
+    if (ticker) drawTicker(c, R, E.weights, E.scrub, palette)
     // Cubed edge fade, kept exactly from the source: morph edges dissolve
     // long before the core does.
     if (wB > 0.02) {
@@ -627,23 +669,26 @@ export function makeEras(
         for (const m of net.msgs) {
           const hd = net.head(m, now)
           if (!hd) continue
-          c.strokeStyle = ember ? palette.ember : palette.accent
-          c.lineWidth = ember ? 1.6 : 1.3
-          c.globalAlpha = 0.8
-          if (ember) {
-            c.shadowColor = palette.glow
-            c.shadowBlur = 8
-          }
           c.beginPath()
           c.moveTo(hd[0], hd[1])
           c.lineTo(hd[2], hd[3])
+          // A wide translucent pass gives the same halo as shadowBlur without
+          // asking the canvas to blur a new region on every message.
+          if (ember) {
+            c.strokeStyle = palette.glow
+            c.lineWidth = 5 * K
+            c.globalAlpha = 0.22
+            c.stroke()
+          }
+          c.strokeStyle = ember ? palette.ember : palette.accent
+          c.lineWidth = ember ? 1.6 : 1.3
+          c.globalAlpha = 0.8
           c.stroke()
           c.globalAlpha = 1
           c.fillStyle = ember ? palette.ember : palette.accent
           c.beginPath()
           c.arc(hd[2], hd[3], 2.3 * K, 0, TAU)
           c.fill()
-          c.shadowBlur = 0
         }
     }
     p.forEach((q, i) => {
@@ -660,29 +705,31 @@ export function makeEras(
         const co = Math.cos(q.rot)
         const si = Math.sin(q.rot)
         const sc = wA > 0.5 && i >= 5 ? 0.6 : 1
-        for (const [col, o] of [
-          [palette.shadowSolid, 2.5],
-          [palette[q.tone as keyof Palette] as string, 0],
-        ] as Array<[string, number]>) {
-          c.fillStyle = col
+        for (let pass = 0; pass < 2; pass += 1) {
+          const o = pass === 0 ? 2.5 : 0
+          c.fillStyle = pass === 0 ? palette.shadowSolid : (palette[q.tone as keyof Palette] as string)
           c.beginPath()
-          q.v.forEach(([x, y], k) => {
-            const X = q.x + (x * co - y * si) * sc + o
-            const Y = q.y + (x * si + y * co) * sc + o
+          for (let k = 0; k < q.v.length; k += 1) {
+            const vx = q.v[k][0]
+            const vy = q.v[k][1]
+            const X = q.x + (vx * co - vy * si) * sc + o
+            const Y = q.y + (vx * si + vy * co) * sc + o
             if (k) c.lineTo(X, Y)
             else c.moveTo(X, Y)
-          })
+          }
           c.closePath()
           c.fill()
         }
         if (on) {
           const g = Math.max(0, 1 - (now - q.inf) / 900)
+          c.strokeStyle = palette.glow
+          c.lineWidth = 6 + g * 8
+          c.globalAlpha = da * 0.28
+          c.stroke()
           c.strokeStyle = palette.ember
           c.lineWidth = 1.2 + g
-          c.shadowColor = palette.glow
-          c.shadowBlur = 3 + g * 12
+          c.globalAlpha = da
           c.stroke()
-          c.shadowBlur = 0
         }
       } else {
         c.fillStyle = on ? palette.accent : palette.ink
@@ -706,10 +753,10 @@ export function makeEras(
     })
     if (wA > 0.02) {
       c.globalAlpha = wA
-      for (const m of E.msgs) drawPacket(c, m.A, m.B, (now - m.t0) / m.dur, m.text, ember ? palette.glow : undefined, palette)
+      for (const m of E.msgs) drawPacket(c, m.A, m.B, (now - m.t0) / m.dur, m.text, ember ? palette.glow : undefined, palette, R)
       for (const a of agents) {
         c.globalAlpha = wA
-        drawAgent(c, a, now, palette, pointer, ar * wA)
+        drawAgent(c, a, now, palette, pointer, ar * wA, a.name.toUpperCase(), R)
       }
       c.globalAlpha = 1
     }

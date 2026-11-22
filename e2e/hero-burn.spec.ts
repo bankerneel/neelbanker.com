@@ -96,6 +96,38 @@ test('hero burn pauses offscreen and when the document is hidden', async ({ page
   expect(await count()).toBeGreaterThan(h1)
 })
 
+test('the hero canvas caps its pixel ratio and shrinks with the hero box', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' })
+  await page.setViewportSize({ width: 1440, height: 900 })
+  await gotoHydrated(page, '/')
+  await expect(page.locator(CANVAS)).toHaveCount(1, { timeout: 8000 })
+  await page.waitForTimeout(300)
+
+  const ratio = () =>
+    page.locator(CANVAS).evaluate((el) => {
+      const canvas = el as HTMLCanvasElement
+      return canvas.width / canvas.getBoundingClientRect().width
+    })
+  expect(await ratio()).toBeLessThanOrEqual(1.5)
+
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.waitForTimeout(500)
+  expect(await ratio()).toBeLessThanOrEqual(1.01)
+
+  const fits = await page.evaluate(() => {
+    const hero = document.querySelector('[data-hero]') as HTMLElement
+    const canvas = document.querySelector('canvas[data-hero-burn-canvas]') as HTMLCanvasElement
+    return {
+      canvasWidth: canvas.getBoundingClientRect().width,
+      heroWidth: hero.getBoundingClientRect().width,
+      canvasHeight: canvas.getBoundingClientRect().height,
+      heroHeight: hero.getBoundingClientRect().height,
+    }
+  })
+  expect(fits.canvasWidth).toBeLessThanOrEqual(fits.heroWidth + 1)
+  expect(fits.canvasHeight).toBeLessThanOrEqual(fits.heroHeight + 1)
+})
+
 test('hero burn is absent under reduced motion', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await gotoHydrated(page, '/')

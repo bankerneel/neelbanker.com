@@ -1,11 +1,13 @@
 'use client'
 
 import { lazy, Suspense, useEffect, useRef, useState } from 'react'
+import { afterLoad, scheduleAfterIdle } from '@/lib/idle'
 
 /**
  * Tiny client slot for the burning paper. The engine is a separate chunk that
- * is only requested once the opening hook has finished and the hero is near
- * the viewport, so it never enters the homepage initial bundle.
+ * is only requested once the opening hook is over, the hero is near the
+ * viewport and the browser is idle after first paint. It never enters the
+ * homepage initial bundle and cannot count against the critical paint work.
  *
  * The host is an absolute, aria-hidden overlay, so it needs no placeholder
  * height and cannot shift the layout when the canvas arrives.
@@ -23,16 +25,32 @@ export function HeroBurnSlot() {
     const host = hostRef.current
     if (!host) return
 
-    // `timer` stays non-zero after it fires, so it also guards against a
-    // stale observer callback after cleanup - no separate flag is needed.
     let timer = 0
+    let cancelLoad: (() => void) | null = null
+    let cancelIdle: (() => void) | null = null
+    let armed = false
+
+    const clear = () => {
+      window.clearTimeout(timer)
+      timer = 0
+      cancelLoad?.()
+      cancelLoad = null
+      cancelIdle?.()
+      cancelIdle = null
+      armed = false
+    }
     const arm = () => {
-      if (!timer) timer = window.setTimeout(() => setLoad(true), 1200)
+      if (armed) return
+      armed = true
+      timer = window.setTimeout(() => {
+        cancelLoad = afterLoad(() => {
+          cancelIdle = scheduleAfterIdle(() => setLoad(true), 1600)
+        })
+      }, 1200)
     }
     const onChange = (e: MediaQueryListEvent) => {
       if (!e.matches) return
-      window.clearTimeout(timer)
-      timer = 0
+      clear()
       setLoad(false)
     }
 
@@ -50,7 +68,7 @@ export function HeroBurnSlot() {
     else arm()
 
     return () => {
-      window.clearTimeout(timer)
+      clear()
       motion.removeEventListener('change', onChange)
       observer?.disconnect()
     }

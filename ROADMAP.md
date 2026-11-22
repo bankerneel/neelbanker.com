@@ -10,11 +10,12 @@
 
 - **Folded Scrap brand refresh (2026-11-20):** Implementation and local review captured in [brand evidence](design/brand-refresh/README.md). PR targets `main` for Neel's review and merge.
 
-- **Homepage hero systems and 404 Glyph Drift (2026-11-22):** PR 21 is open into `dev` at `1f5feb7`, with the
-  evidence and docs branch `work/evidence-docs` to be cherry-picked by Neel. Both homepage engines now load on
-  intersection and are absent from the initial chunk list. Screenshots were rechecked and kept. Before and after
-  metrics are captured over 5 interleaved runs. Next step is review of the preview before merge. Ember Field and
-  the Particle Lab homepage placement stay out of scope.
+- **Homepage hero systems and 404 Glyph Drift (2026-11-22):** PR 21 is open into `dev` and now carries the
+  owner review fixes. Both homepage engines load on intersection plus idle and are absent from the initial
+  chunk list. Only one canvas runs at a time. The 404 is particle only with a token palette in both themes.
+  Lighthouse, lint, typecheck, build, 9 unit and 78 e2e checks pass, and the six replacement screenshots are
+  in `design/hero-systems/shots/`. Next step is a final preview review before merge. Ember Field and the
+  Particle Lab homepage placement stay out of scope.
 
 ### 0. Redesign — build out Dream Bazaar (Direction P)
 

@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import Script from 'next/script'
 import { Archivo, Caveat } from 'next/font/google'
-import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Nav } from '@/components/nav'
 import { Footer } from '@/components/footer'
@@ -59,8 +58,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Nav />
         <main className="overflow-x-clip">{children}</main>
         <Footer />
-        <Analytics />
-        <SpeedInsights />
+        {/* Vercel's script endpoint only exists on Vercel. Skipping it in
+            local and preview builds avoids console errors and failed fetches. */}
+        {process.env.VERCEL === '1' ? <SpeedInsights /> : null}
       </body>
     </html>
   )

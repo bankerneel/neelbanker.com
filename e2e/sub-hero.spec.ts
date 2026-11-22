@@ -73,6 +73,24 @@ for (const [p, era, href] of [
   })
 }
 
+test('the phone uses a shorter pinned track and keeps touch scrolling', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' })
+  await page.setViewportSize({ width: 390, height: 844 })
+  await gotoHydrated(page, '/')
+  const state = await page.evaluate(() => {
+    const wrap = document.querySelector('[data-sub-hero]') as HTMLElement
+    const stage = wrap.querySelector('.sub-stage') as HTMLElement
+    return {
+      height: wrap.getBoundingClientRect().height,
+      vh: window.innerHeight,
+      touch: getComputedStyle(stage).touchAction,
+    }
+  })
+  expect(state.height).toBeGreaterThan(state.vh * 2)
+  expect(state.height).toBeLessThan(state.vh * 2.4)
+  expect(state.touch).toBe('pan-y')
+})
+
 test('reduced motion drops the pin and lists all three links in the open', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await page.setViewportSize({ width: 1280, height: 800 })

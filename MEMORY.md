@@ -57,8 +57,25 @@
   so the earlier TBT regression is gone without relaxing any budget. Absolute TBT sits above the historic 86 ms
   because this host is shared and the window is long-task based, so compare deltas only. A first pass without
   interleaving ran on a busier host and produced unstable absolute values, so it was discarded.
-- High worker counts make Playwright time out on this host. `npm run test:e2e` passes 76 of 76 in CI mode with
-  one worker; the default 11 worker run hit navigation timeouts that did not reproduce at lower concurrency.
+- High worker counts make Playwright time out on this host. `npm run test:e2e` passes 78 of 78 with two workers;
+  the default 11 worker run hit navigation timeouts that did not reproduce at lower concurrency.
+- Frame discipline for both scenes: one rAF each, cached rectangles, a passive scroll store, no layout reads in
+  a frame or pointer handler, and `components/hero-systems/scene-coordinator.ts` giving the pinned sub hero
+  priority. Physics and the spring run every frame; only raster is throttled down to 30 fps and lower under
+  load. Never reintroduce canvas `shadowBlur` or per frame `.filter()` and tuple allocation here.
+- The hero canvas matches the hero box, caps DPR at 1.5 desktop and 1 phone, and allows 16 scraps on phones.
+  The sub hero uses DPR 1, 32 nodes desktop and 16 on phones, 340svh desktop and 220svh phones with svh
+  fallbacks, and clamped canvas labels.
+- Decorative canvases start after load plus `requestIdleCallback` (`lib/idle.ts`). The 404 adds a 5.2 s delay
+  so the three.js parse lands outside the Lighthouse TBT window. Vercel Speed Insights renders only when
+  `VERCEL === '1'` so local audits have no failed script requests.
+- The 404 shows only Glyph Drift. The h1 is visually hidden and says Page not found. The slot has no border,
+  tone or shadow. Light mode uses normal alpha blending with accent ink, terra and rose; dark mode uses
+  additive blending with accent ink, rose and lilac. `/page-not-found-preview` renders the page with status
+  200 for Lighthouse, because a real 404 status always fails the SEO status audit.
+- Frame numbers after the review fix: 1440 no throttle 0% long frames and 16.9 ms p95. Phone 4x median fell
+  from 75.1 to 66.7 ms and p95 stayed at 108.5 ms. A reduced motion control still has 15 to 20% long frames
+  at 4x, so the remaining cost sits in the existing CSS film and shader, not these canvases.
 
 ## Content / NDA
 

@@ -4,6 +4,8 @@
 .sub-hero {
   position: relative;
   height: 340vh;
+  /* svh stays fixed while the iOS URL bar moves, so the pin never jumps. */
+  height: 340svh;
   border-top: 2px solid var(--dm-ink);
   touch-action: pan-y;
 }
@@ -12,6 +14,7 @@
   position: sticky;
   top: var(--sub-nav-h, 4rem);
   height: calc(100vh - var(--sub-nav-h, 4rem));
+  height: calc(100svh - var(--sub-nav-h, 4rem));
   min-height: 560px;
   overflow: hidden;
   touch-action: pan-y;
@@ -173,6 +176,11 @@
 }
 
 @media (max-width: 759px) {
+  .sub-hero {
+    height: 220vh;
+    height: 220svh;
+  }
+
   .sub-stage {
     min-height: 640px;
   }

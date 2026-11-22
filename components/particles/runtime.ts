@@ -13,10 +13,13 @@ import type {
 
 const MAX_DPR = 2
 const PHONE_DPR = 1.5
-const TOKENS: Array<[keyof ParticlePalette, string]> = [
+type ColourKey = Exclude<keyof ParticlePalette, 'dark'>
+const TOKENS: Array<[ColourKey, string]> = [
   ['butter', '--dm-butter'],
   ['lilac', '--dm-lilac'],
   ['sky', '--dm-sky'],
+  ['rose', '--dm-rose'],
+  ['terra', '--dm-terra'],
   ['accentInk', '--dm-accent-ink'],
   ['nightInk', '--dm-night-ink'],
   ['panel', '--dm-panel'],
@@ -41,9 +44,11 @@ declare global {
 }
 
 function readPalette(): ParticlePalette {
-  const style = getComputedStyle(document.documentElement)
+  const root = document.documentElement
+  const style = getComputedStyle(root)
   const palette = {} as ParticlePalette
   for (const [key, token] of TOKENS) palette[key] = style.getPropertyValue(token).trim()
+  palette.dark = root.dataset.theme === 'dark'
   return palette
 }
 

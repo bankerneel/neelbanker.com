@@ -29,14 +29,9 @@ export default function NotFound() {
       <p className="hand relative z-10 -rotate-2 text-[1.9rem] leading-none text-dm-accent-ink sm:text-[2.3rem]">
         this page wandered off ✦
       </p>
-      <h1 className="relative z-10 mt-2 text-[clamp(5rem,22vw,15rem)] font-black leading-[0.82] tracking-[-0.05em]">
-        4<span className="max-outline">0</span>4
-      </h1>
+      <h1 className="sr-only">Page not found</h1>
 
-      <ParticleSlot
-        scene="glyph-drift"
-        className="relative z-10 mt-8 border-2 border-current tone-night shadow-hard-lg"
-      />
+      <ParticleSlot scene="glyph-drift" className="relative z-10 mt-6" />
 
       <div className="relative z-10 mt-10 flex flex-col gap-10 lg:flex-row lg:items-start">
         <Scrap className="w-full max-w-[520px] -rotate-[1.2deg]" paperClassName="tone-panel px-7 py-9 sm:px-9">

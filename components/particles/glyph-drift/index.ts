@@ -164,10 +164,21 @@ void main() {
 `
 
 function paletteColors(palette: ParticlePalette): [THREE.Color, THREE.Color, THREE.Color] {
-  const sky = new THREE.Color(palette.sky || palette.ink)
-  const lilac = new THREE.Color(palette.lilac || palette.panel)
-  const butter = new THREE.Color(palette.butter || palette.nightInk)
-  return [sky, lilac, butter]
+  // Light ground uses the dark, muted tokens so the glyphs stay legible with
+  // normal alpha blending. Dark ground can use the pale accents additively.
+  const keys = palette.dark
+    ? [palette.accentInk, palette.rose, palette.lilac]
+    : [palette.accentInk, palette.terra, palette.rose]
+  const fallback = palette.ink || palette.nightInk
+  return [
+    new THREE.Color(keys[0] || fallback),
+    new THREE.Color(keys[1] || fallback),
+    new THREE.Color(keys[2] || fallback),
+  ]
+}
+
+function blendFor(palette: ParticlePalette): THREE.Blending {
+  return palette.dark ? THREE.AdditiveBlending : THREE.NormalBlending
 }
 
 const definition: ParticleSceneDefinition = {
@@ -312,12 +323,12 @@ const definition: ParticleSceneDefinition = {
           uTime: { value: 0 },
           uSize: { value: params.particleSize },
           uPixelRatio: { value: ctx.quality.pixelRatio },
-          uOpacity: { value: 0.6 },
+          uOpacity: { value: ctx.palette.dark ? 0.78 : 0.6 },
         },
         vertexShader: VERTEX_SHADER,
         fragmentShader: FRAGMENT_SHADER,
         transparent: true,
-        blending: THREE.AdditiveBlending,
+        blending: blendFor(ctx.palette),
         depthWrite: false,
         depthTest: false,
         toneMapped: false,
@@ -446,7 +457,7 @@ const definition: ParticleSceneDefinition = {
         const density = THREE.MathUtils.clamp(viewW / 95, 0.28, 1.1)
         material.uniforms.uTime.value = time
         material.uniforms.uSize.value = params.particleSize
-        material.uniforms.uOpacity.value = 0.6 * density
+        material.uniforms.uOpacity.value = (c.palette.dark ? 0.78 : 0.6) * density
         material.uniforms.uPixelRatio.value = c.quality.pixelRatio
       },
 
@@ -482,6 +493,13 @@ const definition: ParticleSceneDefinition = {
 
       setPalette(palette: ParticlePalette, c: ParticleSceneContext): void {
         colors = paletteColors(palette)
+        if (material) {
+          const blend = blendFor(palette)
+          if (material.blending !== blend) {
+            material.blending = blend
+            material.needsUpdate = true
+          }
+        }
         computeTargets()
         if (reduced && count) {
           posArr.set(target)

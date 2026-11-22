@@ -1,9 +1,11 @@
 'use client'
 
 import { lazy, Suspense, useEffect, useState } from 'react'
+import { afterLoad, scheduleAfterIdle } from '@/lib/idle'
 
 // The canvas engine is a separate async chunk. It is requested only when the
-// reserved 340vh box approaches the viewport, never in the initial JS.
+// reserved box approaches the viewport and the main thread is idle after
+// first paint, never in the initial JS or ahead of the LCP element.
 const SubHero = lazy(() => import('./sub-hero').then((m) => ({ default: m.SubHero })))
 
 /** Tiny client gate: observes the server-rendered box, then mounts the scene. */
@@ -17,21 +19,40 @@ export function SubHeroGate() {
       wrap.style.setProperty('--sub-nav-h', `${Math.round(nav)}px`)
       wrap.dataset.motion = matchMedia('(prefers-reduced-motion: reduce)').matches ? 'reduced' : 'full'
     }
+
+    let cancelLoad: (() => void) | null = null
+    let cancelIdle: (() => void) | null = null
+    let queued = false
+    const arm = () => {
+      if (queued) return
+      queued = true
+      cancelLoad = afterLoad(() => {
+        cancelIdle = scheduleAfterIdle(() => setEngaged(true), 1600)
+      })
+    }
+
     if (!wrap || !('IntersectionObserver' in window)) {
-      queueMicrotask(() => setEngaged(true))
-      return
+      arm()
+      return () => {
+        cancelLoad?.()
+        cancelIdle?.()
+      }
     }
     const io = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setEngaged(true)
+          arm()
           io.disconnect()
         }
       },
       { rootMargin: '300px 0px' },
     )
     io.observe(wrap)
-    return () => io.disconnect()
+    return () => {
+      io.disconnect()
+      cancelLoad?.()
+      cancelIdle?.()
+    }
   }, [])
 
   return engaged ? (

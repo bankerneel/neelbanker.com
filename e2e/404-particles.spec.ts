@@ -37,15 +37,28 @@ async function threeChunks(pending: Array<Promise<{ url: string; body: string }>
   return responses.filter(({ body }) => THREE_MARKERS.every((marker) => body.includes(marker))).map(({ url }) => url)
 }
 
-test('the 404 keeps its real content and adds an aria hidden slot', async ({ page }) => {
+test('the 404 shows only the particle glyphs in an unboxed, full width slot', async ({ page }) => {
   await gotoHydrated(page, LOST)
-  await expect(page.getByRole('heading', { level: 1 })).toContainText('404')
+  const heading = page.getByRole('heading', { level: 1 })
+  await expect(heading).toHaveText('Page not found')
+  await expect(heading).toHaveClass(/sr-only/)
+  await expect(page.getByText('404', { exact: true })).toHaveCount(0)
+  await expect(page.getByText('this page wandered off ✦')).toHaveCount(1)
   await expect(page.getByRole('link', { name: 'Home' })).toHaveCount(1)
+
   const slot = page.locator('.particle-slot')
   await expect(slot).toHaveCount(1)
   await expect(slot).toHaveAttribute('aria-hidden', 'true')
   const box = await slot.boundingBox()
-  expect(box?.height).toBeGreaterThan(200)
+  expect(box?.height).toBeGreaterThanOrEqual(320)
+  expect(box?.height).toBeLessThanOrEqual(560)
+  const style = await slot.evaluate((el) => {
+    const s = getComputedStyle(el)
+    return { border: s.borderTopWidth, background: s.backgroundColor, shadow: s.boxShadow }
+  })
+  expect(style.border).toBe('0px')
+  expect(style.background).toBe('rgba(0, 0, 0, 0)')
+  expect(style.shadow).toBe('none')
 })
 
 test('no canvas is created before the slot intersects', async ({ page }) => {
