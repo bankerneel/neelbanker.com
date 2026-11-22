@@ -1,7 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
-import dynamic from 'next/dynamic'
+import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 
 /**
  * Tiny client slot for the burning paper. The engine is a separate chunk that
@@ -12,9 +11,7 @@ import dynamic from 'next/dynamic'
  * height and cannot shift the layout when the canvas arrives.
  */
 
-const HeroBurn = dynamic(() => import('./hero-burn').then((m) => m.HeroBurn), { ssr: false })
-
-const HOOK_MS = 1200
+const HeroBurn = lazy(() => import('./hero-burn').then((m) => ({ default: m.HeroBurn })))
 
 export function HeroBurnSlot() {
   const hostRef = useRef<HTMLDivElement>(null)
@@ -26,13 +23,11 @@ export function HeroBurnSlot() {
     const host = hostRef.current
     if (!host) return
 
-    let near = false
+    // `timer` stays non-zero after it fires, so it also guards against a
+    // stale observer callback after cleanup - no separate flag is needed.
     let timer = 0
-    let cancelled = false
-
     const arm = () => {
-      if (!near || timer || cancelled) return
-      timer = window.setTimeout(() => setLoad(true), HOOK_MS)
+      if (!timer) timer = window.setTimeout(() => setLoad(true), 1200)
     }
     const onChange = (e: MediaQueryListEvent) => {
       if (!e.matches) return
@@ -46,20 +41,15 @@ export function HeroBurnSlot() {
       'IntersectionObserver' in window
         ? new IntersectionObserver(
             ([entry]) => {
-              near = entry.isIntersecting
-              if (near) arm()
+              if (entry.isIntersecting) arm()
             },
             { rootMargin: '200px 0px' },
           )
         : null
     if (observer) observer.observe(host)
-    else {
-      near = true
-      arm()
-    }
+    else arm()
 
     return () => {
-      cancelled = true
       window.clearTimeout(timer)
       motion.removeEventListener('change', onChange)
       observer?.disconnect()
@@ -68,7 +58,11 @@ export function HeroBurnSlot() {
 
   return (
     <div ref={hostRef} aria-hidden="true" className="hero-burn-layer" data-hero-burn>
-      {load && <HeroBurn hostRef={hostRef} />}
+      {load && (
+        <Suspense fallback={null}>
+          <HeroBurn hostRef={hostRef} />
+        </Suspense>
+      )}
     </div>
   )
 }

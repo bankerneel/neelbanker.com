@@ -1,11 +1,10 @@
 'use client'
 
-import dynamic from 'next/dynamic'
-import { useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 
 // The canvas engine is a separate async chunk. It is requested only when the
 // reserved 340vh box approaches the viewport, never in the initial JS.
-const SubHero = dynamic(() => import('./sub-hero').then((m) => m.SubHero), { ssr: false })
+const SubHero = lazy(() => import('./sub-hero').then((m) => ({ default: m.SubHero })))
 
 /** Tiny client gate: observes the server-rendered box, then mounts the scene. */
 export function SubHeroGate() {
@@ -23,8 +22,8 @@ export function SubHeroGate() {
       return
     }
     const io = new IntersectionObserver(
-      (entries) => {
-        if (entries.some((e) => e.isIntersecting)) {
+      ([entry]) => {
+        if (entry.isIntersecting) {
           setEngaged(true)
           io.disconnect()
         }
@@ -35,5 +34,9 @@ export function SubHeroGate() {
     return () => io.disconnect()
   }, [])
 
-  return engaged ? <SubHero /> : null
+  return engaged ? (
+    <Suspense fallback={null}>
+      <SubHero />
+    </Suspense>
+  ) : null
 }
