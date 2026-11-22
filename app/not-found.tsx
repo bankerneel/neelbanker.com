@@ -21,10 +21,6 @@ const destinations = [
 export default function NotFound() {
   return (
     <section className="page-wrap relative pb-10 pt-12 sm:pt-16">
-      <div
-        aria-hidden="true"
-        className="surreal-arch dm-longshadow pointer-events-none absolute right-[6%] top-6 hidden h-72 w-44 bg-dm-lilac lg:block"
-      />
 
       <p className="hand relative z-10 -rotate-2 text-[1.9rem] leading-none text-dm-accent-ink sm:text-[2.3rem]">
         this page wandered off ✦
