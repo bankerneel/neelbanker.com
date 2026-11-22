@@ -282,10 +282,11 @@ run, so absolute values sit above the historic 86 ms figure. Use the before and 
 | Host cadence, hero, median / p95 | 16.7 / 16.9 ms | 16.7 / 17.0 ms | 16.7 / 16.9 ms | 16.7 / 16.9 ms |
 | Host cadence, sub hero, median / p95 | none | 16.7 / 16.9 ms | none | 16.7 / 16.9 ms |
 
-Initial JS gzip from the built HTML: `/` goes from 200.1 KB to 202.3 KB, the 404 from 197.8 KB to 198.5 KB.
-The 404 delta is the ~624 B slot loader; three.js and both homepage engines stay out of every initial chunk
-list. Against the previous integration head the homepage fell by about 7.0 KB gzip, close to the reported
-851 B for the burn engine and 5.6 KiB for the sub hero engine. LCP, CLS and host frame cadence show no
+Initial JS gzip from the built HTML: `/` goes from 200.1 KB to 201.2 KB, the 404 from 197.8 KB to 198.5 KB,
+a homepage delta of +1152 B against the +2 KB acceptance cap. The 404 delta is the ~624 B slot loader;
+three.js and both homepage engines stay out of every initial chunk list. Against the earlier integration head
+the homepage fell by about 8.1 KB gzip: the two engines moved into lazy chunks and the two tiny gates dropped
+the next/dynamic loadable boilerplate. LCP, CLS and host frame cadence show no
 regression. TBT is within noise on both widths: +3 ms desktop and +30 ms phone, smaller than the spread of
 the repeated runs. No acceptance budget is relaxed. Host frame cadence comes from rAF intervals, not GPU FPS.
 WebGL and canvas draws are async and there is no timer query, so no GPU frame time is claimed.

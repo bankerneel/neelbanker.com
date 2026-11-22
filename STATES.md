@@ -34,8 +34,9 @@ Core routes now feel substantially more consistent, lighter, and more editorial 
     plus 9 unit tests pass.
   - Interleaved medians (CPU 4x, slow 4G on phone): LCP 1952 to 1752 ms desktop and 3012 to 3096 ms phone,
     TBT 677 to 680 ms desktop and 349 to 379 ms phone, CLS 0, host frame cadence flat at a 16.7 ms median.
-    Initial JS gzip on `/` fell from 209.3 KB at the previous integration head to 202.3 KB, and the 404 is
-    198.5 KB. TBT is within noise on both widths, so the earlier regression is resolved without relaxing any
+    Initial JS gzip on `/` is 201.2 KB against 200.1 KB at dev, a +1152 B delta inside the +2 KB cap; the 404 is
+    198.5 KB. A final trim of the two tiny lazy gates removed 1099 B gzip from the earlier 202.3 KB head.
+    TBT is within noise on both widths, so the earlier regression is resolved without relaxing any
     budget. Ember Field and the rejected Particle Lab homepage placement are not shipped.
 
 - **Bands + the homepage film (2026-09-27, local branch `feat/motion-film`, not pushed):**
