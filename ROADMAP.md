@@ -10,6 +10,13 @@
 
 - **Folded Scrap brand refresh (2026-11-20):** Implementation and local review captured in [brand evidence](design/brand-refresh/README.md). PR targets `main` for Neel's review and merge.
 
+- **Homepage hero systems and 404 Glyph Drift (2026-11-22):** PR 21 is open into `dev` and now carries the
+  owner review fixes. Both homepage engines load on intersection plus idle and are absent from the initial
+  chunk list. Only one canvas runs at a time. The 404 is particle only with a token palette in both themes.
+  Lighthouse, lint, typecheck, build, 9 unit and 78 e2e checks pass, and the six replacement screenshots are
+  in `design/hero-systems/shots/`. Next step is a final preview review before merge. Ember Field and the
+  Particle Lab homepage placement stay out of scope.
+
 ### 0. Redesign — build out Dream Bazaar (Direction P)
 
 The site was judged to have become generic (its near-black + lime palette and Syne/mono
@@ -160,6 +167,16 @@ _Original checklist:_
 - `layout` — no element past the viewport at 320 / 375 / 768 / 1024px on seven key routes. It caught two real
   bugs on the way in (homepage polaroids and a long uppercase project title at 320px)
 - `e2e/helpers.ts` `gotoHydrated()` waits for React hydration before interacting
+
+### 8. Hero systems QA and lazy loading (2026-11-22, PR 21)
+
+- Review the 20 screenshots in `design/hero-systems/shots/` across both viewports, both themes and all three
+  eras of the pinned map. They were rechecked against the lazy slots and kept, since only animation phase differs.
+- TBT no longer regresses: +3 ms desktop and +30 ms phone on the median of 5 interleaved runs, both within the
+  spread of repeated runs. LCP, CLS and host frame cadence also show no regression. No budget was relaxed.
+- Initial JS gzip on `/` is 201.2 KB, down from 209.3 KB at the earlier head and +1152 B against 200.1 KB at dev,
+  inside the +2 KB cap. The 404 is 198.5 KB. Neither homepage engine nor three.js is in any initial chunk list.
+- Real-device QA is still open for the burn canvas and the pinned map, as with the rest of the film.
 
 ## Ongoing Rules
 

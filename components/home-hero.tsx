@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { NewsletterForm } from '@/components/newsletter-form'
+import { HeroBurnSlot } from '@/components/hero-systems/hero-burn-slot'
 import { Scrap } from '@/components/bazaar/scrap'
 import { chipLink } from '@/components/bazaar/styles'
 import { cn } from '@/lib/utils'
@@ -9,12 +10,6 @@ const stats = [
   { value: '7+', label: 'years building', tone: 'tone-terra', tilt: '-rotate-6' },
   { value: '50+', label: 'engineers led', tone: 'tone-rose', tilt: 'rotate-[5deg]' },
   { value: '15+', label: 'production platforms', tone: 'tone-sage', tilt: '-rotate-3' },
-]
-
-const techStack = [
-  'Hyperledger Fabric', 'OP Stack / L2', 'Solidity', 'ERC-4337', 'Fireblocks NCW', 'BitGo', 'Node.js', 'NestJS',
-  'Go', 'Python', 'Claude API', 'Ethereum', 'Polygon', 'Solana', 'Base', 'Arbitrum', 'Account Abstraction',
-  'Docker', 'AWS EKS', 'HSM',
 ]
 
 // Depth for pointer parallax (--depth) and scroll pull-back (--px).
@@ -31,6 +26,9 @@ export function HomeHero() {
   return (
     <>
       <section className="hero-stage page-wrap relative pt-8 sm:pt-12" aria-labelledby="hero-title" data-hero data-ambient data-sky-window>
+        {/* burning paper: behind the copy, above the sky. Empty under reduced motion. */}
+        <HeroBurnSlot />
+
         {/* dream furniture — decorative only */}
         <div
           aria-hidden="true"
@@ -137,23 +135,6 @@ export function HomeHero() {
           </div>
         </div>
       </section>
-
-      {/* ticker tape — the marquee separator, as a strip of butter tape */}
-      <div className="relative z-10 mt-20 -rotate-[1.2deg]">
-        <p className="sr-only">Stack in production: {techStack.join(', ')}.</p>
-        <div
-          aria-hidden="true"
-          className="tone-butter -mx-[3%] select-none overflow-hidden border-y-[3px] border-current py-3 shadow-hard"
-        >
-          <div className="flex w-max animate-marquee whitespace-nowrap">
-            {[...techStack, ...techStack].map((item, i) => (
-              <span key={i} className="mx-5 text-sm font-black uppercase tracking-[0.08em]">
-                {item} <span className="ml-5">✦</span>
-              </span>
-            ))}
-          </div>
-        </div>
-      </div>
     </>
   )
 }

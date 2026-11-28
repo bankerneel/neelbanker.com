@@ -1,5 +1,8 @@
 import Link from 'next/link'
 import type { CSSProperties } from 'react'
+import './hero-systems.css'
+import { SubHeroSlot } from '@/components/hero-systems/sub-hero-slot'
+import { TechMarquee } from '@/components/hero-systems/tech-marquee'
 import { getAllArticleMeta, getAllProjectMeta, getAllResourceMeta } from '@/lib/mdx'
 import { ServiceCard } from '@/components/service-card'
 import { ProjectCard } from '@/components/project-card'
@@ -65,6 +68,8 @@ export default function HomePage() {
     <>
       <FilmProgress />
       <HomeHero />
+      <SubHeroSlot />
+      <TechMarquee />
 
       {/* ── Receipts — proof near the fold ─────────────────────────── */}
       <section aria-labelledby="receipts" className="page-wrap mt-20 sm:mt-24" data-sky-window>

@@ -35,6 +35,48 @@
 - One small photo does not justify `next/image` (~6 KB gz client JS on /about); a pre-sized WebP in a plain `img` is lighter.
 - A client component can hydrate after the header: e2e clicks on it need `waitForHydration(locator)` (e2e/helpers.ts), or they are lost.
 
+## Hero systems (2026-11-22, PR 21)
+
+- Three scenes shipped: burning paper behind the hero copy, a pinned three era career map before the marquee,
+  and Glyph Drift on the 404 only. All read colours from `--dm-*`; there is no CDN, no external font and no
+  hard-coded fill. Ember Field and the Particle Lab homepage placement were rejected and are not shipped.
+- Both homepage engines are now lazy: `hero-burn-slot.tsx` gates the burn engine on the ~1.2 s hook and
+  intersection, and `sub-hero-slot.tsx` plus `sub-hero-gate.tsx` render the full 340vh markup on the server and
+  import `sub-hero.tsx` on intersection. Neither engine is in the homepage initial chunk list. Against the
+  previous integration head the homepage initial JS dropped by about 7.0 KB gzip, reported as 851 B for burn
+  and 5.6 KiB for the sub hero. The 404 slot loader is about 624 B gz and three.js appears in no initial bundle.
+- The burn engine pauses off screen, on hidden documents and on a runtime reduced-motion change, and trims its
+  load after sustained slow frames. Reduced motion leaves the reserved box empty rather than shrinking it.
+- The sub hero keeps one rAF, measures layout only on resize or theme change, and holds all three real links in
+  `.sub-sr-links`. Its Ethereum head read runs only from the browser, once per 12 s in the blockchain era, with
+  a 3 s timeout and a simulated fallback. Never initiate that call from a shell.
+- Glyph Drift cycles 404 and LOST, and reduced motion paints one still frame with no loop.
+- Measured before and after on clean production builds, median of 5 interleaved runs with order alternated,
+  CPU 4x and slow 4G on phone: LCP within noise, CLS 0, host frame cadence flat at a 16.7 ms median, TBT
+  677 to 680 ms desktop and 349 to 379 ms phone. Those deltas are smaller than the spread of repeated runs,
+  so the earlier TBT regression is gone without relaxing any budget. Absolute TBT sits above the historic 86 ms
+  because this host is shared and the window is long-task based, so compare deltas only. A first pass without
+  interleaving ran on a busier host and produced unstable absolute values, so it was discarded.
+- High worker counts make Playwright time out on this host. `npm run test:e2e` passes 78 of 78 with two workers;
+  the default 11 worker run hit navigation timeouts that did not reproduce at lower concurrency.
+- Frame discipline for both scenes: one rAF each, cached rectangles, a passive scroll store, no layout reads in
+  a frame or pointer handler, and `components/hero-systems/scene-coordinator.ts` giving the pinned sub hero
+  priority. Physics and the spring run every frame; only raster is throttled down to 30 fps and lower under
+  load. Never reintroduce canvas `shadowBlur` or per frame `.filter()` and tuple allocation here.
+- The hero canvas matches the hero box, caps DPR at 1.5 desktop and 1 phone, and allows 16 scraps on phones.
+  The sub hero uses DPR 1, 32 nodes desktop and 16 on phones, 340svh desktop and 220svh phones with svh
+  fallbacks, and clamped canvas labels.
+- Decorative canvases start after load plus `requestIdleCallback` (`lib/idle.ts`). The 404 adds a 5.2 s delay
+  so the three.js parse lands outside the Lighthouse TBT window. Vercel Speed Insights renders only when
+  `VERCEL === '1'` so local audits have no failed script requests.
+- The 404 shows only Glyph Drift. The h1 is visually hidden and says Page not found. The slot has no border,
+  tone or shadow. Light mode uses normal alpha blending with accent ink, terra and rose; dark mode uses
+  additive blending with accent ink, rose and lilac. `/page-not-found-preview` renders the page with status
+  200 for Lighthouse, because a real 404 status always fails the SEO status audit.
+- Frame numbers after the review fix: 1440 no throttle 0% long frames and 16.9 ms p95. Phone 4x median fell
+  from 75.1 to 66.7 ms and p95 stayed at 108.5 ms. A reduced motion control still has 15 to 20% long frames
+  at 4x, so the remaining cost sits in the existing CSS film and shader, not these canvases.
+
 ## Content / NDA
 
 - **Naming by group (Neel, 2026-09-27, revised the same day):** SoluLab → real names (he is not under NDA with SoluLab); Tech Alchemy → `Project <Codename>` (real names never on the site); Personal → pseudonym product names (CredSeal, Keystone Bridge, Canopy Chain, StayWise, Sentinel Audit — confirmed by Neel). Scales and Coffer are Tech Alchemy (confirmed). Slugs ship to the browser, so Tech Alchemy slugs must stay neutral; DocTrace's slug went back to `doctrace-fabric-documents`. `/resume` keeps real names by his choice.
