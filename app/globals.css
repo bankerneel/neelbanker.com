@@ -102,6 +102,9 @@
   --dm-lilac: #c3aad0;
   --dm-sage: #a8bd9e;
   --dm-terra: #d68f73;
+  /* burning paper (design/hero-systems/final.html): ember edge, glow sparks */
+  --dm-ember: #ffb36b;
+  --dm-glow: #ff7a2e;
   --dm-shadow: rgba(58, 47, 61, 0.22);
   --dm-longshadow: rgba(58, 47, 61, 0.16);
   --dm-marker: #f2dca8;
@@ -172,6 +175,9 @@
   --dm-lilac: #9a7a9f;
   --dm-sage: #7d9064;
   --dm-terra: #c07048;
+  /* burning paper keeps the same ember/glow in both themes, as in the lab */
+  --dm-ember: #ffb36b;
+  --dm-glow: #ff7a2e;
   --dm-shadow: rgba(0, 0, 0, 0.5);
   --dm-longshadow: rgba(0, 0, 0, 0.45);
   --dm-marker: rgba(192, 112, 72, 0.42);
@@ -607,6 +613,29 @@
 @media (prefers-reduced-motion: reduce) {
   .animate-marquee {
     animation: none !important;
+  }
+}
+
+/* ── Burning paper (components/hero-systems/hero-burn.tsx) ────────────
+   The host reserves the full hero box at z-0: behind every hero scrap and
+   above the fixed sky canvas. The canvas itself is mounted by JS only after
+   the opening hook, so the LCP paragraph paints first. */
+.hero-burn-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.hero-burn-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-burn-canvas {
+    display: none;
   }
 }
 

@@ -1,0 +1,23 @@
+/* Reserved stage for the 404 Glyph Drift canvas. There is no fill, border or
+   shadow here: the particles sit directly on the site sky and the arch shows
+   through. The box is sized in CSS so the lazy canvas cannot shift content. */
+
+.particle-slot {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: clamp(320px, 42vw, 560px);
+  overflow: hidden;
+  touch-action: pan-y;
+}
+
+.particle-slot .particle-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Reduced motion is handled in the runtime: it paints one still frame of 404
+   and starts no frame loop. There is no CSS animation to guard here. */

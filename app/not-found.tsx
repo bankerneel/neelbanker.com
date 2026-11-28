@@ -1,8 +1,10 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Scrap } from '@/components/bazaar/scrap'
+import { ParticleSlot } from '@/components/particles/slot'
 import { chipLink, pick, tilts, tones } from '@/components/bazaar/styles'
 import { cn } from '@/lib/utils'
+import './particles-404.css'
 
 export const metadata: Metadata = {
   title: 'Page not found',
@@ -19,17 +21,13 @@ const destinations = [
 export default function NotFound() {
   return (
     <section className="page-wrap relative pb-10 pt-12 sm:pt-16">
-      <div
-        aria-hidden="true"
-        className="surreal-arch dm-longshadow pointer-events-none absolute right-[6%] top-6 hidden h-72 w-44 bg-dm-lilac lg:block"
-      />
 
       <p className="hand relative z-10 -rotate-2 text-[1.9rem] leading-none text-dm-accent-ink sm:text-[2.3rem]">
         this page wandered off ✦
       </p>
-      <h1 className="relative z-10 mt-2 text-[clamp(5rem,22vw,15rem)] font-black leading-[0.82] tracking-[-0.05em]">
-        4<span className="max-outline">0</span>4
-      </h1>
+      <h1 className="sr-only">Page not found</h1>
+
+      <ParticleSlot scene="glyph-drift" className="relative z-10 mt-6" />
 
       <div className="relative z-10 mt-10 flex flex-col gap-10 lg:flex-row lg:items-start">
         <Scrap className="w-full max-w-[520px] -rotate-[1.2deg]" paperClassName="tone-panel px-7 py-9 sm:px-9">

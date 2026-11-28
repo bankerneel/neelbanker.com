@@ -1,0 +1,251 @@
+/* Pinned sub hero: the career map between the hero and the tech marquee.
+   Every colour comes from a --dm-* token. No fills are hard-coded here. */
+
+.sub-hero {
+  position: relative;
+  height: 340vh;
+  /* svh stays fixed while the iOS URL bar moves, so the pin never jumps. */
+  height: 340svh;
+  border-top: 2px solid var(--dm-ink);
+  touch-action: pan-y;
+}
+
+.sub-stage {
+  position: sticky;
+  top: var(--sub-nav-h, 4rem);
+  height: calc(100vh - var(--sub-nav-h, 4rem));
+  height: calc(100svh - var(--sub-nav-h, 4rem));
+  min-height: 560px;
+  overflow: hidden;
+  touch-action: pan-y;
+}
+
+.sub-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.sub-pw {
+  position: relative;
+  z-index: 2;
+}
+
+.sub-head {
+  max-width: 420px;
+  padding-top: 56px;
+}
+
+.sub-head .ticket {
+  transform: rotate(1deg);
+}
+
+.sub-head h2 {
+  margin: 20px 0 0;
+  font-size: clamp(2.1rem, 5.4vw, 4rem);
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+
+.sub-head p {
+  max-width: 380px;
+  margin: 18px 0 0;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.65;
+}
+
+.sub-hand {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 1.6rem;
+  transform: rotate(-2deg);
+}
+
+.sub-era-link {
+  position: absolute;
+  z-index: 5;
+  display: none;
+  align-items: center;
+  gap: 8px;
+  max-width: calc(100% - 32px);
+  padding: 7px 11px;
+  border: 1.5px solid var(--dm-ink);
+  background: var(--dm-panel);
+  box-shadow: 4px 4px 0 var(--dm-shadow);
+  color: var(--dm-ink);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  line-height: 1.2;
+  text-decoration: none;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 150ms, border-color 150ms, transform 150ms;
+}
+
+.sub-era-link[data-visible="true"] {
+  display: inline-flex;
+}
+
+.sub-era-link b {
+  color: var(--dm-ink-soft);
+  font-weight: 500;
+}
+
+.sub-era-link:hover {
+  color: var(--dm-accent-ink);
+  border-color: var(--dm-accent-ink);
+  transform: translate(-1px, -1px);
+}
+
+.sub-label {
+  position: absolute;
+  right: 16px;
+  bottom: 14px;
+  z-index: 4;
+  max-width: calc(100% - 32px);
+  color: var(--dm-ink-soft);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  line-height: 1.5;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  text-transform: uppercase;
+}
+
+/* The three real links stay in the HTML: hidden visually, never from the
+   keyboard or assistive tech, and revealed as soon as one takes focus. */
+.sub-sr-links {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 6;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  list-style: none;
+}
+
+.sub-sr-links:focus-within {
+  width: auto;
+  max-width: calc(100% - 32px);
+  height: auto;
+  margin: 8px 16px;
+  padding: 12px 16px;
+  overflow: visible;
+  clip-path: none;
+  white-space: normal;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  border: 2px solid var(--dm-ink);
+  background: var(--dm-panel);
+  box-shadow: 5px 5px 0 var(--dm-shadow);
+}
+
+.sub-sr-links li + li {
+  margin-top: 4px;
+}
+
+.sub-sr-links a {
+  color: var(--dm-accent-ink);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.sub-sr-links a b {
+  font-weight: 700;
+}
+
+@media (max-width: 759px) {
+  .sub-hero {
+    height: 220vh;
+    height: 220svh;
+  }
+
+  .sub-stage {
+    min-height: 640px;
+  }
+
+  .sub-head {
+    padding-top: 32px;
+  }
+
+  .sub-head p {
+    font-size: 15px;
+  }
+
+  .sub-era-link {
+    max-width: calc(100vw - 32px);
+    font-size: 10px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+}
+
+/* Reduced motion: no pin, a normal-height section, a still web3 graph and
+   all three links shown in the open. */
+@media (prefers-reduced-motion: reduce) {
+  .sub-hero {
+    height: auto;
+    min-height: 0;
+  }
+
+  .sub-stage {
+    position: static;
+    height: auto;
+    min-height: 560px;
+    overflow: visible;
+  }
+
+  .sub-head {
+    padding-bottom: 24px;
+  }
+
+  .sub-era-link,
+  .sub-label {
+    display: none !important;
+  }
+
+  .sub-sr-links {
+    position: relative;
+    top: auto;
+    left: auto;
+    z-index: 6;
+    width: auto;
+    height: auto;
+    margin: 24px 16px 0;
+    padding: 16px;
+    overflow: visible;
+    clip-path: none;
+    white-space: normal;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px 24px;
+    border: 2px solid var(--dm-ink);
+    background: var(--dm-panel);
+    box-shadow: 5px 5px 0 var(--dm-shadow);
+  }
+
+  .sub-sr-links li + li {
+    margin-top: 0;
+  }
+}
